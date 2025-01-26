@@ -1,8 +1,9 @@
 import { NextAuthConfig } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-// @ts-expect-error: Import is used in module declaration
-import { JWT } from "next-auth/jwt";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { JWT } from "next-auth/jwt"; //import is used in module declaration
+/* eslint-enable @typescript-eslint/no-unused-vars */
 import { db, users } from "../schema";
 import { eq } from "drizzle-orm";
 
