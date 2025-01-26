@@ -1,103 +1,108 @@
 import {
-    boolean,
-    timestamp,
-    pgTable,
-    text,
-    primaryKey,
-    integer,
-  } from "drizzle-orm/pg-core"
-  import postgres from "postgres"
-  import { drizzle } from "drizzle-orm/postgres-js"
-  import type { AdapterAccountType } from "next-auth/adapters"
-   
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) {
-    throw new Error("DATABASE_URL is not set")
-  }
-  
-  const pool = postgres(connectionString, { max: 1 })
-   
-  export const db = drizzle(pool)
-   
-  export const users = pgTable("user", {
-    id: text("id")
-      .primaryKey()
-      .$defaultFn(() => crypto.randomUUID()),
-    name: text("name"),
-    email: text("email").unique(),
-    emailVerified: timestamp("emailVerified", { mode: "date" }),
-    image: text("image"),
-  })
-   
-  export const accounts = pgTable(
-    "account",
-    {
-      userId: text("userId")
-        .notNull()
-        .references(() => users.id, { onDelete: "cascade" }),
-      type: text("type").$type<AdapterAccountType>().notNull(),
-      provider: text("provider").notNull(),
-      providerAccountId: text("providerAccountId").notNull(),
-      refresh_token: text("refresh_token"),
-      access_token: text("access_token"),
-      expires_at: integer("expires_at"),
-      token_type: text("token_type"),
-      scope: text("scope"),
-      id_token: text("id_token"),
-      session_state: text("session_state"),
-    },
-    (account) => [
-      {
-        compoundKey: primaryKey({
-          columns: [account.provider, account.providerAccountId],
-        }),
-      },
-    ]
-  )
-   
-  export const sessions = pgTable("session", {
-    sessionToken: text("sessionToken").primaryKey(),
+  boolean,
+  timestamp,
+  pgTable,
+  text,
+  primaryKey,
+  integer,
+} from "drizzle-orm/pg-core"
+import postgres from "postgres"
+import { drizzle } from "drizzle-orm/postgres-js"
+import type { AdapterAccountType } from "next-auth/adapters"
+
+export const users = pgTable("user", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name"),
+  email: text("email").unique(),
+  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  image: text("image"),
+  password: text("password"),
+  createdDate: timestamp("createdDate", { mode: "date", withTimezone: true }).defaultNow(),
+  updatedDate: timestamp("updatedDate", { mode: "date", withTimezone: true }).defaultNow().$onUpdateFn(() => new Date()),
+})
+
+export const accounts = pgTable(
+  "account",
+  {
     userId: text("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").$type<AdapterAccountType>().notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("providerAccountId").notNull(),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
+    scope: text("scope"),
+    id_token: text("id_token"),
+    session_state: text("session_state"),
+  },
+  (account) => [
+    {
+      compoundKey: primaryKey({
+        columns: [account.provider, account.providerAccountId],
+      }),
+    },
+  ]
+)
+
+export const sessions = pgTable("session", {
+  sessionToken: text("sessionToken").primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+})
+
+export const verificationTokens = pgTable(
+  "verificationToken",
+  {
+    identifier: text("identifier").notNull(),
+    token: text("token").notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
-  })
-   
-  export const verificationTokens = pgTable(
-    "verificationToken",
+  },
+  (verificationToken) => [
     {
-      identifier: text("identifier").notNull(),
-      token: text("token").notNull(),
-      expires: timestamp("expires", { mode: "date" }).notNull(),
+      compositePk: primaryKey({
+        columns: [verificationToken.identifier, verificationToken.token],
+      }),
     },
-    (verificationToken) => [
-      {
-        compositePk: primaryKey({
-          columns: [verificationToken.identifier, verificationToken.token],
-        }),
-      },
-    ]
-  )
-   
-  export const authenticators = pgTable(
-    "authenticator",
+  ]
+)
+
+export const authenticators = pgTable(
+  "authenticator",
+  {
+    credentialID: text("credentialID").notNull().unique(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    providerAccountId: text("providerAccountId").notNull(),
+    credentialPublicKey: text("credentialPublicKey").notNull(),
+    counter: integer("counter").notNull(),
+    credentialDeviceType: text("credentialDeviceType").notNull(),
+    credentialBackedUp: boolean("credentialBackedUp").notNull(),
+    transports: text("transports"),
+  },
+  (authenticator) => [
     {
-      credentialID: text("credentialID").notNull().unique(),
-      userId: text("userId")
-        .notNull()
-        .references(() => users.id, { onDelete: "cascade" }),
-      providerAccountId: text("providerAccountId").notNull(),
-      credentialPublicKey: text("credentialPublicKey").notNull(),
-      counter: integer("counter").notNull(),
-      credentialDeviceType: text("credentialDeviceType").notNull(),
-      credentialBackedUp: boolean("credentialBackedUp").notNull(),
-      transports: text("transports"),
+      compositePK: primaryKey({
+        columns: [authenticator.userId, authenticator.credentialID],
+      }),
     },
-    (authenticator) => [
-      {
-        compositePK: primaryKey({
-          columns: [authenticator.userId, authenticator.credentialID],
-        }),
-      },
-    ]
-  )
+  ]
+)
+
+const schema = { users, accounts, sessions, verificationTokens, authenticators };
+
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  throw new Error("DATABASE_URL is not set")
+}
+
+const pool = postgres(connectionString)
+
+export const db = drizzle(pool, { schema })
