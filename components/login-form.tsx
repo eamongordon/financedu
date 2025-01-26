@@ -106,6 +106,7 @@ export default function LoginForm() {
         //toast.success("Email sent! Check your inbox.");
       }
     } catch (error) {
+      console.log(error);
       //setLoading(false);
       //toast.error("An error occurred. Please try again.");
     };
