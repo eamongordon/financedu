@@ -1,46 +1,33 @@
-import NextAuth, { NextAuthResult } from "next-auth";
+import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
-//import Nodemailer from "next-auth/providers/nodemailer";
 import authConfig from "./config";
-import { validateUser } from "@/lib/actions";
-import GitHub from "next-auth/providers/github"
+import { compare } from "bcrypt";
+import { db, users } from "../schema";
+import { eq } from "drizzle-orm";
 
-const nextauth = NextAuth({
-    ...authConfig,
-    providers: [
-        CredentialsProvider({
-            credentials: {
-                email: { label: "Email", type: "email" },
-                password: { label: "Password", type: "password" }
-            },
-            async authorize(credentials) {
-                const { email, password } = credentials ?? {}
-                if (!email || !password) {
-                    throw new Error("Missing email or password");
-                }
-                const user = await validateUser(email as string, password as string);
-                if (!user) {
-                    throw new Error("Invalid email or password");
-                }
-                return user;
-            },
-        }),
-        GitHub
-        /*
-        Nodemailer({
-            server: {
-                host: process.env.EMAIL_SERVER_HOST,
-                port: parseInt(process.env.EMAIL_SERVER_PORT as string),
-                auth: {
-                    user: process.env.EMAIL_SERVER_USER,
-                    pass: process.env.EMAIL_SERVER_PASSWORD
-                }
-            },
-            from: process.env.EMAIL_FROM
-        })
-            */
-    ]
+export const { auth, handlers, signIn, signOut } = NextAuth({
+  ...authConfig,
+  providers: [
+    ...authConfig.providers,
+    CredentialsProvider({
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials) {
+        const { email, password } = credentials ?? {}
+        if (!email || !password) {
+          throw new Error("Missing email or password");
+        }
+        const user = await db.query.users.findFirst({
+            where: eq(users.email, email as string),
+          });
+        // if user doesn't exist or password doesn't match
+        if (!user || !user.password || !(await compare(password as string, user.password))) {
+          throw new Error("Invalid email or password")
+        }
+        return user;
+      },
+    })
+  ]
 });
-
-export const auth: NextAuthResult["auth"] = nextauth.auth;
-export const handlers: NextAuthResult["handlers"] = nextauth.handlers;
