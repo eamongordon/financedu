@@ -1,61 +1,253 @@
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+"use client";
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"form">) {
-  return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
-      <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-bold">Login to your account</h1>
-        <p className="text-balance text-sm text-muted-foreground">
-          Enter your email below to login to your account
-        </p>
-      </div>
-      <div className="grid gap-6">
-        <div className="grid gap-2">
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="m@example.com" required />
-        </div>
-        <div className="grid gap-2">
-          <div className="flex items-center">
-            <Label htmlFor="password">Password</Label>
-            <a
-              href="#"
-              className="ml-auto text-sm underline-offset-4 hover:underline"
-            >
-              Forgot your password?
-            </a>
-          </div>
-          <Input id="password" type="password" required />
-        </div>
-        <Button type="submit" className="w-full">
-          Login
-        </Button>
-        <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-          <span className="relative z-10 bg-background px-2 text-muted-foreground">
-            Or continue with
-          </span>
-        </div>
-        <Button variant="outline" className="w-full">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path
-              d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
-              fill="currentColor"
-            />
-          </svg>
-          Login with GitHub
-        </Button>
-      </div>
-      <div className="text-center text-sm">
-        Don&apos;t have an account?{" "}
-        <a href="#" className="underline underline-offset-4">
-          Sign up
-        </a>
-      </div>
+import Image from "next/image";
+import Link from 'next/link';
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { type Key, Suspense, useState } from "react";
+import { SessionProvider, signIn } from "next-auth/react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import SocialLoginButton from "./social-login-button";
+import { createUser } from "@/lib/actions";
+//import { toast } from "sonner";
+
+const Logo = () => (
+  <Image
+    alt="Platforms Starter Kit"
+    width={100}
+    height={100}
+    className="relative mx-auto h-12 w-auto dark:scale-120 dark:rounded-full dark:border dark:border-stone-400 my-5"
+    src="/cookielogo.svg"
+  />
+);
+
+const FormHeader = ({ title }: { title: string }) => (
+  <h1 className="mt-6 text-center font-medium text-3xl dark:text-white">
+    {title}
+  </h1>
+);
+
+const FormWrapper = ({ children, onSubmit }: { children: React.ReactNode, onSubmit: (e: React.FormEvent<HTMLFormElement>) => void }) => (
+  <SessionProvider>
+    <form onSubmit={onSubmit} className="flex flex-col space-y-4 px-4 mt-8 sm:px-16">
+      {children}
     </form>
-  )
+  </SessionProvider>
+);
+
+export default function LoginForm() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUri = searchParams.get('redirect');
+  const [selected, setSelected] = useState<Key>(pathname);
+  const [forgotPassword, setForgotPassword] = useState(false);
+  const [sentForgotPasswordEmail, setSentForgotPasswordEmail] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleForgotPasswordToggle = (back: boolean) => {
+    setForgotPassword(!back);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    try {
+      e.preventDefault();
+      setLoading(true);
+      const formType = selected === "/login" ? "login" : "register";
+      if (formType === "login") {
+        console.log("submitted login")
+        console.log("current email", e.currentTarget.email.value)
+        console.log("current password", e.currentTarget.password.value)
+        const res = await signIn("credentials", {
+          email: e.currentTarget.email.value,
+          password: e.currentTarget.password.value,
+          redirect: false
+        });
+
+        if (res?.error) {
+          setLoading(false);
+          router.push("/error")
+          //toast.error("Invalid email or password.");
+        } else {
+          //router.push(redirectUri ? decodeURIComponent(redirectUri) : "/");
+          //router.refresh();
+        }
+      } else if (formType === "register") {
+        await createUser(
+          e.currentTarget.email.value,
+          e.currentTarget.password.value,
+          e.currentTarget.nametxt.value || undefined
+        );
+
+        const signInRes = await signIn("credentials", {
+          redirect: false,
+          email: data.email,
+          password: data.password,
+        });
+
+        if (signInRes?.error) {
+          setLoading(false);
+        } else {
+          router.refresh();
+          if (redirectUri) {
+            router.push(decodeURIComponent(redirectUri));
+          } else {
+            router.push("/");
+          }
+        }
+      } else {
+        await signIn('nodemailer', { redirect: false, email: e.currentTarget.email.value, callbackUrl: '/settings/#new-password' });
+        setLoading(false);
+        setSentForgotPasswordEmail(true)
+        //toast.success("Email sent! Check your inbox.");
+      }
+    } catch (error) {
+      setLoading(false);
+      //toast.error("An error occurred. Please try again.");
+    };
+  };
+
+  return (
+    <div>
+      <div className="max-w-[348px] border border-stone-200 dark:border-stone-700 sm:max-w-md sm:mx-auto w-full rounded-xl">
+        <div aria-label="Shift between Login and Signup forms">
+          {selected === "/login" && (
+            <div key="/login" title="Log In">
+              <Logo />
+              {forgotPassword ? (
+                <>
+                  <FormHeader title="Reset Password" />
+                  <p className="text-center text-sm pt-4 px-16">
+                    Send a login link to your account&apos;s email.
+                  </p>
+                  <FormWrapper onSubmit={handleSubmit}>
+                    <Input
+                      id="email"
+                      name="email"
+                      placeholder="Email"
+                      type="email"
+                      autoComplete="email"
+                      onChange={(e) => setData({ ...data, email: e.target.value })}
+                      className="w-full"
+                      required
+                    />
+                    <Button /*isLoading={loading}*/ type="submit">
+                      <p>{sentForgotPasswordEmail ? "Resend Email" : "Send Email"}</p>
+                    </Button>
+                  </FormWrapper>
+                  <p className="text-center text-sm pt-8 pb-8 px-16">
+                    <button className="hover:opacity-80 transition-opacity tap-highlight-transparent font-semibold text-sm" onClick={() => handleForgotPasswordToggle(true)}>
+                      Back to Login
+                    </button>
+                  </p>
+                </>
+              ) : (
+                <>
+                  <FormHeader title="Welcome Back" />
+                  <FormWrapper onSubmit={handleSubmit}>
+                    <Input
+                      id="email"
+                      name="email"
+                      placeholder="Email"
+                      type="email"
+                      autoComplete="email"
+                      onChange={(e) => setData({ ...data, email: e.target.value })}
+                      className="w-full"
+                      required
+                    />
+                    <Input
+                      id="password"
+                      name="password"
+                      placeholder="Password"
+                      type="password"
+                      onChange={(e) => setData({ ...data, password: e.target.value })}
+                      required
+                      className="w-full"
+                    />
+                    <button type="button" className="hover:opacity-80 transition-opacity tap-highlight-transparent relative inline-flex items-center font-semibold text-sm" onClick={() => handleForgotPasswordToggle(false)}>
+                      Forgot Password?
+                    </button>
+                    <Button /*isLoading={loading}*/ type="submit">
+                      <p>Sign In</p>
+                    </Button>
+                  </FormWrapper>
+                  <p className="text-center text-sm pt-8 pb-8 px-16">
+                    Don&apos;t have an account?{" "}
+                    <Link href="/signup">
+                      <button className="hover:opacity-80 transition-opacity tap-highlight-transparent font-semibold text-sm" onClick={() => setSelected("/signup")}>
+                        Sign Up
+                      </button>
+                    </Link>
+                    {" "}for free.
+                  </p>
+                  <hr className="px-2 bg-stone-300" />
+                  <div className="flex flex-col space-y-4 px-4 mt-8 mb-8 sm:px-16">
+                    <Suspense fallback={<div className="my-2 h-10 w-full rounded-md border border-stone-200 bg-stone-100 dark:border-stone-700 dark:bg-stone-800" />}>
+                      <SocialLoginButton />
+                    </Suspense>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+          {selected === "/signup" && (
+            <div key="/signup" title="Sign Up">
+              <Logo />
+              <FormHeader title="Get Started" />
+              <FormWrapper onSubmit={handleSubmit}>
+                <Input
+                  id="nametxt"
+                  placeholder="Name (Optional)"
+                  name="nametxt"
+                  type="text"
+                  className="w-full"
+                />
+                <Input
+                  id="email"
+                  name="email"
+                  placeholder="Email"
+                  type="email"
+                  autoComplete="email"
+                  onChange={(e) => setData({ ...data, email: e.target.value })}
+                  className="w-full"
+                  required
+                />
+                <Input
+                  id="password"
+                  name="password"
+                  placeholder="Password"
+                  type="password"
+                  onChange={(e) => setData({ ...data, password: e.target.value })}
+                  required
+                  className="w-full"
+                />
+                <Button /*isLoading={loading}*/ type="submit">
+                  <p>Sign Up</p>
+                </Button>
+              </FormWrapper>
+              <p className="text-center text-sm pt-8 pb-8 px-16">
+                Already have an account?{" "}
+                <Link href="/login">
+                  <button className="hover:opacity-80 transition-opacity tap-highlight-transparent font-semibold text-sm" onClick={() => setSelected("/login")}>
+                    Log In
+                  </button>
+                </Link>
+                {" "}instead.
+              </p>
+              <hr className="px-2 bg-stone-300" />
+              <div className="flex flex-col space-y-4 px-4 mt-8 mb-8 sm:px-16">
+                <Suspense fallback={<div className="my-2 h-10 w-full rounded-md border border-stone-200 bg-stone-100 dark:border-stone-700 dark:bg-stone-800" />}>
+                  <SocialLoginButton signup />
+                </Suspense>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
