@@ -1,7 +1,7 @@
 import { NextAuthConfig } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-//@ts-ignore
+//@ts-expect-error
 import { JWT } from "next-auth/jwt";
 import { db, users } from "../schema";
 import { eq } from "drizzle-orm";
