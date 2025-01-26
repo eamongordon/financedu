@@ -14,11 +14,11 @@ export default function SocialLoginButton({
 
   // Get error message added by next/auth in URL.
   const searchParams = useSearchParams();
-  const redirectUri = searchParams.get('redirect');
+  //const redirectUri = searchParams.get('redirect');
   const error = searchParams?.get("error");
 
   useEffect(() => {
-    const errorMessage = Array.isArray(error) ? error.pop() : error;
+    //const errorMessage = Array.isArray(error) ? error.pop() : error;
     //errorMessage && toast.error(errorMessage);
   }, [error]);
 
