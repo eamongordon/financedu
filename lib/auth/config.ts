@@ -1,7 +1,7 @@
 import { NextAuthConfig } from "next-auth";
-import { DrizzleAdapter } from "@auth/drizzle-adapter"
+//import { DrizzleAdapter } from "@auth/drizzle-adapter"
 //import { JWT } from "next-auth/jwt";
-import { db } from "../schema";
+//import { db } from "../schema";
 
 export default {
     //adapter: DrizzleAdapter(db),
@@ -13,7 +13,7 @@ export default {
     },
     session: { strategy: "jwt" },
     callbacks: {
-        jwt: async ({ token, user, trigger, session }) => {
+        jwt: async ({ token, trigger, session }) => {
             if (trigger === "update") {
                 const sessionKeyList = Object.keys(session);
                 sessionKeyList.forEach(async (key) => {
