@@ -23,7 +23,7 @@ export default function HeaderComp({
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b">
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 relative flex items-center justify-between h-16">
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 relative flex items-center justify-between h-16 bg-background">
         {/* Logo */}
         <div className="flex-shrink-0 flex flex-row space-x-2">
           <Image height={50} width={200} src="/financedu-logo.svg" alt="Logo" />
@@ -39,8 +39,8 @@ export default function HeaderComp({
                 <UserMenu name="Eamon G" email="ekeokigordon@icloud.com" />
               ) : (
                 <>
-                  <Link href="/login" className={cn(buttonVariants({ variant: "secondary" }), "rounded-full w-28")}>Log In</Link>
-                  <Link href="/signup" className={cn(buttonVariants({ variant: "default" }), "rounded-full w-28")}>Sign Up</Link>
+                  <Link href="/login" className={cn(buttonVariants({ variant: "outline" }), "w-28")}>Log In</Link>
+                  <Link href="/signup" className={cn(buttonVariants({ variant: "default" }), "w-28")}>Get Started</Link>
                 </>
               )}
             </div>
