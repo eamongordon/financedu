@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import UserMenu from './user-menu';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 export default function HeaderComp({
   userData
@@ -25,8 +26,7 @@ export default function HeaderComp({
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 relative flex items-center justify-between h-16">
         {/* Logo */}
         <div className="flex-shrink-0 flex flex-row space-x-2">
-          <img className="h-8 w-8" src="/cookielogo.svg" alt="Logo" />
-          <p className="font-semibold text-xl">Cookieless</p>
+          <Image height={50} width={200} src="/financedu-logo.svg" alt="Logo" />
         </div>
         {/* Menu items and button */}
         <div className="flex-1 flex items-center justify-end">
