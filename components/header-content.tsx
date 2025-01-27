@@ -22,7 +22,7 @@ export default function HeaderComp({
   console.log("userData", userData);
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b-2">
+    <nav className="sticky top-0 z-50 w-full border-b">
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 relative flex items-center justify-between h-16">
         {/* Logo */}
         <div className="flex-shrink-0 flex flex-row space-x-2">
