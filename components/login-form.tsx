@@ -13,11 +13,11 @@ import { createUser } from "@/lib/actions";
 
 const Logo = () => (
   <Image
-    alt="Platforms Starter Kit"
+    alt="Financedu Logo"
     width={100}
     height={100}
     className="relative mx-auto h-12 w-auto dark:scale-120 dark:rounded-full dark:border dark:border-stone-400 my-5"
-    src="/cookielogo.svg"
+    src="/financedu-icon.svg"
   />
 );
 
@@ -29,7 +29,7 @@ const FormHeader = ({ title }: { title: string }) => (
 
 const FormWrapper = ({ children, onSubmit }: { children: React.ReactNode, onSubmit: (e: React.FormEvent<HTMLFormElement>) => void }) => (
   <SessionProvider>
-    <form onSubmit={onSubmit} className="flex flex-col space-y-4 px-4 mt-8 sm:px-16">
+    <form onSubmit={onSubmit} className="flex flex-col space-y-4 mt-8">
       {children}
     </form>
   </SessionProvider>
@@ -114,7 +114,7 @@ export default function LoginForm() {
 
   return (
     <div>
-      <div className="max-w-[348px] border border-stone-200 dark:border-stone-700 sm:max-w-md sm:mx-auto w-full rounded-xl">
+      <div className="sm:mx-auto w-full rounded-xl">
         <div aria-label="Shift between Login and Signup forms">
           {selected === "/login" && (
             <div key="/login" title="Log In">
@@ -186,7 +186,7 @@ export default function LoginForm() {
                     {" "}for free.
                   </p>
                   <hr className="px-2 bg-stone-300" />
-                  <div className="flex flex-col space-y-4 px-4 mt-8 mb-8 sm:px-16">
+                  <div className="flex flex-col mt-8 mb-8">
                     <Suspense fallback={<div className="my-2 h-10 w-full rounded-md border border-stone-200 bg-stone-100 dark:border-stone-700 dark:bg-stone-800" />}>
                       <SocialLoginButton />
                     </Suspense>
@@ -240,7 +240,7 @@ export default function LoginForm() {
                 {" "}instead.
               </p>
               <hr className="px-2 bg-stone-300" />
-              <div className="flex flex-col space-y-4 px-4 mt-8 mb-8 sm:px-16">
+              <div className="flex flex-col space-y-4 mt-8 mb-8">
                 <Suspense fallback={<div className="my-2 h-10 w-full rounded-md border border-stone-200 bg-stone-100 dark:border-stone-700 dark:bg-stone-800" />}>
                   <SocialLoginButton signup />
                 </Suspense>
