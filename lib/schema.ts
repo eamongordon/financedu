@@ -6,6 +6,7 @@ import {
   primaryKey,
   integer,
 } from "drizzle-orm/pg-core"
+import { sql } from 'drizzle-orm'
 import postgres from "postgres"
 import { drizzle } from "drizzle-orm/postgres-js"
 import type { AdapterAccountType } from "next-auth/adapters"
@@ -21,6 +22,10 @@ export const users = pgTable("user", {
   password: text("password"),
   createdDate: timestamp("createdDate", { mode: "date", withTimezone: true }).defaultNow(),
   updatedDate: timestamp("updatedDate", { mode: "date", withTimezone: true }).defaultNow().$onUpdateFn(() => new Date()),
+  roles: text('roles', { enum: ["learner", "teacher", "parent"] })
+    .array()
+    .notNull()
+    .default(sql`'{"learner"}'::text[]`),
 })
 
 export const accounts = pgTable(
