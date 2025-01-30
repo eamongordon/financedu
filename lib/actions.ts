@@ -4,9 +4,9 @@ import { eq } from "drizzle-orm";
 import { db, users } from "./schema";
 import { hash, compare } from "bcrypt";
 
-export async function createUser(email: string, password: string, name?: string) {
+export async function createUser({ email, password, firstName, lastName }: { email: string, password: string, firstName?: string, lastName?: string }) {
     const passwordHash = await hash(password, 10);
-    return await db.insert(users).values({ email, password: passwordHash, name: name });
+    return await db.insert(users).values({ email, password: passwordHash, firstName, lastName });
 }
 
 export async function validateUser(email: string, password: string) {

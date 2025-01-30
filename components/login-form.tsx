@@ -47,6 +47,8 @@ export default function LoginForm() {
   const [data, setData] = useState({
     email: "",
     password: "",
+    firstName: "",
+    lastName: "",
   });
 
   const handleForgotPasswordToggle = (back: boolean) => {
@@ -77,11 +79,12 @@ export default function LoginForm() {
           //router.refresh();
         }
       } else if (formType === "register") {
-        await createUser(
-          e.currentTarget.email.value,
-          e.currentTarget.password.value,
-          e.currentTarget.nametxt.value || undefined
-        );
+        await createUser({
+          email: e.currentTarget.email.value,
+          password: e.currentTarget.password.value,
+          firstName: e.currentTarget.firstName.value || undefined,
+          lastName: e.currentTarget.lastName.value || undefined
+        });
 
         const signInRes = await signIn("credentials", {
           redirect: false,
@@ -200,13 +203,22 @@ export default function LoginForm() {
               <Logo />
               <FormHeader title="Get Started" />
               <FormWrapper onSubmit={handleSubmit}>
-                <Input
-                  id="nametxt"
-                  placeholder="Name (Optional)"
-                  name="nametxt"
-                  type="text"
-                  className="w-full"
-                />
+                <div className="flex space-x-4">
+                  <Input
+                    id="firstName"
+                    placeholder="First Name"
+                    name="firstName"
+                    type="text"
+                    className="w-full"
+                  />
+                  <Input
+                    id="lastName"
+                    placeholder="Last Name"
+                    name="lastName"
+                    type="text"
+                    className="w-full"
+                  />
+                </div>
                 <Input
                   id="email"
                   name="email"
