@@ -11,6 +11,9 @@ import postgres from "postgres"
 import { drizzle } from "drizzle-orm/postgres-js"
 import type { AdapterAccountType } from "next-auth/adapters"
 
+export type Role = "learner" | "teacher" | "parent";
+export type Roles = Role[] & { 0: "learner" };
+
 export const users = pgTable("user", {
   id: text("id")
     .primaryKey()
@@ -26,7 +29,8 @@ export const users = pgTable("user", {
   roles: text('roles', { enum: ["learner", "teacher", "parent"] })
     .array()
     .notNull()
-    .default(sql`'{"learner"}'::text[]`),
+    .default(sql`'{"learner"}'::text[]`)
+    .$type<Roles>(),
 })
 
 export const accounts = pgTable(

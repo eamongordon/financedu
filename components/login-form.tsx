@@ -9,6 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import SocialLoginButton from "./social-login-button";
 import { createUser } from "@/lib/actions";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { Label } from "./ui/label";
+import { GraduationCap, Apple } from "lucide-react";
+import { Role } from "@/lib/schema";
 //import { toast } from "sonner";
 
 const Logo = () => (
@@ -83,7 +87,8 @@ export default function LoginForm() {
           email: e.currentTarget.email.value,
           password: e.currentTarget.password.value,
           firstName: e.currentTarget.firstName.value || undefined,
-          lastName: e.currentTarget.lastName.value || undefined
+          lastName: e.currentTarget.lastName.value || undefined,
+          roles: e.currentTarget.role !== "learner" ? ["learner", e.currentTarget.role as Role] : ["learner"]
         });
 
         const signInRes = await signIn("credentials", {
@@ -203,6 +208,58 @@ export default function LoginForm() {
               <Logo />
               <FormHeader title="Get Started" />
               <FormWrapper onSubmit={handleSubmit}>
+                <RadioGroup id="role" defaultValue="learner" className="grid grid-cols-3 gap-4">
+                  <div>
+                    <RadioGroupItem value="learner" id="learner" className="peer sr-only" />
+                    <Label
+                      htmlFor="learner"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                    >
+                      <GraduationCap size={24} className="mb-3" />
+                      Learner
+                    </Label>
+                  </div>
+                  <div>
+                    <RadioGroupItem value="parent" id="parent" className="peer sr-only" />
+                    <Label
+                      htmlFor="parent"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="mb-3"
+                      >
+                        <path d="M10.102 17.102A4 4 0 0 0 7.291 19.5" />
+                        <path d="M13.898 17.102A4 4 0 0 1 16.71 19.5" />
+                        <path d="M14.5 9.289A4 4 0 0 0 12 13a4 4 0 0 0-2.5-3.706" />
+                        <path d="M19.5 9.297a4 4 0 0 1 2.452 4.318" />
+                        <path d="M4.5 9.288a4 4 0 0 0-2.452 4.327" />
+                        <circle cx="12" cy="15.5" r="2.5" />
+                        <circle cx="17" cy="7" r="3" />
+                        <circle cx="7" cy="7" r="3" />
+                      </svg>
+                      Parent
+                    </Label>
+                  </div>
+                  <div>
+                    <RadioGroupItem value="teacher" id="teacher" className="peer sr-only" />
+                    <Label
+                      htmlFor="teacher"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                    >
+                      <Apple size={24} className="mb-3" />
+                      Teacher
+                    </Label>
+                  </div>
+                </RadioGroup>
                 <div className="flex space-x-4">
                   <Input
                     id="firstName"

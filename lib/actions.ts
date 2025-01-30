@@ -3,10 +3,11 @@
 import { eq } from "drizzle-orm";
 import { db, users } from "./schema";
 import { hash, compare } from "bcrypt";
+import { type Roles } from "./schema";
 
-export async function createUser({ email, password, firstName, lastName }: { email: string, password: string, firstName?: string, lastName?: string }) {
+export async function createUser({ email, password, firstName, lastName, roles }: { email: string, password: string, firstName?: string, lastName?: string, roles: Roles }) {
     const passwordHash = await hash(password, 10);
-    return await db.insert(users).values({ email, password: passwordHash, firstName, lastName });
+    return await db.insert(users).values({ email, password: passwordHash, firstName, lastName, roles });
 }
 
 export async function validateUser(email: string, password: string) {
