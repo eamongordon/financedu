@@ -11,7 +11,7 @@ export default function AuthLayout({
             <div className="relative hidden bg-muted lg:block">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#00B5EA] to-[#02CF46]"></div>
                 <Image
-                    src="/financedu-homepage_banner.jpeg"
+                    src="/homepage-banner.jpg"
                     alt="Image"
                     fill
                     className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale opacity-20"
