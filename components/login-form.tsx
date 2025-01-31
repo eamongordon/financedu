@@ -13,7 +13,7 @@ import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
 import { GraduationCap, Apple } from "lucide-react";
 import { Role } from "@/lib/schema";
-//import { toast } from "sonner";
+import { toast } from "sonner";
 
 const Logo = () => (
   <Image
@@ -47,7 +47,7 @@ export default function LoginForm() {
   const [selected, setSelected] = useState<Key>(pathname);
   const [forgotPassword, setForgotPassword] = useState(false);
   const [sentForgotPasswordEmail, setSentForgotPasswordEmail] = useState(false);
-  //const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -62,7 +62,7 @@ export default function LoginForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
-      //setLoading(true);
+      setLoading(true);
       const formType = selected === "/login" ? "login" : "register";
       if (formType === "login") {
         console.log("submitted login")
@@ -75,12 +75,12 @@ export default function LoginForm() {
         });
 
         if (res?.error) {
-          //setLoading(false);
+          setLoading(false);
           router.push("/error")
-          //toast.error("Invalid email or password.");
+          toast.error("Invalid email or password.");
         } else {
-          //router.push(redirectUri ? decodeURIComponent(redirectUri) : "/");
-          //router.refresh();
+          router.push(redirectUri ? decodeURIComponent(redirectUri) : "/");
+          router.refresh();
         }
       } else if (formType === "register") {
         await createUser({
@@ -98,7 +98,7 @@ export default function LoginForm() {
         });
 
         if (signInRes?.error) {
-          //setLoading(false);
+          setLoading(false);
         } else {
           router.refresh();
           if (redirectUri) {
@@ -109,14 +109,14 @@ export default function LoginForm() {
         }
       } else {
         await signIn('nodemailer', { redirect: false, email: e.currentTarget.email.value, callbackUrl: '/settings/#new-password' });
-        //setLoading(false);
+        setLoading(false);
         setSentForgotPasswordEmail(true)
-        //toast.success("Email sent! Check your inbox.");
+        toast.success("Email sent! Check your inbox.");
       }
     } catch (error) {
       console.log(error);
-      //setLoading(false);
-      //toast.error("An error occurred. Please try again.");
+      setLoading(false);
+      toast.error("An error occurred. Please try again.");
     };
   };
 
@@ -144,7 +144,7 @@ export default function LoginForm() {
                       className="w-full"
                       required
                     />
-                    <Button /*isLoading={loading}*/ type="submit">
+                    <Button isLoading={loading} type="submit">
                       <p>{sentForgotPasswordEmail ? "Resend Email" : "Send Email"}</p>
                     </Button>
                   </FormWrapper>
@@ -295,7 +295,7 @@ export default function LoginForm() {
                   required
                   className="w-full"
                 />
-                <Button /*isLoading={loading}*/ type="submit">
+                <Button isLoading={loading} type="submit">
                   <p>Sign Up</p>
                 </Button>
               </FormWrapper>
