@@ -26,7 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-const ResetEmailFormSchema = z.object({
+const ResetPasswordFormSchema = z.object({
   email: z.string().email()
 });
 
@@ -61,7 +61,7 @@ const FormHeader = ({ title, description }: { title: string, description?: strin
   </>
 );
 
-export default function LoginForm() {
+export default function AuthForm() {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -71,8 +71,8 @@ export default function LoginForm() {
   const [sentForgotPasswordEmail, setSentForgotPasswordEmail] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const resetEmailForm = useForm<z.infer<typeof ResetEmailFormSchema>>({
-    resolver: zodResolver(ResetEmailFormSchema),
+  const resetPasswordForm = useForm<z.infer<typeof ResetPasswordFormSchema>>({
+    resolver: zodResolver(ResetPasswordFormSchema),
     defaultValues: {
       email: "",
     },
@@ -101,7 +101,7 @@ export default function LoginForm() {
     setForgotPassword(!back);
   };
 
-  async function onResetEmailFormSubmit(data: z.infer<typeof ResetEmailFormSchema>) {
+  async function onResetPasswordFormSubmit(data: z.infer<typeof ResetPasswordFormSchema>) {
     try {
       setLoading(true);
       await signIn('nodemailer', { redirect: false, email: data.email, callbackUrl: '/settings/#new-password' });
@@ -182,10 +182,10 @@ export default function LoginForm() {
                 <>
                   <FormHeader title="Reset Password" description="Send a login link to your account's email." />
                   <SessionProvider>
-                    <Form {...resetEmailForm}>
-                      <form onSubmit={resetEmailForm.handleSubmit(onResetEmailFormSubmit)} className="flex flex-col space-y-4 mt-8">
+                    <Form {...resetPasswordForm}>
+                      <form onSubmit={resetPasswordForm.handleSubmit(onResetPasswordFormSubmit)} className="flex flex-col space-y-4 mt-8">
                         <FormField
-                          control={resetEmailForm.control}
+                          control={resetPasswordForm.control}
                           name="email"
                           render={({ field }) => (
                             <FormItem>
