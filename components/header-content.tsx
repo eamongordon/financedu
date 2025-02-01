@@ -7,6 +7,7 @@ import { Menu, X } from 'lucide-react';
 import UserMenu from './user-menu';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import { Separator } from './ui/separator';
 
 export default function HeaderComp({
   userData
@@ -31,15 +32,15 @@ export default function HeaderComp({
         {/* Menu items and button */}
         <div className="flex-1 flex items-center justify-end">
           <div className="hidden md:flex space-x-4">
-            <Link href="#home" className=" px-3 py-2 text-sm font-semibold">Home</Link>
-            <Link href="#features" className="text-neutral-700 hover:text-dough-500 px-3 py-2 text-sm font-semibold">Features</Link>
-            <Link href="#contact" className="text-neutral-700 hover:text-dough-500 px-3 py-2 text-sm font-semibold">Contact</Link>
-            <div className='ml-4 space-x-2'>
+            <Link href="#home" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Home</Link>
+            <Link href="#features" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Features</Link>
+            <Link href="#contact" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Contact</Link>
+            <div className='ml-4 self-center'>
               {loggedIn ? (
                 <UserMenu name="Eamon G" email="ekeokigordon@icloud.com" />
               ) : (
                 <>
-                  <Link href="/login" className={cn(buttonVariants({ variant: "outline" }), "w-28")}>Log In</Link>
+                  <Link href="/login" className={cn(buttonVariants({ variant: "secondary" }), "w-28")}>Log In</Link>
                   <Link href="/signup" className={cn(buttonVariants({ variant: "default" }), "w-28")}>Get Started</Link>
                 </>
               )}
@@ -64,13 +65,18 @@ export default function HeaderComp({
         </div>
       </div>
       {/* Mobile menu */}
-      <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden absolute w-full`} id="mobile-menu">
-        <div className="px-2 pt-2 pb-3 space-y-1">
-          <Link href="#home" className="text-neutral-700 hover:text-dough-500 block px-3 py-2 rounded-md text-base font-medium">Home</Link>
-          <Link href="#features" className="text-neutral-700 hover:text-dough-500 block px-3 py-2 rounded-md text-base font-medium">Features</Link>
-          <Link href="#contact" className="text-neutral-700 hover:text-dough-500 block px-3 py-2 rounded-md text-base font-medium">Contact</Link>
-          <Link href="/login" className={cn(buttonVariants({ variant: "secondary" }), "rounded-full w-28")}>Log In</Link>
-          <Link href="/signup" className={cn(buttonVariants({ variant: "secondary" }), "rounded-full w-28")}>Sign Up</Link>
+      <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden absolute h-screen w-full backdrop-blur-xl bg-background/80`} id="mobile-menu">
+        <div className="p-6 space-y-6">
+          <div className='flex flex-col gap-4'>
+            <Link href="#home" className="text-foreground hover:text-primary block text-base font-semibold">Home</Link>
+            <Link href="#features" className="text-foreground hover:text-primary block text-base font-semibold">Features</Link>
+            <Link href="#contact" className="text-foreground hover:text-primary block text-base font-semibold">Contact</Link>
+          </div>
+          <Separator />
+          <div className='flex flex-col gap-2'>
+            <Link href="/signup" className={cn(buttonVariants({ variant: "default" }), "w-full")}>Sign Up</Link>
+            <Link href="/login" className={cn(buttonVariants({ variant: "secondary" }), "w-full")}>Log In</Link>
+          </div>
         </div>
       </div>
     </nav>
