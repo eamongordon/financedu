@@ -257,7 +257,7 @@ export default function AuthForm() {
                     {" "}for free.
                   </p>
                   <hr className="px-2 bg-stone-300" />
-                  <div className="flex flex-col mt-8 mb-8">
+                  <div className="mt-8 mb-8">
                     <Suspense fallback={<div className="my-2 h-10 w-full rounded-md border border-stone-200 bg-stone-100 dark:border-stone-700 dark:bg-stone-800" />}>
                       <SocialLoginButton />
                     </Suspense>
@@ -407,7 +407,7 @@ export default function AuthForm() {
                 {" "}instead.
               </p>
               <hr className="px-2 bg-stone-300" />
-              <div className="flex flex-col mt-8 mb-8">
+              <div className="mt-8 mb-8">
                 <Suspense fallback={<div className="my-2 h-10 w-full rounded-md border border-stone-200 bg-stone-100 dark:border-stone-700 dark:bg-stone-800" />}>
                   <SocialLoginButton signup />
                 </Suspense>
