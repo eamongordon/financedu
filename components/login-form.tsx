@@ -45,20 +45,20 @@ const SignupFormSchema = z.object({
   role: z.enum(["learner", "parent", "teacher"])
 });
 
-const Logo = () => (
-  <Image
-    alt="Financedu Logo"
-    width={75}
-    height={75}
-    className="relative mx-auto h-12 w-auto my-5"
-    src="/financedu-icon.svg"
-  />
-);
-
-const FormHeader = ({ title }: { title: string }) => (
-  <h1 className="mt-6 text-center font-medium text-3xl dark:text-white">
-    {title}
-  </h1>
+const FormHeader = ({ title, description }: { title: string, description?: string }) => (
+  <>
+    <Image
+      alt="Financedu Logo"
+      width={75}
+      height={75}
+      className="relative mx-auto h-12 w-auto my-5"
+      src="/financedu-icon.svg"
+    />
+    <h1 className="mt-6 text-center font-medium text-3xl dark:text-white">
+      {title}
+    </h1>
+    {description && <p className="text-md text-muted-foreground pt-4 text-center">{description}</p>}
+  </>
 );
 
 export default function LoginForm() {
@@ -178,13 +178,9 @@ export default function LoginForm() {
         <div aria-label="Shift between Login and Signup forms">
           {selected === "/login" && (
             <div key="/login" title="Log In">
-              <Logo />
               {forgotPassword ? (
                 <>
-                  <FormHeader title="Reset Password" />
-                  <p className="text-center text-sm pt-4 px-16">
-                    Send a login link to your account&apos;s email.
-                  </p>
+                  <FormHeader title="Reset Password" description="Send a login link to your account's email." />
                   <SessionProvider>
                     <Form {...resetEmailForm}>
                       <form onSubmit={resetEmailForm.handleSubmit(onResetEmailFormSubmit)} className="flex flex-col space-y-4 mt-8">
@@ -272,8 +268,7 @@ export default function LoginForm() {
           )}
           {selected === "/signup" && (
             <div key="/signup" title="Sign Up">
-              <Logo />
-              <FormHeader title="Get Started" />
+              <FormHeader title="Get Started" description="Access all we have to offer for free!" />
               <SessionProvider>
                 <Form {...signupForm}>
                   <form onSubmit={signupForm.handleSubmit(onSignupFormSubmit)} className="flex flex-col space-y-4 mt-8">
@@ -286,7 +281,7 @@ export default function LoginForm() {
                             onValueChange={field.onChange}
                             defaultValue={field.value}
                             className="grid grid-cols-3 gap-4">
-                            <FormItem>
+                            <FormItem className="space-y-0">
                               <FormControl>
                                 <RadioGroupItem value="learner" id="learner" className="peer sr-only" />
                               </FormControl>
@@ -298,7 +293,7 @@ export default function LoginForm() {
                                 Learner
                               </Label>
                             </FormItem>
-                            <FormItem>
+                            <FormItem className="space-y-0">
                               <FormControl>
                                 <RadioGroupItem value="parent" id="parent" className="peer sr-only" />
                               </FormControl>
@@ -330,7 +325,7 @@ export default function LoginForm() {
                                 Parent
                               </Label>
                             </FormItem>
-                            <FormItem>
+                            <FormItem className="space-y-0">
                               <FormControl>
                                 <RadioGroupItem value="teacher" id="teacher" className="peer sr-only" />
                               </FormControl>
@@ -412,7 +407,7 @@ export default function LoginForm() {
                 {" "}instead.
               </p>
               <hr className="px-2 bg-stone-300" />
-              <div className="flex flex-col space-y-4 mt-8 mb-8">
+              <div className="flex flex-col mt-8 mb-8">
                 <Suspense fallback={<div className="my-2 h-10 w-full rounded-md border border-stone-200 bg-stone-100 dark:border-stone-700 dark:bg-stone-800" />}>
                   <SocialLoginButton signup />
                 </Suspense>
