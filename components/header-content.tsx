@@ -54,13 +54,14 @@ export default function HeaderComp({
             variant="ghost"
             aria-controls="mobile-menu"
             aria-expanded={isMenuOpen}
+            className='[&_svg]:size-auto'
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <span className="sr-only">Open main menu</span>
             {/* Icon when menu is closed. */}
-            <Menu className={`${isMenuOpen ? 'hidden' : 'block'} h-6 w-6`} />
+            <Menu size={24} className={isMenuOpen ? 'hidden' : 'block'} />
             {/* Icon when menu is open. */}
-            <X className={`${isMenuOpen ? 'block' : 'hidden'} h-6 w-6`} />
+            <X size={24} className={isMenuOpen ? 'block' : 'hidden'} />
           </Button>
         </div>
       </div>
