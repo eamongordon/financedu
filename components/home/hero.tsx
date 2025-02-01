@@ -7,12 +7,12 @@ export function Hero() {
     return (
         <div className="grid min-h-dvh md:min-h-[550px] md:grid-cols-2">
             <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#00B5EA] to-[#02CF46]"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-[#00B5EA] to-[#02CF46] dark:brightness-[0.6]"></div>
                 <Image
                     src="/homepage-banner.jpg"
                     alt="Image"
                     fill
-                    className="absolute inset-0 h-full w-full object-cover opacity-20"
+                    className="absolute inset-0 h-full w-full object-cover dark:brightness-75 opacity-20"
                 />
             </div>
             <div className="flex flex-col justify-start items-start md:justify-center md:items-center gap-4 p-6 lg:p-10 bg-muted/60">
