@@ -23,7 +23,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 
@@ -49,8 +48,8 @@ const SignupFormSchema = z.object({
 const Logo = () => (
   <Image
     alt="Financedu Logo"
-    width={100}
-    height={100}
+    width={75}
+    height={75}
     className="relative mx-auto h-12 w-auto my-5"
     src="/financedu-icon.svg"
   />
@@ -194,7 +193,6 @@ export default function LoginForm() {
                           name="email"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Email</FormLabel>
                               <FormControl>
                                 <Input autoComplete="email" placeholder="Email Address" {...field} />
                               </FormControl>
@@ -225,7 +223,6 @@ export default function LoginForm() {
                           name="email"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Email</FormLabel>
                               <FormControl>
                                 <Input className="w-full" type="email" autoComplete="email" placeholder="Email Address" {...field} />
                               </FormControl>
@@ -238,7 +235,6 @@ export default function LoginForm() {
                           name="password"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Password</FormLabel>
                               <FormControl>
                                 <Input className="w-full" type="password" placeholder="Password" {...field} />
                               </FormControl>
@@ -356,7 +352,6 @@ export default function LoginForm() {
                         name="firstName"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>First Name</FormLabel>
                             <FormControl>
                               <Input placeholder="First Name" {...field} />
                             </FormControl>
@@ -369,7 +364,6 @@ export default function LoginForm() {
                         name="lastName"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Last Name</FormLabel>
                             <FormControl>
                               <Input placeholder="Last Name" {...field} />
                             </FormControl>
@@ -383,7 +377,6 @@ export default function LoginForm() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
                           <FormControl>
                             <Input type="email" autoComplete="email" placeholder="Email Address" {...field} />
                           </FormControl>
@@ -396,7 +389,6 @@ export default function LoginForm() {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Password</FormLabel>
                           <FormControl>
                             <Input type="password" placeholder="Password" {...field} />
                           </FormControl>
