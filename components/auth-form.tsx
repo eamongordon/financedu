@@ -7,7 +7,7 @@ import { type Key, Suspense, useState } from "react";
 import { SessionProvider, signIn } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import SocialLoginButton from "./social-login-button";
+import SocialLoginButton from "./social-login-buttons";
 import { createUser } from "@/lib/actions";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
