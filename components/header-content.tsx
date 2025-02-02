@@ -39,10 +39,10 @@ export default function HeaderComp({
               {loggedIn ? (
                 <UserMenu name="Eamon G" email="ekeokigordon@icloud.com" />
               ) : (
-                <>
-                  <Link href="/login" className={cn(buttonVariants({ variant: "secondary" }), "w-28")}>Log In</Link>
-                  <Link href="/signup" className={cn(buttonVariants({ variant: "default" }), "w-28")}>Get Started</Link>
-                </>
+                <div className='flex flex-row gap-2'>
+                  <Link href="/login" className={cn(buttonVariants({ variant: "secondary" }), "w-28 text-base")}>Log In</Link>
+                  <Link href="/signup" className={cn(buttonVariants({ variant: "default" }), "w-28 text-base")}>Get Started</Link>
+                </div>
               )}
             </div>
           </div>

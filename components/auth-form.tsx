@@ -57,7 +57,7 @@ const FormHeader = ({ title, description }: { title: string, description?: strin
     <h1 className="mt-6 text-center font-medium text-3xl dark:text-white">
       {title}
     </h1>
-    {description && <p className="text-md text-muted-foreground pt-4 text-center">{description}</p>}
+    {description && <p className="text-muted-foreground pt-4 text-center">{description}</p>}
   </>
 );
 
