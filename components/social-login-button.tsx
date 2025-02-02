@@ -21,7 +21,9 @@ export default function SocialLoginButton({
 
   useEffect(() => {
     const errorMessage = Array.isArray(error) ? error.pop() : error;
-    errorMessage && toast.error(errorMessage);
+    if (errorMessage) {
+      toast.error(errorMessage);
+    }
   }, [error]);
 
   return (
