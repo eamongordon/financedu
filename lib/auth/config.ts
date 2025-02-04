@@ -10,9 +10,13 @@ import { eq } from "drizzle-orm";
 declare module "next-auth" {
     interface User {
         roles?: string[]
+        firstName?: string,
+        lastName?: string,
     }
     interface Token {
-        roles?: string[]
+        roles?: string[],
+        firstName?: string,
+        lastName?: string,
     }
 }
 
@@ -20,6 +24,8 @@ declare module "next-auth/jwt" {
     /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
     interface JWT {
         roles?: string[]
+        firstName?: string,
+        lastName?: string,
     }
 }
 
@@ -32,8 +38,8 @@ export default {
                 return {
                     id: profile.sub,
                     name: profile.name || profile.email,
-                    first_name: profile.given_name,
-                    last_name: profile.family_name,
+                    firstName: profile.given_name,
+                    lastName: profile.family_name,
                     email: profile.email,
                     image: profile.picture,
                 }
@@ -51,6 +57,8 @@ export default {
         jwt: async ({ token, user, trigger, session }) => {
             if (user) {
                 token.roles = user.roles;
+                token.firstName = user.firstName;
+                token.lastName = user.lastName;
             }
             if (trigger === "update") {
                 const sessionKeyList = Object.keys(session);
@@ -64,6 +72,8 @@ export default {
             session.user = {
                 ...session.user,
                 roles: token?.roles,
+                firstName: token?.firstName,
+                lastName: token?.lastName,
                 ...(token.sub && { id: token.sub }),
             };
             return session;
