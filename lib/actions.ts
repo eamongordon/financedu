@@ -48,15 +48,7 @@ export const editUser = async (
             .where(eq(users.id, userId))
             .returning();
         return response;
-    } catch (error: any) {
-        if (error.code === "P2002") {
-            return {
-                error: `This ${error.meta.target} is already in use`,
-            };
-        } else {
-            return {
-                error: error.message,
-            };
-        }
+    } catch (error) {
+        throw error;
     }
 };
