@@ -10,13 +10,13 @@ import { eq } from "drizzle-orm";
 declare module "next-auth" {
     interface User {
         roles?: string[]
-        firstName?: string,
-        lastName?: string,
+        firstName?: string | null,
+        lastName?: string | null,
     }
     interface Token {
         roles?: string[],
-        firstName?: string,
-        lastName?: string,
+        firstName?: string | null,
+        lastName?: string | null,
     }
 }
 
@@ -24,8 +24,8 @@ declare module "next-auth/jwt" {
     /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
     interface JWT {
         roles?: string[]
-        firstName?: string,
-        lastName?: string,
+        firstName?: string | null,
+        lastName?: string | null,
     }
 }
 
