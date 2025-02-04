@@ -68,8 +68,8 @@ export default {
             };
             return session;
         },
-        signIn: async ({ user, profile }) => {
-            if (!profile) {
+        signIn: async ({ user, email }) => {
+            if (email?.verificationRequest) {
                 const userExists = await db.query.users.findFirst({
                     where: eq(users.email, user.email as string),
                 });
