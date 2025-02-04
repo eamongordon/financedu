@@ -23,7 +23,7 @@ export async function validateUser(email: string, password: string) {
 }
 
 export const editUser = async (
-    updates: { [key: string]: any }
+    updates: { [key: string]: string }
 ) => {
     const session = await auth();
     if (!session || !session.user || !session.user.email) {

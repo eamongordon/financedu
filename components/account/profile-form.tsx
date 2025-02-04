@@ -40,6 +40,7 @@ export function ProfileForm() {
             await editUser(data);
             toast.success("Profile updated!");
         } catch (error) {
+            console.error(error);
             toast.error("Something went wrong.");
         }
     }
