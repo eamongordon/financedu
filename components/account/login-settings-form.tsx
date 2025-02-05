@@ -53,6 +53,7 @@ export function LoginSettingsFormInner({ defaultValues }: LoginFormProps) {
             await editUser(data);
             await update(data);
             router.refresh();
+            form.reset(data);
             toast.success("Login information updated!");
         } catch (error) {
             console.error(error);

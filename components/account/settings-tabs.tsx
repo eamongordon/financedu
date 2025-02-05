@@ -26,7 +26,7 @@ export default function SettingsTabs({ profileDefaultValues, rolesDefaultValues,
 
     return (
         <Tabs value={tab || 'profile'}>
-            <TabsList className="bg-inherit gap-6">
+            <TabsList className="bg-inherit gap-7">
                 <TabsTrigger
                     value="profile"
                     onClick={() => router.push('/settings?tab=profile')}

@@ -52,8 +52,8 @@ export function ProfileFormInner({ defaultValues }: ProfileFormProps) {
             await editUser(data);
             await update(data);
             router.refresh();
-            toast.success("Profile updated!");
             form.reset(data);
+            toast.success("Profile updated!");
         } catch (error) {
             console.error(error);
             toast.error("Something went wrong.");
@@ -89,7 +89,7 @@ export function ProfileFormInner({ defaultValues }: ProfileFormProps) {
                         </FormItem>
                     )}
                 />
-                <Button isLoading={form.formState.isSubmitting} disabled={!form.formState.isDirty} type="submit">Update profile</Button>
+                <Button isLoading={form.formState.isSubmitting} disabled={!form.formState.isDirty} type="submit">Update Profile</Button>
             </form>
         </Form>
     )

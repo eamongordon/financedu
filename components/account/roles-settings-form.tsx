@@ -53,6 +53,7 @@ export function RolesSettingsFormInner({ defaultValues }: RolesFormProps) {
             await editUser({ roles: data.roles });
             await update({ roles: data.roles });
             router.refresh();
+            form.reset(data);
             toast.success("Roles updated!");
         } catch (error) {
             console.error(error);
