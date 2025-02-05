@@ -42,7 +42,7 @@ export function ProfileForm({ defaultValues }: ProfileFormProps) {
 export function ProfileFormInner({ defaultValues }: ProfileFormProps) {
     const router = useRouter();
     const { update } = useSession();
-    
+
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(profileFormSchema),
         defaultValues,
@@ -50,7 +50,6 @@ export function ProfileFormInner({ defaultValues }: ProfileFormProps) {
 
     async function onSubmit(data: ProfileFormValues) {
         try {
-
             await editUser(data);
             await update(data);
             router.refresh();
@@ -103,7 +102,7 @@ export function ProfileFormInner({ defaultValues }: ProfileFormProps) {
                             </FormItem>
                         )}
                     />
-                    <Button type="submit">Update profile</Button>
+                    <Button isLoading={form.formState.isSubmitting} disabled={!form.formState.isDirty} type="submit">Update profile</Button>
                 </form>
             </Form>
     )
