@@ -4,17 +4,17 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { JWT } from "next-auth/jwt"; //import is used in module declaration
 /* eslint-enable @typescript-eslint/no-unused-vars */
-import { db, users } from "@/lib/schema";
+import { db, type Roles, users } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 
 declare module "next-auth" {
     interface User {
-        roles?: string[]
+        roles?: Roles
         firstName?: string | null,
         lastName?: string | null,
     }
     interface Token {
-        roles?: string[],
+        roles?: Roles,
         firstName?: string | null,
         lastName?: string | null,
     }
@@ -23,7 +23,7 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
     /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
     interface JWT {
-        roles?: string[]
+        roles?: Roles,
         firstName?: string | null,
         lastName?: string | null,
     }

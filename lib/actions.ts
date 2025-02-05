@@ -23,7 +23,7 @@ export async function validateUser(email: string, password: string) {
 }
 
 export const editUser = async (
-    updates: { [key: string]: string }
+    updates: { [key: string]: string | Roles }
 ) => {
     const session = await auth();
     if (!session || !session.user || !session.user.email) {
@@ -38,7 +38,7 @@ export const editUser = async (
 
     for (const key in updates) {
         if (key === 'password') {
-            updates[key] = await hash(updates[key], 10);
+            updates[key] = await hash(updates[key] as string, 10);
         }
     }
 
