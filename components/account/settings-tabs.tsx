@@ -52,10 +52,10 @@ export default function SettingsTabs({ profileDefaultValues, rolesDefaultValues,
             <TabsContent value="profile" className="py-4">
                 <ProfileForm defaultValues={profileDefaultValues} />
             </TabsContent>
-            <TabsContent value="roles">
+            <TabsContent value="roles" className="py-4">
                 <RolesSettingsForm defaultValues={rolesDefaultValues} />
             </TabsContent>
-            <TabsContent value="login">
+            <TabsContent value="login" className="py-4">
                 <LoginSettingsForm defaultValues={loginDefaultValues} />
             </TabsContent>
         </Tabs>

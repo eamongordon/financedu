@@ -64,7 +64,7 @@ export function RolesSettingsFormInner({ defaultValues }: RolesFormProps) {
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormItem>
-                    <FormLabel>Roles</FormLabel>
+                    <FormLabel>I'm using Financedu as a:</FormLabel>
                     <div className="flex flex-col space-y-4">
                         <FormField
                             control={form.control}
