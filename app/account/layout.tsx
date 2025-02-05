@@ -25,6 +25,7 @@ interface SettingsLayoutProps {
 
 export default async function SettingsLayout({ children }: SettingsLayoutProps) {
   const session = await auth();
+  const avatar = session?.user?.image;
   const firstName = session?.user?.firstName;
   const lastName = session?.user?.lastName;
   const initials = `${firstName?.charAt(0) ?? ''}${lastName?.charAt(0) ?? ''}`;
@@ -35,8 +36,8 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
         <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
           <aside className="-mx-4 lg:w-1/5">
             <div className="px-2 flex items-center space-x-4 mb-6">
-              <Avatar className="lg:size-1/4">
-                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <Avatar className="lg:size-1/4 aspect-square">
+                <AvatarImage src={avatar ?? undefined} alt={firstName ?? undefined}/>
                 <AvatarFallback>{initials}</AvatarFallback>
               </Avatar>
               <div className="flex flex-col justify-center gap-1">
