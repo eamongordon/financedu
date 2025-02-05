@@ -26,12 +26,30 @@ export default function SettingsTabs({ profileDefaultValues, rolesDefaultValues,
 
     return (
         <Tabs value={tab || 'profile'}>
-            <TabsList>
-                <TabsTrigger value="profile" onClick={() => router.push('/settings?tab=profile')}>Profile</TabsTrigger>
-                <TabsTrigger value="roles" onClick={() => router.push('/settings?tab=roles')}>Roles</TabsTrigger>
-                <TabsTrigger value="login" onClick={() => router.push('/settings?tab=login')}>Login</TabsTrigger>
+            <TabsList className="bg-inherit gap-6">
+                <TabsTrigger
+                    value="profile"
+                    onClick={() => router.push('/settings?tab=profile')}
+                    className="px-0 rounded-none text-md text-foreground font-semibold data-[state=active]:shadow-none data-[state=active]:text-primary border-b-4 border-transparent data-[state=active]:border-primary"
+                >
+                    Profile
+                </TabsTrigger>
+                <TabsTrigger
+                    value="roles"
+                    onClick={() => router.push('/settings?tab=roles')}
+                    className="px-0 rounded-none text-md text-foreground font-semibold data-[state=active]:shadow-none data-[state=active]:text-primary border-b-4 border-transparent data-[state=active]:border-primary"
+                >
+                    Roles
+                </TabsTrigger>
+                <TabsTrigger
+                    value="login"
+                    onClick={() => router.push('/settings?tab=login')}
+                    className="px-0 rounded-none text-md text-foreground font-semibold data-[state=active]:shadow-none data-[state=active]:text-primary border-b-4 border-transparent data-[state=active]:border-primary"
+                >
+                    Login
+                </TabsTrigger>
             </TabsList>
-            <TabsContent value="profile">
+            <TabsContent value="profile" className="py-4">
                 <ProfileForm defaultValues={profileDefaultValues} />
             </TabsContent>
             <TabsContent value="roles">
