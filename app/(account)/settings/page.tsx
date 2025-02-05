@@ -4,6 +4,7 @@ import { type LoginFormValues } from "@/components/account/login-settings-form";
 import { auth } from "@/lib/auth";
 import { Roles } from "@/lib/schema";
 import SettingsTabs from "@/components/account/settings-tabs";
+import { Separator } from "@/components/ui/separator";
 
 export default async function SettingsPage() {
     const session = await auth();
@@ -26,10 +27,19 @@ export default async function SettingsPage() {
     } as LoginFormValues;
 
     return (
-        <SettingsTabs
-            profileDefaultValues={profileDefaultValues}
-            rolesDefaultValues={rolesDefaultValues}
-            loginDefaultValues={loginDefaultValues}
-        />
+        <main>
+            <div className="space-y-0.5">
+                <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
+                <p className="text-muted-foreground">
+                    Manage your account settings and set e-mail preferences.
+                </p>
+            </div>
+            <Separator className="my-6" />
+            <SettingsTabs
+                profileDefaultValues={profileDefaultValues}
+                rolesDefaultValues={rolesDefaultValues}
+                loginDefaultValues={loginDefaultValues}
+            />
+        </main>
     );
 }
