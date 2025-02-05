@@ -63,7 +63,7 @@ export default function UserMenu({ imageSrc, name, email }: UserMenuProps) {
           <Link href="/settings">Sites</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/settings">Settings</Link>
+          <Link href="/account/settings">Settings</Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
           Billing

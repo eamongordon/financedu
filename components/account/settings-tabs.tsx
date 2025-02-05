@@ -20,7 +20,7 @@ export default function SettingsTabs({ profileDefaultValues, rolesDefaultValues,
 
     useEffect(() => {
         if (!tab) {
-            router.push('/settings?tab=profile');
+            router.push('/account/settings?tab=profile');
         }
     }, [tab, router]);
 
@@ -29,21 +29,21 @@ export default function SettingsTabs({ profileDefaultValues, rolesDefaultValues,
             <TabsList className="bg-inherit gap-7">
                 <TabsTrigger
                     value="profile"
-                    onClick={() => router.push('/settings?tab=profile')}
+                    onClick={() => router.push('/account/settings?tab=profile')}
                     className="px-0 rounded-none text-md text-foreground font-semibold data-[state=active]:shadow-none data-[state=active]:text-primary border-b-4 border-transparent data-[state=active]:border-primary"
                 >
                     Profile
                 </TabsTrigger>
                 <TabsTrigger
                     value="roles"
-                    onClick={() => router.push('/settings?tab=roles')}
+                    onClick={() => router.push('/account/settings?tab=roles')}
                     className="px-0 rounded-none text-md text-foreground font-semibold data-[state=active]:shadow-none data-[state=active]:text-primary border-b-4 border-transparent data-[state=active]:border-primary"
                 >
                     Roles
                 </TabsTrigger>
                 <TabsTrigger
                     value="login"
-                    onClick={() => router.push('/settings?tab=login')}
+                    onClick={() => router.push('/account/settings?tab=login')}
                     className="px-0 rounded-none text-md text-foreground font-semibold data-[state=active]:shadow-none data-[state=active]:text-primary border-b-4 border-transparent data-[state=active]:border-primary"
                 >
                     Login
