@@ -69,7 +69,7 @@ export function RolesSettingsFormInner({ defaultValues }: RolesFormProps) {
                         <FormField
                             control={form.control}
                             name="roles"
-                            render={({ field }) => (
+                            render={() => (
                                 <FormItem>
                                     <FormControl>
                                         <div className="flex items-center space-x-4">
