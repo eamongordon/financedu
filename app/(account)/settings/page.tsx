@@ -1,4 +1,4 @@
-import { ProfileFormValues } from "@/components/account/profile-form";
+import { type ProfileFormValues } from "@/components/account/profile-form";
 import { type RolesFormValues } from "@/components/account/roles-settings-form";
 import { type LoginFormValues } from "@/components/account/login-settings-form";
 import { auth } from "@/lib/auth";
@@ -12,7 +12,6 @@ export default async function SettingsPage() {
     }
 
     const profileDefaultValues = {
-        email: session.user?.email || "",
         firstName: session.user?.firstName || "",
         lastName: session.user?.lastName || "",
     } as ProfileFormValues;
