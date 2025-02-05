@@ -47,7 +47,7 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
         <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
           <aside className="-mx-4 lg:w-1/5">
             <div className="px-2 flex items-center space-x-4 mb-6">
-              <Avatar>
+              <Avatar className="lg:size-1/4">
                 <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                 <AvatarFallback>{initials}</AvatarFallback>
               </Avatar>
