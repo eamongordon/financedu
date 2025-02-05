@@ -51,8 +51,8 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
                 <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                 <AvatarFallback>{initials}</AvatarFallback>
               </Avatar>
-              <div>
-                <span className="font-semibold">Welcome,</span>
+              <div className="flex flex-col justify-center gap-1">
+                <span className="block leading-none font-semibold">Welcome,</span>
                 <span className="block leading-none">{firstName}</span>
               </div>
             </div>
