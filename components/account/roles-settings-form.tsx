@@ -126,7 +126,7 @@ export function RolesSettingsFormInner({ defaultValues }: RolesFormProps) {
                                             </svg>
                                             <div>
                                                 <FormLabel>Parent</FormLabel>
-                                                <p className="text-muted-foreground text-sm">Monitor your child's progress.</p>
+                                                <p className="text-muted-foreground text-sm">Monitor your child&apos;s progress.</p>
                                             </div>
                                         </div>
                                     </FormControl>
