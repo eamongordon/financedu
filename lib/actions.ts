@@ -1,7 +1,7 @@
 "use server";
 
 import { eq } from "drizzle-orm";
-import { courses, lessons, users, modules } from "./db/schema";
+import { courses, lessons, users, modules, moduleToLessons } from "./db/schema";
 import { db } from "./db";
 import { hash, compare } from "bcrypt";
 import { type Roles } from "./db/schema";
@@ -61,7 +61,7 @@ export async function listCourses() {
 type CourseBase = typeof courses.$inferSelect;
 
 type CourseWithModules = CourseBase & {
-    modules: typeof modules.$inferSelect; 
+    modules: typeof modules.$inferSelect;
 };
 
 type CourseWithModulesAndLessons = CourseBase & {
@@ -72,10 +72,10 @@ type CourseWithModulesAndLessons = CourseBase & {
 
 type GetCourseReturnType<T extends { includeModules?: boolean, includeLessons?: boolean }> =
     T['includeModules'] extends true
-        ? T['includeLessons'] extends true
-            ? CourseWithModulesAndLessons
-            : CourseWithModules
-        : CourseBase;
+    ? T['includeLessons'] extends true
+    ? CourseWithModulesAndLessons
+    : CourseWithModules
+    : CourseBase;
 
 export async function getCourse<T extends { includeModules?: boolean, includeLessons?: boolean }>(
     courseId: string,
@@ -86,7 +86,11 @@ export async function getCourse<T extends { includeModules?: boolean, includeLes
         with: options?.includeModules ? {
             modules: options.includeLessons ? {
                 with: {
-                    lessons: true,
+                    moduleToLessons: {
+                        with: {
+                            lesson: true
+                        }
+                    }
                 },
             } : true,
         } : undefined,
