@@ -137,7 +137,7 @@ export const lessons = pgTable("lesson", {
   objectives: text("objectives"),
 })
 
-export const moduleLessons = pgTable("moduleLesson", {
+export const moduleToLessons = pgTable("moduleLesson", {
   moduleId: text("moduleId")
     .notNull()
     .references(() => modules.id, { onDelete: "cascade" }),
@@ -153,15 +153,7 @@ export const moduleLessons = pgTable("moduleLesson", {
   },
 ])
 
-export const activities = pgTable("activity", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  type: text("type", { enum: ["Quiz", "Article"] }).notNull(),
-  description: text("description"),
-})
-
-export const lessonActivities = pgTable("lessonActivity", {
+export const lessonToActivities = pgTable("lessonActivity", {
   lessonId: text("lessonId")
     .notNull()
     .references(() => lessons.id, { onDelete: "cascade" }),
@@ -177,16 +169,15 @@ export const lessonActivities = pgTable("lessonActivity", {
   },
 ])
 
-export const questions = pgTable("question", {
+export const activities = pgTable("activity", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  type: text("type", { enum: ["matching", "number", "multiselect", "radio", "info"] }).notNull(),
-  difficulty: text("difficulty", { enum: ["easy", "medium", "hard"] }).notNull(),
+  type: text("type", { enum: ["Quiz", "Article"] }).notNull(),
   description: text("description"),
 })
 
-export const activityQuestions = pgTable("activityQuestion", {
+export const activityToQuestions = pgTable("activityQuestion", {
   activityId: text("activityId")
     .notNull()
     .references(() => activities.id, { onDelete: "cascade" }),
@@ -202,15 +193,16 @@ export const activityQuestions = pgTable("activityQuestion", {
   },
 ])
 
-export const standards = pgTable("standard", {
+export const questions = pgTable("question", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
+  type: text("type", { enum: ["matching", "number", "multiselect", "radio", "info"] }).notNull(),
+  difficulty: text("difficulty", { enum: ["easy", "medium", "hard"] }).notNull(),
   description: text("description"),
-  objectives: text("objectives"),
 })
 
-export const activityStandards = pgTable("activityStandard", {
+export const activityToStandards = pgTable("activityStandard", {
   activityId: text("activityId")
     .notNull()
     .references(() => activities.id, { onDelete: "cascade" }),
@@ -224,6 +216,14 @@ export const activityStandards = pgTable("activityStandard", {
     }),
   },
 ])
+
+export const standards = pgTable("standard", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  description: text("description"),
+  objectives: text("objectives"),
+})
 
 export const userProgress = pgTable("userProgress", {
   userId: text("userId")
@@ -286,71 +286,71 @@ export const modulesRelations = relations(modules, ({ one, many }) => ({
     fields: [modules.courseId],
     references: [courses.id],
   }),
-  lessons: many(moduleLessons),
+  moduleToLessons: many(moduleToLessons),
   userProgress: many(userProgress),
 }))
 
 export const lessonsRelations = relations(lessons, ({ many }) => ({
-  modules: many(moduleLessons),
-  activities: many(lessonActivities),
+  moduleToLessons: many(moduleToLessons),
+  lessonToActivities: many(lessonToActivities),
   userProgress: many(userProgress),
 }))
 
-export const moduleLessonsRelations = relations(moduleLessons, ({ one }) => ({
+export const moduleLessonsRelations = relations(moduleToLessons, ({ one }) => ({
   module: one(modules, {
-    fields: [moduleLessons.moduleId],
+    fields: [moduleToLessons.moduleId],
     references: [modules.id],
   }),
   lesson: one(lessons, {
-    fields: [moduleLessons.lessonId],
+    fields: [moduleToLessons.lessonId],
     references: [lessons.id],
   }),
 }))
 
 export const activitiesRelations = relations(activities, ({ many }) => ({
-  lessons: many(lessonActivities),
-  questions: many(activityQuestions),
-  standards: many(activityStandards),
+  lessonToActivities: many(lessonToActivities),
+  activityToQuestions: many(activityToQuestions),
+  activityToStandards: many(activityToStandards),
   userProgress: many(userProgress),
 }))
 
-export const lessonActivitiesRelations = relations(lessonActivities, ({ one }) => ({
+export const lessonActivitiesRelations = relations(lessonToActivities, ({ one }) => ({
   lesson: one(lessons, {
-    fields: [lessonActivities.lessonId],
+    fields: [lessonToActivities.lessonId],
     references: [lessons.id],
   }),
   activity: one(activities, {
-    fields: [lessonActivities.activityId],
+    fields: [lessonToActivities.activityId],
     references: [activities.id],
   }),
 }))
 
 export const questionsRelations = relations(questions, ({ many }) => ({
-  activities: many(activityQuestions),
+  activityToQuestions: many(activityToQuestions),
 }))
 
-export const activityQuestionsRelations = relations(activityQuestions, ({ one }) => ({
+export const activityQuestionsRelations = relations(activityToQuestions, ({ one }) => ({
   activity: one(activities, {
-    fields: [activityQuestions.activityId],
+    fields: [activityToQuestions.activityId],
     references: [activities.id],
   }),
   question: one(questions, {
-    fields: [activityQuestions.questionId],
+    fields: [activityToQuestions.questionId],
     references: [questions.id],
   }),
 }))
 
 export const standardsRelations = relations(standards, ({ many }) => ({
-  activities: many(activityStandards),
+  activityToStandards: many(activityToStandards),
 }))
 
-export const activityStandardsRelations = relations(activityStandards, ({ one }) => ({
+export const activityStandardsRelations = relations(activityToStandards, ({ one }) => ({
   activity: one(activities, {
-    fields: [activityStandards.activityId],
+    fields: [activityToStandards.activityId],
     references: [activities.id],
   }),
   standard: one(standards, {
-    fields: [activityStandards.standardId],
+    fields: [activityToStandards.standardId],
     references: [standards.id],
   }),
 }))
