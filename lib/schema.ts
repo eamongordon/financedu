@@ -202,7 +202,34 @@ export const activityQuestions = pgTable("activityQuestion", {
   },
 ])
 
-const schema = { users, accounts, sessions, verificationTokens, authenticators, courses, modules, lessons, activities, lessonActivities, questions, activityQuestions, moduleLessons };
+export const standards = pgTable("standard", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  description: text("description"),
+  objectives: text("objectives"),
+})
+
+export const activityStandards = pgTable("activityStandard", {
+  activityId: text("activityId")
+    .notNull()
+    .references(() => activities.id, { onDelete: "cascade" }),
+  standardId: text("standardId")
+    .notNull()
+    .references(() => standards.id, { onDelete: "cascade" }),
+}, (activityStandard) => [
+  {
+    compositePK: primaryKey({
+      columns: [activityStandard.activityId, activityStandard.standardId],
+    }),
+  },
+])
+
+const schema = { 
+  users, accounts, sessions, verificationTokens, authenticators, 
+  courses, modules, lessons, activities, lessonActivities, 
+  questions, activityQuestions, moduleLessons, standards, activityStandards 
+};
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
