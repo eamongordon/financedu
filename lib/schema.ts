@@ -384,7 +384,12 @@ const schema = {
   users, accounts, sessions, verificationTokens, authenticators, 
   courses, modules, lessons, activities, lessonActivities, 
   questions, activityQuestions, moduleLessons, standards, activityStandards,
-  userProgress
+  userProgress,
+  usersRelations, accountsRelations, sessionsRelations, authenticatorsRelations,
+  coursesRelations, modulesRelations, lessonsRelations, moduleLessonsRelations,
+  activitiesRelations, lessonActivitiesRelations, questionsRelations,
+  activityQuestionsRelations, standardsRelations, activityStandardsRelations,
+  userProgressRelations
 };
 
 const connectionString = process.env.DATABASE_URL;
