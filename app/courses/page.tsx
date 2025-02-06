@@ -12,10 +12,10 @@ export default async function CoursesPage() {
     return (
         <div>
             <Banner title="Courses" />
-            <ul className="flex justify-center items-center flex-wrap gap-4 my-10">
+            <ul className="flex justify-center items-center flex-wrap gap-4 my-4 sm:my-10 px-4">
                 {courses.map((course) => (
                     <li key={course.id}>
-                        <Card className="w-[300px] sm:w-[375px] overflow-hidden">
+                        <Card className="w-full sm:w-[375px] overflow-hidden">
                             <div className="relative w-full h-48">
                                 <Image src={course.image ?? "/homepage-banner.jpg"} alt={course.title} layout="fill" className="object-cover" />
                             </div>

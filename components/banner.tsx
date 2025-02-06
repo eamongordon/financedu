@@ -9,7 +9,7 @@ interface BannerProps {
 
 export default function Banner({ title, backgroundImage, className }: BannerProps) {
     return (
-        <div className="relative flex justify-center items-center w-full h-44">
+        <div className="relative flex justify-center items-center w-full h-24 sm:h-40">
             <div className={cn("absolute inset-0 bg-gradient-to-br from-[#00D9AE] to-[#3BDE2C] dark:brightness-[0.6]", className)} />
             <Image
                 src={backgroundImage ?? "/homepage-banner.jpg"}
