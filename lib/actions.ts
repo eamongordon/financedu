@@ -57,3 +57,22 @@ export const editUser = async (
 export async function listCourses() {
     return await db.query.courses.findMany();
 }
+
+export async function getCourse(courseId: string, options?: { includeModules?: boolean, includeLessons?: boolean }) {
+    const course = await db.query.courses.findFirst({
+        where: eq(courses.id, courseId),
+        with: options?.includeModules ? {
+            modules: options.includeLessons ? {
+                with: {
+                    lessons: true,
+                },
+            } : true,
+        } : undefined,
+    });
+
+    if (!course) {
+        throw new Error("Course not found");
+    }
+
+    return course;
+}
