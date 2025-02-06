@@ -1,11 +1,12 @@
 import { listCourses } from "@/lib/actions";
+import Banner from "@/components/banner";
 
 export default async function CoursesPage() {
     const courses = await listCourses();
 
     return (
         <div>
-            <h1>Courses</h1>
+            <Banner title="Courses"/>
             <ul>
                 {courses.map((course) => (
                     <li key={course.id}>
