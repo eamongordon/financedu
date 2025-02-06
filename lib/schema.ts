@@ -10,6 +10,7 @@ import { sql } from 'drizzle-orm'
 import postgres from "postgres"
 import { drizzle } from "drizzle-orm/postgres-js"
 import type { AdapterAccountType } from "next-auth/adapters"
+import { relations } from "drizzle-orm"
 
 export type Role = "learner" | "teacher" | "parent";
 export type Roles = Role[] & { 0: "learner" };
@@ -247,6 +248,136 @@ export const userProgress = pgTable("userProgress", {
     }),
   },
 ])
+
+export const usersRelations = relations(users, ({ many }) => ({
+  accounts: many(accounts),
+  sessions: many(sessions),
+  authenticators: many(authenticators),
+  userProgress: many(userProgress),
+}))
+
+export const accountsRelations = relations(accounts, ({ one }) => ({
+  user: one(users, {
+    fields: [accounts.userId],
+    references: [users.id],
+  }),
+}))
+
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  user: one(users, {
+    fields: [sessions.userId],
+    references: [users.id],
+  }),
+}))
+
+export const authenticatorsRelations = relations(authenticators, ({ one }) => ({
+  user: one(users, {
+    fields: [authenticators.userId],
+    references: [users.id],
+  }),
+}))
+
+export const coursesRelations = relations(courses, ({ many }) => ({
+  modules: many(modules),
+  userProgress: many(userProgress),
+}))
+
+export const modulesRelations = relations(modules, ({ one, many }) => ({
+  course: one(courses, {
+    fields: [modules.courseId],
+    references: [courses.id],
+  }),
+  lessons: many(moduleLessons),
+  userProgress: many(userProgress),
+}))
+
+export const lessonsRelations = relations(lessons, ({ many }) => ({
+  modules: many(moduleLessons),
+  activities: many(lessonActivities),
+  userProgress: many(userProgress),
+}))
+
+export const moduleLessonsRelations = relations(moduleLessons, ({ one }) => ({
+  module: one(modules, {
+    fields: [moduleLessons.moduleId],
+    references: [modules.id],
+  }),
+  lesson: one(lessons, {
+    fields: [moduleLessons.lessonId],
+    references: [lessons.id],
+  }),
+}))
+
+export const activitiesRelations = relations(activities, ({ many }) => ({
+  lessons: many(lessonActivities),
+  questions: many(activityQuestions),
+  standards: many(activityStandards),
+  userProgress: many(userProgress),
+}))
+
+export const lessonActivitiesRelations = relations(lessonActivities, ({ one }) => ({
+  lesson: one(lessons, {
+    fields: [lessonActivities.lessonId],
+    references: [lessons.id],
+  }),
+  activity: one(activities, {
+    fields: [lessonActivities.activityId],
+    references: [activities.id],
+  }),
+}))
+
+export const questionsRelations = relations(questions, ({ many }) => ({
+  activities: many(activityQuestions),
+}))
+
+export const activityQuestionsRelations = relations(activityQuestions, ({ one }) => ({
+  activity: one(activities, {
+    fields: [activityQuestions.activityId],
+    references: [activities.id],
+  }),
+  question: one(questions, {
+    fields: [activityQuestions.questionId],
+    references: [questions.id],
+  }),
+}))
+
+export const standardsRelations = relations(standards, ({ many }) => ({
+  activities: many(activityStandards),
+}))
+
+export const activityStandardsRelations = relations(activityStandards, ({ one }) => ({
+  activity: one(activities, {
+    fields: [activityStandards.activityId],
+    references: [activities.id],
+  }),
+  standard: one(standards, {
+    fields: [activityStandards.standardId],
+    references: [standards.id],
+  }),
+}))
+
+export const userProgressRelations = relations(userProgress, ({ one }) => ({
+  user: one(users, {
+    fields: [userProgress.userId],
+    references: [users.id],
+  }),
+  course: one(courses, {
+    fields: [userProgress.courseId],
+    references: [courses.id],
+  }),
+  module: one(modules, {
+    fields: [userProgress.moduleId],
+    references: [modules.id],
+  }),
+  lesson: one(lessons, {
+    fields: [userProgress.lessonId],
+    references: [lessons.id],
+  }),
+  activity: one(activities, {
+    fields: [userProgress.activityId],
+    references: [activities.id],
+  }),
+}))
 
 const schema = { 
   users, accounts, sessions, verificationTokens, authenticators, 
