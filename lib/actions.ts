@@ -52,3 +52,7 @@ export const editUser = async (
         throw error;
     }
 };
+
+export async function listCourses() {
+    return await db.query.courses.findMany();
+}
