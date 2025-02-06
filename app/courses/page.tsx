@@ -16,7 +16,7 @@ export default async function CoursesPage() {
                 {courses.map((course) => (
                     <li key={course.id}>
                         <Card className="w-full sm:w-[375px] overflow-hidden">
-                            <div className="relative w-full h-48">
+                            <div className="relative w-full h-36">
                                 <Image src={course.image ?? "/homepage-banner.jpg"} alt={course.title} layout="fill" className="object-cover" />
                             </div>
                             <CardHeader>
