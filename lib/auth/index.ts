@@ -2,7 +2,8 @@ import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
 import authConfig from "./config";
 import { compare } from "bcrypt";
-import { db, users } from "@/lib/schema";
+import { users } from "@/lib/db/schema";
+import { db } from "@/lib/db";
 import { eq } from "drizzle-orm";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
@@ -20,8 +21,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           throw new Error("Missing email or password");
         }
         const user = await db.query.users.findFirst({
-            where: eq(users.email, email as string),
-          });
+          where: eq(users.email, email as string),
+        });
         // if user doesn't exist or password doesn't match
         if (!user || !user.password || !(await compare(password as string, user.password))) {
           throw new Error("Invalid email or password")

@@ -18,7 +18,7 @@ import { editUser } from "@/lib/actions"
 import { useRouter } from "next/navigation";
 import { SessionProvider, useSession } from "next-auth/react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Roles } from "@/lib/schema";
+import { Roles } from "@/lib/db/schema";
 import { GraduationCap, Apple } from "lucide-react";
 
 const rolesFormSchema = z.object({

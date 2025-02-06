@@ -12,7 +12,7 @@ import { createUser } from "@/lib/actions";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 import { GraduationCap, Apple } from "lucide-react";
-import { Role } from "@/lib/schema";
+import { Role } from "@/lib/db/schema";
 import { toast } from "sonner";
 
 import { zodResolver } from "@hookform/resolvers/zod"

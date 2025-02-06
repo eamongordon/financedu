@@ -4,7 +4,8 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { JWT } from "next-auth/jwt"; //import is used in module declaration
 /* eslint-enable @typescript-eslint/no-unused-vars */
-import { db, type Roles, users } from "@/lib/schema";
+import { type Roles, users } from "@/lib/db/schema";
+import { db } from "../db";
 import { eq } from "drizzle-orm";
 
 declare module "next-auth" {

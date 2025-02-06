@@ -1,9 +1,10 @@
 "use server";
 
 import { eq } from "drizzle-orm";
-import { db, users } from "./schema";
+import { courses, users } from "./db/schema";
+import { db } from "./db";
 import { hash, compare } from "bcrypt";
-import { type Roles } from "./schema";
+import { type Roles } from "./db/schema";
 import { auth } from "./auth";
 
 export async function createUser({ email, password, firstName, lastName, roles }: { email: string, password: string, firstName?: string, lastName?: string, roles: Roles }) {
