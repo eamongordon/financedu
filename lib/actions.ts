@@ -1,7 +1,7 @@
 "use server";
 
 import { eq } from "drizzle-orm";
-import { courses, lessons, users, modules } from "./db/schema";
+import { courses, lessons, users, modules, moduleToLessons } from "./db/schema";
 import { db } from "./db";
 import { hash, compare } from "bcrypt";
 import { type Roles } from "./db/schema";
@@ -64,6 +64,14 @@ type CourseWithModules = CourseBase & {
     modules: typeof modules.$inferSelect;
 };
 
+type QueryCourseWithModulesAndLessons = CourseBase & {
+    modules: (typeof modules.$inferSelect & {
+        moduleToLessons: (typeof moduleToLessons.$inferSelect & {
+            lesson: typeof lessons.$inferSelect;
+        })[];
+    })[];
+};
+
 type CourseWithModulesAndLessons = CourseBase & {
     modules: (typeof modules.$inferSelect & {
         lessons: typeof lessons.$inferSelect[];
@@ -89,16 +97,21 @@ export async function getCourse<T extends { includeModules?: boolean, includeLes
                     moduleToLessons: {
                         with: {
                             lesson: true
-                        }
-                    }
+                        },
+                        orderBy: (moduleToLessons, { asc }) => [asc(moduleToLessons.order)]
+                    },
                 },
+                orderBy: (modules, { asc }) => [asc(modules.order)],
             } : true,
         } : undefined,
     });
+
 
     if (!course) {
         throw new Error("Course not found");
     }
 
-    return course as GetCourseReturnType<T>;
+    const result = options?.includeLessons ? { ...course, modules: (course as QueryCourseWithModulesAndLessons).modules.map((module) => { return { ...module, lessons: module.moduleToLessons.map((moduleToLessonsObj) => moduleToLessonsObj.lesson) } }) } : course;
+
+    return result as GetCourseReturnType<T>;
 }
