@@ -1,7 +1,7 @@
 "use server";
 
 import { eq } from "drizzle-orm";
-import { courses, users } from "./db/schema";
+import { courses, lessons, users, modules } from "./db/schema";
 import { db } from "./db";
 import { hash, compare } from "bcrypt";
 import { type Roles } from "./db/schema";
@@ -58,7 +58,29 @@ export async function listCourses() {
     return await db.query.courses.findMany();
 }
 
-export async function getCourse(courseId: string, options?: { includeModules?: boolean, includeLessons?: boolean }) {
+type CourseBase = typeof courses.$inferSelect;
+
+type CourseWithModules = CourseBase & {
+    modules: typeof modules.$inferSelect; 
+};
+
+type CourseWithModulesAndLessons = CourseBase & {
+    modules: (typeof modules.$inferSelect & {
+        lessons: typeof lessons.$inferSelect[];
+    })[];
+};
+
+type GetCourseReturnType<T extends { includeModules?: boolean, includeLessons?: boolean }> =
+    T['includeModules'] extends true
+        ? T['includeLessons'] extends true
+            ? CourseWithModulesAndLessons
+            : CourseWithModules
+        : CourseBase;
+
+export async function getCourse<T extends { includeModules?: boolean, includeLessons?: boolean }>(
+    courseId: string,
+    options?: T
+): Promise<GetCourseReturnType<T>> {
     const course = await db.query.courses.findFirst({
         where: eq(courses.id, courseId),
         with: options?.includeModules ? {
@@ -74,5 +96,5 @@ export async function getCourse(courseId: string, options?: { includeModules?: b
         throw new Error("Course not found");
     }
 
-    return course;
+    return course as GetCourseReturnType<T>;
 }
