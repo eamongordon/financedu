@@ -225,10 +225,34 @@ export const activityStandards = pgTable("activityStandard", {
   },
 ])
 
+export const userProgress = pgTable("userProgress", {
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  courseId: text("courseId")
+    .notNull()
+    .references(() => courses.id, { onDelete: "cascade" }),
+  moduleId: text("moduleId")
+    .references(() => modules.id, { onDelete: "cascade" }),
+  lessonId: text("lessonId")
+    .references(() => lessons.id, { onDelete: "cascade" }),
+  activityId: text("activityId")
+    .references(() => activities.id, { onDelete: "cascade" }),
+  progressStatus: text("progressStatus", { enum: ["not started", "in progress", "completed"] }).notNull(),
+  updatedDate: timestamp("updatedDate", { mode: "date", withTimezone: true }).defaultNow().$onUpdateFn(() => new Date()),
+}, (userProgress) => [
+  {
+    compositePK: primaryKey({
+      columns: [userProgress.userId, userProgress.courseId, userProgress.moduleId, userProgress.lessonId, userProgress.activityId],
+    }),
+  },
+])
+
 const schema = { 
   users, accounts, sessions, verificationTokens, authenticators, 
   courses, modules, lessons, activities, lessonActivities, 
-  questions, activityQuestions, moduleLessons, standards, activityStandards 
+  questions, activityQuestions, moduleLessons, standards, activityStandards,
+  userProgress
 };
 
 const connectionString = process.env.DATABASE_URL;
