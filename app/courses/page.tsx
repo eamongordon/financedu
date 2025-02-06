@@ -27,11 +27,11 @@ export default async function CoursesPage() {
                                 <div className="flex gap-10 sm:gap-12">
                                     <div>
                                         <p className="font-semibold">Length (Hrs.):</p>
-                                        <p className="text-2xl">32 - 56</p>
+                                        <p className="text-muted-foreground text-2xl">32 - 56</p>
                                     </div>
                                     <div>
                                         <p className="font-semibold">Grade Levels:</p>
-                                        <p className="text-2xl">7 - 12</p>
+                                        <p className="text-muted-foreground text-2xl">7 - 12</p>
                                     </div>
                                 </div>
                                 <Link href={`/courses/${course.id}`} className={cn(buttonVariants(), "w-full")}>View Course</Link>
