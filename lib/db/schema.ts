@@ -5,6 +5,7 @@ import {
   text,
   primaryKey,
   integer,
+  decimal,
 } from "drizzle-orm/pg-core"
 import { sql } from 'drizzle-orm'
 import type { AdapterAccountType } from "next-auth/adapters"
@@ -201,9 +202,43 @@ export const questions = pgTable("question", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  type: text("type", { enum: ["matching", "number", "multiselect", "radio", "info"] }).notNull(),
+  type: text("type", { enum: ["matching", "numeric", "multiselect", "radio", "info"] }).notNull(),
   difficulty: text("difficulty", { enum: ["easy", "medium", "hard"] }).notNull(),
   description: text("description"),
+  numericAnswer: decimal("numericAnswer", { precision: 10, scale: 2 }),
+  instructions: text("instructions"),
+})
+
+export const questionOptions = pgTable("questionOption", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  questionId: text("questionId")
+    .notNull()
+    .references(() => questions.id, { onDelete: "cascade" }),
+  option: text("option").notNull(),
+  isCorrect: boolean("isCorrect").notNull(),
+})
+
+export const matchingSubquestions = pgTable("matchingSubquestion", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  questionId: text("questionId")
+    .notNull()
+    .references(() => questions.id, { onDelete: "cascade" }),
+  subquestion: text("subquestion").notNull(),
+})
+
+export const matchingOptions = pgTable("matchingOption", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  questionId: text("questionId")
+    .notNull()
+    .references(() => questions.id, { onDelete: "cascade" }),
+  option: text("option").notNull(),
+  correct: boolean("correct").notNull(),
 })
 
 export const activityToStandards = pgTable("activityStandard", {
@@ -331,6 +366,31 @@ export const lessonActivitiesRelations = relations(lessonToActivities, ({ one })
 
 export const questionsRelations = relations(questions, ({ many }) => ({
   activityToQuestions: many(activityToQuestions),
+  questionOptions: many(questionOptions),
+  matchingSubquestions: many(matchingSubquestions),
+  matchingOptions: many(matchingOptions),
+}))
+
+export const questionOptionsRelations = relations(questionOptions, ({ one }) => ({
+  question: one(questions, {
+    fields: [questionOptions.questionId],
+    references: [questions.id],
+  }),
+}))
+
+export const matchingSubquestionsRelations = relations(matchingSubquestions, ({ one, many }) => ({
+  question: one(questions, {
+    fields: [matchingSubquestions.questionId],
+    references: [questions.id],
+  }),
+  matchingOptions: many(matchingOptions),
+}))
+
+export const matchingOptionsRelations = relations(matchingOptions, ({ one }) => ({
+  question: one(questions, {
+    fields: [matchingOptions.questionId],
+    references: [questions.id],
+  }),
 }))
 
 export const activityQuestionsRelations = relations(activityToQuestions, ({ one }) => ({
