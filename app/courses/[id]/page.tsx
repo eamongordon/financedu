@@ -13,7 +13,7 @@ export default async function Page({
             className="my-4 w-full mx-6 flex flex-col sm:flex-row sm:flex-grow sm:divide-x dark:divide-stone-500"
         >
             <div
-                className="sm:w-1/3 flex flex-col gap-4 items-start px-2 sm:px-8 text-left sm:sticky top-6 mb-4 sm:mb-0 sm:h-screen"
+                className="sm:w-1/3 flex flex-col gap-4 items-start px-2 sm:px-8 text-left sm:sticky top-[80px] mb-4 sm:mb-0 sm:h-screen"
             >
                 <h1 className="text-2xl font-bold">{course.title}</h1>
                 <p className="mt-2">{course.description}</p>
