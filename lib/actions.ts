@@ -58,41 +58,23 @@ export async function listCourses() {
     return await db.query.courses.findMany();
 }
 
-type CourseBase = typeof courses.$inferSelect;
-
-type CourseWithModules = CourseBase & {
-    modules: typeof modules.$inferSelect;
-};
-
-type QueryCourseWithModulesAndLessons = CourseBase & {
-    modules: (typeof modules.$inferSelect & {
-        moduleToLessons: (typeof moduleToLessons.$inferSelect & {
-            lesson: typeof lessons.$inferSelect;
-        })[];
-    })[];
-};
-
-type CourseWithModulesAndLessons = CourseBase & {
-    modules: (typeof modules.$inferSelect & {
-        lessons: typeof lessons.$inferSelect[];
-    })[];
-};
-
-type GetCourseReturnType<T extends { includeModules?: boolean, includeLessons?: boolean }> =
-    T['includeModules'] extends true
-    ? T['includeLessons'] extends true
-    ? CourseWithModulesAndLessons
-    : CourseWithModules
-    : CourseBase;
-
-export async function getCourse<T extends { includeModules?: boolean, includeLessons?: boolean }>(
-    courseId: string,
-    options?: T
-): Promise<GetCourseReturnType<T>> {
+export async function getCourse(courseId: string) {
     const course = await db.query.courses.findFirst({
         where: eq(courses.id, courseId),
-        with: options?.includeModules ? {
-            modules: options.includeLessons ? {
+    });
+
+    if (!course) {
+        throw new Error("Course not found");
+    }
+
+    return course;
+}
+
+export async function getCourseWithModulesAndLessons(courseId: string) {
+    const course = await db.query.courses.findFirst({
+        where: eq(courses.id, courseId),
+        with: {
+            modules: {
                 with: {
                     moduleToLessons: {
                         with: {
@@ -102,16 +84,13 @@ export async function getCourse<T extends { includeModules?: boolean, includeLes
                     },
                 },
                 orderBy: (modules, { asc }) => [asc(modules.order)],
-            } : true,
-        } : undefined,
+            },
+        },
     });
-
 
     if (!course) {
         throw new Error("Course not found");
     }
 
-    const result = options?.includeLessons ? { ...course, modules: (course as QueryCourseWithModulesAndLessons).modules.map((module) => { return { ...module, lessons: module.moduleToLessons.map((moduleToLessonsObj) => moduleToLessonsObj.lesson) } }) } : course;
-
-    return result as GetCourseReturnType<T>;
+    return course;
 }
