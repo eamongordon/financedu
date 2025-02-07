@@ -124,6 +124,7 @@ export const modules = pgTable("module", {
   courseId: text("courseId")
     .notNull()
     .references(() => courses.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
   description: text("description"),
   objectives: text("objectives"),
   order: integer("order").notNull(),
@@ -133,6 +134,7 @@ export const lessons = pgTable("lesson", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
+  title: text("title").notNull(),
   description: text("description"),
   objectives: text("objectives"),
 })
@@ -173,6 +175,7 @@ export const activities = pgTable("activity", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
+  title: text("title").notNull(),
   type: text("type", { enum: ["Quiz", "Article"] }).notNull(),
   description: text("description"),
 })
