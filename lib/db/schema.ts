@@ -178,6 +178,7 @@ export const activities = pgTable("activity", {
   title: text("title").notNull(),
   type: text("type", { enum: ["Quiz", "Article"] }).notNull(),
   description: text("description"),
+  content: text("content"),
 })
 
 export const activityToQuestions = pgTable("activityQuestion", {
