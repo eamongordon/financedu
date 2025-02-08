@@ -228,6 +228,9 @@ export const matchingSubquestions = pgTable("matchingSubquestion", {
     .notNull()
     .references(() => questions.id, { onDelete: "cascade" }),
   subquestion: text("subquestion").notNull(),
+  correctMatchingOptionId: text("correctMatchingOptionId")
+    .notNull()
+    .references(() => matchingOptions.id, { onDelete: "cascade" }),
 })
 
 export const matchingOptions = pgTable("matchingOption", {
@@ -384,6 +387,10 @@ export const matchingSubquestionsRelations = relations(matchingSubquestions, ({ 
     references: [questions.id],
   }),
   matchingOptions: many(matchingOptions),
+  correctMatchingOption: one(matchingOptions, {
+    fields: [matchingSubquestions.correctMatchingOptionId],
+    references: [matchingOptions.id],
+  }),
 }))
 
 export const matchingOptionsRelations = relations(matchingOptions, ({ one }) => ({
