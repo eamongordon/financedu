@@ -216,7 +216,7 @@ export const questionOptions = pgTable("questionOption", {
   questionId: text("questionId")
     .notNull()
     .references(() => questions.id, { onDelete: "cascade" }),
-  option: text("option").notNull(),
+  value: text("value").notNull(),
   isCorrect: boolean("isCorrect").notNull(),
 })
 
