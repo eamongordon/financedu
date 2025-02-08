@@ -180,6 +180,7 @@ export const activities = pgTable("activity", {
   type: text("type", { enum: ["Quiz", "Article"] }).notNull(),
   description: text("description"),
   content: text("content"),
+  topics: text("topics").array(),
 })
 
 export const activityToQuestions = pgTable("activityQuestion", {
