@@ -228,7 +228,7 @@ export const matchingSubquestions = pgTable("matchingSubquestion", {
   questionId: text("questionId")
     .notNull()
     .references(() => questions.id, { onDelete: "cascade" }),
-  subquestion: text("subquestion").notNull(),
+  instructions: text("instructions").notNull(),
   correctMatchingOptionId: text("correctMatchingOptionId")
     .notNull()
     .references(() => matchingOptions.id, { onDelete: "cascade" }),
