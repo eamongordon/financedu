@@ -241,8 +241,7 @@ export const matchingOptions = pgTable("matchingOption", {
   questionId: text("questionId")
     .notNull()
     .references(() => questions.id, { onDelete: "cascade" }),
-  option: text("option").notNull(),
-  correct: boolean("correct").notNull(),
+  value: text("value").notNull(),
 })
 
 export const activityToStandards = pgTable("activityStandard", {
