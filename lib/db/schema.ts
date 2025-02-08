@@ -207,6 +207,7 @@ export const questions = pgTable("question", {
   description: text("description"),
   numericAnswer: decimal("numericAnswer", { precision: 10, scale: 2 }),
   instructions: text("instructions"),
+  topics: text("topics").array(),
 })
 
 export const questionOptions = pgTable("questionOption", {
