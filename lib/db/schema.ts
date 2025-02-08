@@ -381,7 +381,7 @@ export const questionOptionsRelations = relations(questionOptions, ({ one }) => 
   }),
 }))
 
-export const matchingSubquestionsRelations = relations(matchingSubquestions, ({ one, many }) => ({
+export const matchingSubquestionsRelations = relations(matchingSubquestions, ({ one }) => ({
   question: one(questions, {
     fields: [matchingSubquestions.questionId],
     references: [questions.id],
