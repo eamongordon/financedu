@@ -392,11 +392,12 @@ export const matchingSubquestionsRelations = relations(matchingSubquestions, ({ 
   }),
 }))
 
-export const matchingOptionsRelations = relations(matchingOptions, ({ one }) => ({
+export const matchingOptionsRelations = relations(matchingOptions, ({ one, many }) => ({
   question: one(questions, {
     fields: [matchingOptions.questionId],
     references: [questions.id],
   }),
+  matchingSubquestions: many(matchingSubquestions),
 }))
 
 export const activityQuestionsRelations = relations(activityToQuestions, ({ one }) => ({
