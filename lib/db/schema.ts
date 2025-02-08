@@ -386,7 +386,6 @@ export const matchingSubquestionsRelations = relations(matchingSubquestions, ({ 
     fields: [matchingSubquestions.questionId],
     references: [questions.id],
   }),
-  matchingOptions: many(matchingOptions),
   correctMatchingOption: one(matchingOptions, {
     fields: [matchingSubquestions.correctMatchingOptionId],
     references: [matchingOptions.id],
