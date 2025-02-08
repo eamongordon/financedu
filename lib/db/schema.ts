@@ -205,6 +205,7 @@ export const questions = pgTable("question", {
   type: text("type", { enum: ["matching", "numeric", "multiselect", "radio", "info"] }).notNull(),
   difficulty: text("difficulty", { enum: ["easy", "medium", "hard"] }),
   numericAnswer: decimal("numericAnswer", { precision: 10, scale: 2 }),
+  tolerance: integer("tolerance"),
   instructions: text("instructions"),
   topics: text("topics").array(),
 })
