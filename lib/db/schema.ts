@@ -204,7 +204,6 @@ export const questions = pgTable("question", {
     .$defaultFn(() => crypto.randomUUID()),
   type: text("type", { enum: ["matching", "numeric", "multiselect", "radio", "info"] }).notNull(),
   difficulty: text("difficulty", { enum: ["easy", "medium", "hard"] }).notNull(),
-  description: text("description"),
   numericAnswer: decimal("numericAnswer", { precision: 10, scale: 2 }),
   instructions: text("instructions"),
   topics: text("topics").array(),
