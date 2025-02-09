@@ -18,12 +18,6 @@ export default function SettingsTabs({ profileDefaultValues, rolesDefaultValues,
     const searchParams = useSearchParams();
     const tab = searchParams.get('tab');
 
-    useEffect(() => {
-        if (!tab) {
-            router.push('/account/settings?tab=profile');
-        }
-    }, [tab, router]);
-
     return (
         <Tabs value={tab || 'profile'}>
             <TabsList className="bg-inherit gap-7">
