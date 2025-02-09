@@ -145,7 +145,7 @@ export const lessons = pgTable("lesson", {
   order: integer("order").notNull(),
 })
 
-export const lessonToActivities = pgTable("lessonActivity", {
+export const lessonToActivities = pgTable("lessonToActivity", {
   lessonId: text("lessonId")
     .notNull()
     .references(() => lessons.id, { onDelete: "cascade" }),
@@ -153,10 +153,10 @@ export const lessonToActivities = pgTable("lessonActivity", {
     .notNull()
     .references(() => activities.id, { onDelete: "cascade" }),
   order: integer("order").notNull(),
-}, (lessonActivity) => [
+}, (lessonToActivity) => [
   {
     compositePK: primaryKey({
-      columns: [lessonActivity.lessonId, lessonActivity.activityId],
+      columns: [lessonToActivity.lessonId, lessonToActivity.activityId],
     }),
   },
 ])
@@ -172,7 +172,7 @@ export const activities = pgTable("activity", {
   topics: text("topics").array(),
 })
 
-export const activityToQuestions = pgTable("activityQuestion", {
+export const activityToQuestions = pgTable("activityToQuestion", {
   activityId: text("activityId")
     .notNull()
     .references(() => activities.id, { onDelete: "cascade" }),
@@ -180,10 +180,10 @@ export const activityToQuestions = pgTable("activityQuestion", {
     .notNull()
     .references(() => questions.id, { onDelete: "cascade" }),
   order: integer("order").notNull(),
-}, (activityQuestion) => [
+}, (activityToQuestion) => [
   {
     compositePK: primaryKey({
-      columns: [activityQuestion.activityId, activityQuestion.questionId],
+      columns: [activityToQuestion.activityId, activityToQuestion.questionId],
     }),
   },
 ])
@@ -235,17 +235,17 @@ export const matchingOptions = pgTable("matchingOption", {
   value: text("value").notNull(),
 })
 
-export const activityToStandards = pgTable("activityStandard", {
+export const activityToStandards = pgTable("activityToStandard", {
   activityId: text("activityId")
     .notNull()
     .references(() => activities.id, { onDelete: "cascade" }),
   standardId: text("standardId")
     .notNull()
     .references(() => standards.id, { onDelete: "cascade" }),
-}, (activityStandard) => [
+}, (activityToStandard) => [
   {
     compositePK: primaryKey({
-      columns: [activityStandard.activityId, activityStandard.standardId],
+      columns: [activityToStandard.activityId, activityToStandard.standardId],
     }),
   },
 ])
@@ -339,7 +339,7 @@ export const activitiesRelations = relations(activities, ({ many }) => ({
   userProgress: many(userProgress),
 }))
 
-export const lessonActivitiesRelations = relations(lessonToActivities, ({ one }) => ({
+export const lessonToActivitiesRelations = relations(lessonToActivities, ({ one }) => ({
   lesson: one(lessons, {
     fields: [lessonToActivities.lessonId],
     references: [lessons.id],
