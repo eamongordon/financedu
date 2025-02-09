@@ -113,6 +113,7 @@ export const courses = pgTable("course", {
     .$defaultFn(() => crypto.randomUUID()),
   title: text("title").notNull(),
   description: text("description"),
+  longDescription: text("longDescription"),
   courseLength: text("courseLength").notNull(),
   gradeLevels: text("gradeLevels").notNull(),
   image: text("image"),
