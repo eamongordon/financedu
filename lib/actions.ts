@@ -76,12 +76,9 @@ export async function getCourseWithModulesAndLessons(courseId: string) {
         with: {
             modules: {
                 with: {
-                    moduleToLessons: {
-                        with: {
-                            lesson: true
-                        },
-                        orderBy: (moduleToLessons, { asc }) => [asc(moduleToLessons.order)]
-                    },
+                    lessons: {
+                        orderBy: (lessons, { asc }) => [asc(lessons.order)]
+                    }
                 },
                 orderBy: (modules, { asc }) => [asc(modules.order)],
             },

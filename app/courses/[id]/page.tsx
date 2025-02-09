@@ -41,7 +41,7 @@ export default async function Page({
                         </CardHeader>
                         <CardContent>
                             <p>{module.description}</p>
-                            <p>{module.objectives}</p>
+                            <p dangerouslySetInnerHTML={{ __html: module.objectives ?? "" }} />
                         </CardContent>
                         <CardFooter>
                             <Button>Get Started</Button>
