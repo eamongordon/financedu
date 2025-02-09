@@ -136,26 +136,14 @@ export const lessons = pgTable("lesson", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  title: text("title").notNull(),
-  description: text("description"),
-  objectives: text("objectives"),
-})
-
-export const moduleToLessons = pgTable("moduleLesson", {
   moduleId: text("moduleId")
     .notNull()
     .references(() => modules.id, { onDelete: "cascade" }),
-  lessonId: text("lessonId")
-    .notNull()
-    .references(() => lessons.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  description: text("description"),
+  objectives: text("objectives"),
   order: integer("order").notNull(),
-}, (moduleLesson) => [
-  {
-    compositePK: primaryKey({
-      columns: [moduleLesson.moduleId, moduleLesson.lessonId],
-    }),
-  },
-])
+})
 
 export const lessonToActivities = pgTable("lessonActivity", {
   lessonId: text("lessonId")
@@ -331,25 +319,17 @@ export const modulesRelations = relations(modules, ({ one, many }) => ({
     fields: [modules.courseId],
     references: [courses.id],
   }),
-  moduleToLessons: many(moduleToLessons),
+  lessons: many(lessons),
   userProgress: many(userProgress),
 }))
 
-export const lessonsRelations = relations(lessons, ({ many }) => ({
-  moduleToLessons: many(moduleToLessons),
-  lessonToActivities: many(lessonToActivities),
-  userProgress: many(userProgress),
-}))
-
-export const moduleLessonsRelations = relations(moduleToLessons, ({ one }) => ({
+export const lessonsRelations = relations(lessons, ({ one, many }) => ({
   module: one(modules, {
-    fields: [moduleToLessons.moduleId],
+    fields: [lessons.moduleId],
     references: [modules.id],
   }),
-  lesson: one(lessons, {
-    fields: [moduleToLessons.lessonId],
-    references: [lessons.id],
-  }),
+  lessonToActivities: many(lessonToActivities),
+  userProgress: many(userProgress),
 }))
 
 export const activitiesRelations = relations(activities, ({ many }) => ({
