@@ -93,7 +93,7 @@ export async function getCourseWithModulesAndLessons(courseId: string) {
 }
 
 export async function getModuleWithLessonsAndActivities(moduleId: string) {
-    const module = await db.query.modules.findFirst({
+    const moduleObj = await db.query.modules.findFirst({
         where: eq(modules.id, moduleId),
         with: {
             lessons: {
@@ -110,11 +110,11 @@ export async function getModuleWithLessonsAndActivities(moduleId: string) {
         }
     });
 
-    if (!module) {
+    if (!moduleObj) {
         throw new Error("Module not found");
     }
 
-    return module;
+    return moduleObj;
 }
 
 export async function getLessonWithActivities(lessonId: string) {

@@ -8,11 +8,11 @@ export default async function CourseLayout({
     params: Promise<{ moduleId: string }>,
 }) {
     const moduleId = (await params).moduleId;
-    const module = await getModuleWithLessonsAndActivities(moduleId);
-    console.log("module", module);
+    const moduleObj = await getModuleWithLessonsAndActivities(moduleId);
+    console.log("module", moduleObj);
     return (
         <div>
-            {module.lessons.map(lesson => (
+            {moduleObj.lessons.map(lesson => (
                 <Card key={lesson.id} className="mb-4">
                     <CardHeader>
                         <h2 className="text-xl font-semibold">{lesson.title}</h2>
