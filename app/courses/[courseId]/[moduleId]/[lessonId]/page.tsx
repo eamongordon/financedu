@@ -1,4 +1,4 @@
-import { getLessonWithActivities, getModuleWithLessonsAndActivities } from "@/lib/actions";
+import { getLessonWithActivities } from "@/lib/actions";
 
 export default async function CourseLayout({
     params,
