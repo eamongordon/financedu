@@ -1,4 +1,5 @@
 import { getCourseWithModulesAndLessons } from "@/lib/actions"
+import { ModuleNav } from "@/components/course/module-nav"
 
 export default async function CourseLayout({
     params,
@@ -31,13 +32,11 @@ export default async function CourseLayout({
                 </div>
                 <div>
                     <h2 className="text-xl font-bold">Modules</h2>
-                    <ul className="list-disc list-inside">
-                        {course.modules.map((module) => (
-                            <li key={module.id}>
-                                <p>{module.title}</p>
-                            </li>
-                        ))}
-                    </ul>
+                    <ModuleNav modules={course.modules.map(module => ({
+                        id: module.id,
+                        title: module.title,
+                        href: `/courses/${slug}/${module.id}`
+                    }))} />
                 </div>
             </div>
             <div
