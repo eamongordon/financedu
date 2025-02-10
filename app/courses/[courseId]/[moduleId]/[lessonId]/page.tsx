@@ -1,6 +1,6 @@
 import { getLessonWithActivities } from "@/lib/actions";
 
-export default async function CourseLayout({
+export default async function LessonPage({
     params,
 }: {
     params: Promise<{ lessonId: string }>,
@@ -9,6 +9,6 @@ export default async function CourseLayout({
     const lesson = await getLessonWithActivities(lessonId);
 
     return (
-        <p>Lesson: {lesson.title}</p>
+        <p>Viewing Lesson Overview: {lesson.title}</p>
     );
 }

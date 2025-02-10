@@ -1,7 +1,7 @@
 "use server";
 
 import { eq } from "drizzle-orm";
-import { courses, users, modules, lessons } from "./db/schema";
+import { courses, users, modules, lessons, activities } from "./db/schema";
 import { db } from "./db";
 import { hash, compare } from "bcrypt";
 import { type Roles } from "./db/schema";
@@ -135,4 +135,16 @@ export async function getLessonWithActivities(lessonId: string) {
     }
 
     return lesson;
+}
+
+export async function getActivity(activityId: string) {
+    const activity = await db.query.activities.findFirst({
+        where: eq(activities.id, activityId),
+    });
+
+    if (!activity) {
+        throw new Error("Activity not found");
+    }
+
+    return activity;
 }
