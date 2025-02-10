@@ -1,13 +1,13 @@
 import { getCourseWithModulesAndLessons } from "@/lib/actions"
-import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button";
 
-export default async function Page({
+export default async function CourseLayout({
     params,
+    children,
 }: {
-    params: Promise<{ id: string }>
+    params: Promise<{ courseId: string }>,
+    children: React.ReactNode
 }) {
-    const slug = (await params).id;
+    const slug = (await params).courseId;
     const course = await getCourseWithModulesAndLessons(slug);
     console.log("course", course);
     return (
@@ -34,20 +34,7 @@ export default async function Page({
             <div
                 className="sm:w-2/3 flex flex-col items-center mx-auto px-2 sm:px-8 overflow-auto"
             >
-                {course.modules.map(module => (
-                    <Card key={module.id} className="mb-4">
-                        <CardHeader>
-                            <h2 className="text-xl font-semibold">{module.title}</h2>
-                        </CardHeader>
-                        <CardContent>
-                            <p>{module.description}</p>
-                            <p dangerouslySetInnerHTML={{ __html: module.objectives ?? "" }} />
-                        </CardContent>
-                        <CardFooter>
-                            <Button>Get Started</Button>
-                        </CardFooter>
-                    </Card>
-                ))}
+                {children}
             </div>
         </div >
     );
