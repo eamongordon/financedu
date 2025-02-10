@@ -13,10 +13,10 @@ export default async function CourseLayout({
     console.log("course", course);
     return (
         <div
-            className="my-4 w-full flex flex-col sm:flex-row sm:flex-grow sm:divide-x dark:divide-stone-500"
+            className="w-full flex flex-col sm:flex-row sm:flex-grow sm:divide-x divide-muted"
         >
             <div
-                className="sm:w-1/3 flex flex-col gap-4 items-start px-2 sm:px-8 text-left sm:sticky top-[80px] mb-4 sm:mb-0 sm:h-screen"
+                className="py-4 sm:w-1/3 flex flex-col gap-4 items-start px-2 sm:px-8 text-left sm:sticky top-[64px] mb-4 sm:mb-0 sm:h-[calc(100vh-96px)] overflow-auto"//todo: figure out proper height for scolling
             >
                 <h1 className="text-2xl font-bold">{course.title}</h1>
                 <p className="mt-2">{course.description}</p>
@@ -40,7 +40,7 @@ export default async function CourseLayout({
                 </div>
             </div>
             <div
-                className="sm:w-2/3 flex flex-col items-center mx-auto px-2 sm:px-8 overflow-auto"
+                className="py-4 sm:w-2/3 flex flex-col items-center mx-auto px-2 sm:px-8 overflow-auto"
             >
                 {children}
             </div>
