@@ -1,6 +1,7 @@
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { getModuleWithLessonsAndActivities } from "@/lib/actions";
+import Link from "next/link";
 
 export default async function CourseLayout({
     params,
@@ -22,7 +23,7 @@ export default async function CourseLayout({
                         <p dangerouslySetInnerHTML={{ __html: lesson.objectives ?? "" }} />
                     </CardContent>
                     <CardFooter>
-                        <Button>Get Started</Button>
+                        <Link className={buttonVariants()} href={`/courses/${moduleObj.courseId}/${moduleObj.id}/${lesson.id}`}>Get Started</Link>
                     </CardFooter>
                 </Card>
             ))}
