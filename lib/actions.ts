@@ -1,7 +1,7 @@
 "use server";
 
 import { eq } from "drizzle-orm";
-import { courses, users } from "./db/schema";
+import { courses, users, modules } from "./db/schema";
 import { db } from "./db";
 import { hash, compare } from "bcrypt";
 import { type Roles } from "./db/schema";
@@ -90,4 +90,29 @@ export async function getCourseWithModulesAndLessons(courseId: string) {
     }
 
     return course;
+}
+
+export async function getModuleWithLessonsAndActivities(moduleId: string) {
+    const module = await db.query.modules.findFirst({
+        where: eq(modules.id, moduleId),
+        with: {
+            lessons: {
+                with: {
+                    lessonToActivities: {
+                        with: {
+                            activity: true
+                        },
+                        orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+                    }
+                },
+                orderBy: (lessons, { asc }) => [asc(lessons.order)]
+            }
+        }
+    });
+
+    if (!module) {
+        throw new Error("Module not found");
+    }
+
+    return module;
 }

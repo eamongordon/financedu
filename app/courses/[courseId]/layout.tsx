@@ -29,7 +29,16 @@ export default async function CourseLayout({
                         <p className="text-muted-foreground text-2xl">7 - 12</p>
                     </div>
                 </div>
-                {/* Add more course info as needed */}
+                <div>
+                    <h2 className="text-xl font-bold">Modules</h2>
+                    <ul className="list-disc list-inside">
+                        {course.modules.map((module) => (
+                            <li key={module.id}>
+                                <p>{module.title}</p>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
             <div
                 className="sm:w-2/3 flex flex-col items-center mx-auto px-2 sm:px-8 overflow-auto"
