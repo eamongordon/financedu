@@ -5,7 +5,6 @@ import { ProfileForm, type ProfileFormValues } from "@/components/account/profil
 import { RolesSettingsForm, type RolesFormValues } from "@/components/account/roles-settings-form";
 import { LoginSettingsForm, type LoginFormValues } from "@/components/account/login-settings-form";
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
 
 interface SettingsTabsProps {
     profileDefaultValues: ProfileFormValues;
