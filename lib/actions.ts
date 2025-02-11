@@ -140,6 +140,24 @@ export async function getLessonWithActivities(lessonId: string) {
 export async function getActivity(activityId: string) {
     const activity = await db.query.activities.findFirst({
         where: eq(activities.id, activityId),
+        with: {
+            activityToQuestions: {
+                with: {
+                    question: {
+                        with: {
+                            questionOptions: true,
+                            matchingSubquestions: {
+                                with: {
+                                    correctMatchingOption: true
+                                }
+                            },
+                            matchingOptions: true
+                        }
+                    }
+                },
+                orderBy: (activityToQuestions, { asc }) => [asc(activityToQuestions.order)]
+            }
+        }
     });
 
     if (!activity) {
