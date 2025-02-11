@@ -1,4 +1,5 @@
 import { getActivity } from "@/lib/actions";
+import QuizComponent from "@/components/course/quiz-component";
 
 export default async function LessonPage({
     params,
@@ -7,6 +8,7 @@ export default async function LessonPage({
 }) {
     const { activityId } = await params;
     const activity = await getActivity(activityId);
+    console.log("activity", activity);
     return (
         <main>
             {activity.type === "Article" && (
@@ -16,6 +18,9 @@ export default async function LessonPage({
                 </div>
             )}
             <p>Activity: {activity.title}</p>
+            {activity.type === "Quiz" && (
+                <QuizComponent activity={activity} />
+            )}
         </main>
     );
 }
