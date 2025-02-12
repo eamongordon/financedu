@@ -16,7 +16,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Question } from "@/types"
 
-export function RadioQuestion({ question }: { question: Question }) {
+export function RadioQuestion({ question, onResponseChange }: { question: Question, onResponseChange: (response: string, isValid: boolean) => void }) {
     const questionOptionIds = question.questionOptions.map((questionOption) => questionOption.id);
 
     if (questionOptionIds.length === 0) {
@@ -36,6 +36,7 @@ export function RadioQuestion({ question }: { question: Question }) {
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
         console.log(data);
+        onResponseChange(data.type, form.formState.isValid);
     }
 
     return (
@@ -49,7 +50,10 @@ export function RadioQuestion({ question }: { question: Question }) {
                             <FormLabel>Notify me about...</FormLabel>
                             <FormControl>
                                 <RadioGroup
-                                    onValueChange={field.onChange}
+                                    onValueChange={(value) => {
+                                        field.onChange(value);
+                                        onResponseChange(value, form.formState.isValid);
+                                    }}
                                     defaultValue={field.value}
                                     className="flex flex-col space-y-1"
                                 >

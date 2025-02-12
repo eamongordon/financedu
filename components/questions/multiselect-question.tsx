@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form"
 import { Question } from "@/types"
 
-export function MultiselectQuestion({ question }: { question: Question }) {
+export function MultiselectQuestion({ question, onResponseChange }: { question: Question, onResponseChange: (response: string[], isValid: boolean) => void }) {
     const questionOptionIds = question.questionOptions.map((questionOption) => questionOption.id);
 
     const FormSchema = z.object({
@@ -38,6 +38,7 @@ export function MultiselectQuestion({ question }: { question: Question }) {
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
         console.log(data);
+        onResponseChange(data.items, form.formState.isValid);
     }
 
     return (
@@ -69,13 +70,13 @@ export function MultiselectQuestion({ question }: { question: Question }) {
                                                     <Checkbox
                                                         checked={field.value?.includes(questionOption.id)}
                                                         onCheckedChange={(checked) => {
-                                                            return checked
-                                                                ? field.onChange([...field.value, questionOption.id])
-                                                                : field.onChange(
-                                                                    field.value?.filter(
-                                                                        (value) => value !== questionOption.id
-                                                                    )
-                                                                )
+                                                            const newValue = checked
+                                                                ? [...field.value, questionOption.id]
+                                                                : field.value?.filter(
+                                                                    (value) => value !== questionOption.id
+                                                                );
+                                                            field.onChange(newValue);
+                                                            onResponseChange(newValue, form.formState.isValid);
                                                         }}
                                                     />
                                                 </FormControl>
