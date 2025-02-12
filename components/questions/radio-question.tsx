@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -16,7 +17,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Question } from "@/types"
 
-export function RadioQuestion({ question, onResponseChange }: { question: Question, onResponseChange: (response: string, isValid: boolean) => void }) {
+export function RadioQuestion({ question, onResponseChange, onValidChange }: { question: Question, onResponseChange: (response: string) => void, onValidChange: (isValid: boolean) => void }) {
     const questionOptionIds = question.questionOptions.map((questionOption) => questionOption.id);
 
     if (questionOptionIds.length === 0) {
@@ -34,9 +35,14 @@ export function RadioQuestion({ question, onResponseChange }: { question: Questi
         mode: "onChange"
     })
 
+    useEffect(() => {
+        onValidChange(form.formState.isValid);
+    }, [form.formState.isValid, onValidChange]);
+
     function onSubmit(data: z.infer<typeof FormSchema>) {
         console.log(data);
-        onResponseChange(data.type, form.formState.isValid);
+        onResponseChange(data.type);
+        onValidChange(form.formState.isValid);
     }
 
     return (
@@ -52,7 +58,7 @@ export function RadioQuestion({ question, onResponseChange }: { question: Questi
                                 <RadioGroup
                                     onValueChange={(value) => {
                                         field.onChange(value);
-                                        onResponseChange(value, form.formState.isValid);
+                                        onResponseChange(value);
                                     }}
                                     defaultValue={field.value}
                                     className="flex flex-col space-y-1"

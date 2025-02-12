@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { RadioQuestion } from "@/components/questions/radio-question";
 import { MultiselectQuestion } from "@/components/questions/multiselect-question";
 import { NumericQuestion } from "@/components/questions/numeric-question";
@@ -8,26 +8,63 @@ import { TextQuestion } from "@/components/questions/text-question";
 import { MatchingQuestion } from "@/components/questions/matching-question";
 import { InfoQuestion } from "@/components/questions/info-question";
 import { type Activity } from "@/types";
+import { Button } from "../ui/button";
 
-type Response = string | string[];
+type Response = string | string[] | number;
 
 export default function QuizComponent({ activity }: { activity: Activity }) {
-    const [currentQuestionIndex] = useState(0);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [response, setResponse] = useState<Response>([]);
     const [validity, setValidity] = useState(false);
 
     const currentQuestion = activity.activityToQuestions[currentQuestionIndex].question;
 
-    const handleResponseChange = (response: Response, isValid: boolean) => {
+    useEffect(() => {
+        switch (currentQuestion.type) {
+            case "radio":
+                setResponse("");
+                break;
+            case "multiselect":
+                setResponse([]);
+                break;
+            case "numeric":
+                setResponse(0);
+                break;
+            case "text":
+                setResponse("");
+                break;
+            case "matching":
+                setResponse([]);
+                break;
+            case "info":
+                setResponse("");
+                break;
+            default:
+                setResponse("");
+        }
+    }, [currentQuestion]);
+
+    const handleResponseChange = (response: Response) => {
         setResponse(response);
+        console.log("Response:", response);
+    };
+
+    const handleValidChange = (isValid: boolean) => {
+        console.log("isValid:", isValid);
         setValidity(isValid);
     };
 
     const handleSubmit = () => {
-        if (Object.values(validity).every((isValid) => isValid)) {
+        if (validity) {
             console.log("Submitted answers:", response);
         } else {
             console.log("Some questions are invalid.");
+        }
+    };
+
+    const handleNextQuestion = () => {
+        if (currentQuestionIndex < activity.activityToQuestions.length - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
         }
     };
 
@@ -41,10 +78,15 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
                 <RadioQuestion
                     question={currentQuestion}
                     onResponseChange={handleResponseChange}
+                    onValidChange={handleValidChange}
                 />
             )}
             {currentQuestion.type === "multiselect" && (
-                <MultiselectQuestion question={currentQuestion} onResponseChange={handleResponseChange} />
+                <MultiselectQuestion
+                    question={currentQuestion}
+                    onResponseChange={handleResponseChange}
+                    onValidChange={handleValidChange}
+                />
             )}
             {currentQuestion.type === "numeric" && (
                 <NumericQuestion question={currentQuestion} />
@@ -58,7 +100,8 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
             {currentQuestion.type === "info" && (
                 <InfoQuestion question={currentQuestion} />
             )}
-            <button onClick={handleSubmit}>Submit</button>
+            <Button onClick={handleSubmit} disabled={!validity}>Submit</Button>
+            <Button onClick={handleNextQuestion}>Next Question</Button>
         </div>
     );
 }

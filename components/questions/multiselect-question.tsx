@@ -16,8 +16,9 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Question } from "@/types"
+import { useEffect } from "react"
 
-export function MultiselectQuestion({ question, onResponseChange }: { question: Question, onResponseChange: (response: string[], isValid: boolean) => void }) {
+export function MultiselectQuestion({ question, onResponseChange, onValidChange }: { question: Question, onResponseChange: (response: string[]) => void, onValidChange: (isValid: boolean) => void }) {
     const questionOptionIds = question.questionOptions.map((questionOption) => questionOption.id);
 
     const FormSchema = z.object({
@@ -38,8 +39,12 @@ export function MultiselectQuestion({ question, onResponseChange }: { question: 
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
         console.log(data);
-        onResponseChange(data.items, form.formState.isValid);
+        onResponseChange(data.items);
     }
+
+    useEffect(() => {
+        onValidChange(form.formState.isValid);
+    }, [form.formState.isValid, onValidChange]);
 
     return (
         <Form {...form}>
@@ -76,7 +81,8 @@ export function MultiselectQuestion({ question, onResponseChange }: { question: 
                                                                     (value) => value !== questionOption.id
                                                                 );
                                                             field.onChange(newValue);
-                                                            onResponseChange(newValue, form.formState.isValid);
+                                                            onResponseChange(newValue);
+                                                            onValidChange(form.formState.isValid);
                                                         }}
                                                     />
                                                 </FormControl>
