@@ -41,8 +41,8 @@ export default function QuizComponent({ activity }: { activity: ActivityResult }
             {currentQuestion.type === "radio" && (
                 <RadioGroup>
                     {currentQuestion.questionOptions.map((option) => (
-                        <div className="flex items-center space-x-2">
-                            <RadioGroupItem key={option.id} value={option.value} />
+                        <div className="flex items-center space-x-2" key={option.id}>
+                            <RadioGroupItem value={option.value} />
                             <Label>{option.value}</Label>
                         </div>
                     ))}
