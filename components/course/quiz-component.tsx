@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { getActivity } from "@/lib/actions";
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Checkbox } from "@/components/ui/checkbox"
 
 type ActivityResult = Awaited<ReturnType<typeof getActivity>>;
 
@@ -34,35 +37,35 @@ export default function QuizComponent({ activity }: { activity: ActivityResult }
             <h2>{currentQuestion.id}</h2>
             {/* Render question based on type */}
             {currentQuestion.type === "radio" && (
-                <div>
+                <RadioGroup>
                     {currentQuestion.questionOptions.map((option) => (
-                        <button key={option.id} onClick={() => console.log(option.value)}>
-                            {option.value}
-                        </button>
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem key={option.id} value={option.value} />
+                            <Label>{option.value}</Label>
+                        </div>
                     ))}
-                </div>
+                </RadioGroup>
             )}
             {currentQuestion.type === "multiselect" && (
                 <div>
                     {currentQuestion.questionOptions.map((option) => (
-                        <label key={option.id}>
-                            <input type="checkbox" value={option.value} />
-                            {option.value}
-                        </label>
+                        <div className="flex items-center space-x-2" key={option.id}>
+                            <Checkbox value={option.value} />
+                            <Label>{option.value}</Label>
+                        </div>
                     ))}
-                    
                 </div>
             )}
             {currentQuestion.type === "numeric" && (
                 <div>
                     <input type="number" />
-                   
+
                 </div>
             )}
             {currentQuestion.type === "text" && (
                 <div>
                     <input type="text" placeholder={currentQuestion.placeholder ?? undefined} />
-                   
+
                 </div>
             )}
             {currentQuestion.type === "matching" && (
@@ -77,7 +80,7 @@ export default function QuizComponent({ activity }: { activity: ActivityResult }
                             </select>
                         </div>
                     ))}
-                    
+
                 </div>
             )}
             {currentQuestion.type === "info" && (
