@@ -19,13 +19,16 @@ import { Input } from "@/components/ui/input"
 import { Question } from "@/types"
 
 const FormSchema = z.object({
-  response: z.preprocess((val) => Number(val), z.number()),
+  response: z.coerce.number(),
 })
 
 export function NumericQuestion({ question, onResponseChange, onValidChange }: { question: Question, onResponseChange: (response: number) => void, onValidChange: (isValid: boolean) => void }) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    mode: "onChange"
+    mode: "onChange",
+    defaultValues: {
+      response: "" as unknown as number
+    }
   })
 
   useEffect(() => {
