@@ -5,6 +5,8 @@ import { getActivity } from "@/lib/actions";
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Select, SelectItem } from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
 
 type ActivityResult = Awaited<ReturnType<typeof getActivity>>;
 
@@ -47,7 +49,7 @@ export default function QuizComponent({ activity }: { activity: ActivityResult }
                 </RadioGroup>
             )}
             {currentQuestion.type === "multiselect" && (
-                <div>
+                <div className="space-y-2">
                     {currentQuestion.questionOptions.map((option) => (
                         <div className="flex items-center space-x-2" key={option.id}>
                             <Checkbox value={option.value} />
@@ -58,8 +60,7 @@ export default function QuizComponent({ activity }: { activity: ActivityResult }
             )}
             {currentQuestion.type === "numeric" && (
                 <div>
-                    <input type="number" />
-
+                    <Input type="number" />
                 </div>
             )}
             {currentQuestion.type === "text" && (
@@ -73,11 +74,11 @@ export default function QuizComponent({ activity }: { activity: ActivityResult }
                     {currentQuestion.matchingSubquestions.map((subquestion) => (
                         <div key={subquestion.id}>
                             <p>{subquestion.instructions}</p>
-                            <select>
+                            <Select>
                                 {currentQuestion.matchingOptions.map((option) => (
-                                    <option key={option.id} value={option.value}>{option.value}</option>
+                                    <SelectItem key={option.id} value={option.value}>{option.value}</SelectItem>
                                 ))}
-                            </select>
+                            </Select>
                         </div>
                     ))}
 
@@ -85,7 +86,7 @@ export default function QuizComponent({ activity }: { activity: ActivityResult }
             )}
             {currentQuestion.type === "info" && (
                 <div>
-                    <p>{currentQuestion.instructions}</p>
+                    <p dangerouslySetInnerHTML={{ __html: currentQuestion.instructions ?? "" }}></p>
                 </div>
             )}
         </div>
