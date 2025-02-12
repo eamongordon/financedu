@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input"
 import { Question } from "@/types"
 
 const FormSchema = z.object({
-  response: z.number(),
+  response: z.preprocess((val) => Number(val), z.number()),
 })
 
 export function NumericQuestion({ question, onResponseChange, onValidChange }: { question: Question, onResponseChange: (response: number) => void, onValidChange: (isValid: boolean) => void }) {
@@ -49,7 +49,7 @@ export function NumericQuestion({ question, onResponseChange, onValidChange }: {
             <FormItem>
               <FormLabel>Number</FormLabel>
               <FormControl>
-                <Input {...field} onChange={(e) => {
+                <Input type="number" {...field} onChange={(e) => {
                   field.onChange(e);
                   onResponseChange(Number(e.target.value));
                 }} />
