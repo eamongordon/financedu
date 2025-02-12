@@ -89,7 +89,11 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
                 />
             )}
             {currentQuestion.type === "numeric" && (
-                <NumericQuestion question={currentQuestion} />
+                <NumericQuestion
+                    question={currentQuestion}
+                    onResponseChange={handleResponseChange}
+                    onValidChange={handleValidChange}
+                />
             )}
             {currentQuestion.type === "text" && (
                 <TextQuestion question={currentQuestion} />
