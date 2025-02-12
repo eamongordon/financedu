@@ -35,7 +35,7 @@ export default function QuizComponent({ activity }: { activity: ActivityResult }
             {/* Render question based on type */}
             {currentQuestion.type === "radio" && (
                 <div>
-                    {currentQuestion.questionOptions.map((option: any) => (
+                    {currentQuestion.questionOptions.map((option) => (
                         <button key={option.id} onClick={() => console.log(option.value)}>
                             {option.value}
                         </button>
@@ -44,7 +44,7 @@ export default function QuizComponent({ activity }: { activity: ActivityResult }
             )}
             {currentQuestion.type === "multiselect" && (
                 <div>
-                    {currentQuestion.questionOptions.map((option: any) => (
+                    {currentQuestion.questionOptions.map((option) => (
                         <label key={option.id}>
                             <input type="checkbox" value={option.value} />
                             {option.value}
