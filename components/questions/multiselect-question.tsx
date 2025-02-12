@@ -33,6 +33,7 @@ export function MultiselectQuestion({ question }: { question: Question }) {
         defaultValues: {
             items: [],
         },
+        mode: "onChange"
     })
 
     function onSubmit(data: z.infer<typeof FormSchema>) {

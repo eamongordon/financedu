@@ -31,6 +31,7 @@ export function RadioQuestion({ question }: { question: Question }) {
     
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
+        mode: "onChange"
     })
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -53,7 +54,7 @@ export function RadioQuestion({ question }: { question: Question }) {
                                     className="flex flex-col space-y-1"
                                 >
                                     {question.questionOptions.map((questionOptions) => (
-                                        <FormItem className="flex items-center space-x-3 space-y-0">
+                                        <FormItem key={questionOptions.id} className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
                                                 <RadioGroupItem value={questionOptions.id} />
                                             </FormControl>
