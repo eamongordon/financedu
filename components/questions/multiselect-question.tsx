@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form"
 import { Question } from "@/types"
 import { useEffect } from "react"
+import { cn } from "@/lib/utils"
 
 export function MultiselectQuestion({ question, onResponseChange, onValidChange, showCorrectAnswer }: { question: Question, onResponseChange: (response: string[]) => void, onValidChange: (isValid: boolean) => void, showCorrectAnswer: boolean }) {
     const questionOptionIds = question.questionOptions.map((questionOption) => questionOption.id);
@@ -52,8 +53,7 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange,
                     control={form.control}
                     name="items"
                     render={() => (
-                        <FormItem
-                        >
+                        <FormItem>
                             <div className="mb-4 space-y-4">
                                 <FormLabel className="text-base font-semibold">{question.instructions}</FormLabel>
                                 <FormDescription>
@@ -61,44 +61,66 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange,
                                 </FormDescription>
                             </div>
                             <div className="flex flex-col space-y-0 gap-0 border-t border-b divide-y">
-                            {question.questionOptions.map((questionOption) => (
-                                <FormField
-                                    key={questionOption.id}
-                                    control={form.control}
-                                    name="items"
-                                    render={({ field }) => {
-                                        return (
-                                            <FormItem
-                                                key={questionOption.id}
-                                                className="flex flex-row items-center gap-3 space-x-3 space-y-0 p-4"
-                                            >
-                                                <FormControl>
-                                                    <Checkbox
-                                                        checked={field.value?.includes(questionOption.id)}
-                                                        onCheckedChange={(checked) => {
-                                                            const newValue = checked
-                                                                ? [...field.value, questionOption.id]
-                                                                : field.value?.filter(
-                                                                    (value) => value !== questionOption.id
-                                                                );
-                                                            field.onChange(newValue);
-                                                            onResponseChange(newValue);
-                                                            onValidChange(form.formState.isValid);
-                                                        }}
-                                                        className="scale-125 border-border data-[state=checked]:border-primary"
-                                                    />
-                                                </FormControl>
-                                                <FormLabel className="text-base font-normal">
-                                                    {questionOption.value}
-                                                </FormLabel>
-                                            </FormItem>
-                                        )
-                                    }}
-                                />
-                            ))}
+                                {question.questionOptions.map((questionOption) => {
+                                    const isSelected = form.watch("items").includes(questionOption.id);
+                                    const isCorrect = questionOption.isCorrect;
+
+                                    return (
+                                        <FormField
+                                            key={questionOption.id}
+                                            control={form.control}
+                                            name="items"
+                                            render={({ field }) => (
+                                                <FormItem
+                                                    key={questionOption.id}
+                                                    className="flex flex-row items-center gap-3 space-x-3 space-y-0 p-4"
+                                                >
+                                                    <FormControl>
+                                                        <Checkbox
+                                                            checked={isSelected}
+                                                            onCheckedChange={(checked) => {
+                                                                const newValue = checked
+                                                                    ? [...field.value, questionOption.id]
+                                                                    : field.value?.filter(
+                                                                        (value) => value !== questionOption.id
+                                                                    );
+                                                                field.onChange(newValue);
+                                                                onResponseChange(newValue);
+                                                                onValidChange(form.formState.isValid);
+                                                            }}
+                                                            disabled={showCorrectAnswer}
+                                                            className={cn(
+                                                                "scale-125 border-border",
+                                                                showCorrectAnswer
+                                                                    ? isSelected
+                                                                        ? isCorrect
+                                                                            ? "bg-primary border-primary"
+                                                                            : "data-[state=checked]:bg-destructive bg-destructive border-destructive"
+                                                                        : isCorrect
+                                                                            ? "bg-destructive border-destructive"
+                                                                            : "border-border"
+                                                                    : isSelected
+                                                                        ? "bg-primary border-primary"
+                                                                        : "border-border"
+                                                            )}
+                                                        />
+                                                    </FormControl>
+                                                    <FormLabel className="flex flex-col gap-1">
+                                                        {showCorrectAnswer && <div className={cn(
+                                                            "text-sm leading-none",
+                                                            isCorrect ? (isSelected ? "text-primary" : "text-destructive") :
+                                                                isSelected ? "text-destructive" :
+                                                                    "text-muted-foreground"
+                                                        )}>{isCorrect ? (isSelected ? "CORRECT (SELECTED)" : "CORRECT (NOT SELECTED)") : isSelected ? "INCORRECT (SELECTED)" : "INCORRECT"}:</div>}
+                                                        <h1 className="text-base">{questionOption.value}</h1>
+                                                    </FormLabel>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    )
+                                })}
                             </div>
                             <FormMessage />
-                            {showCorrectAnswer && <div className="text-green-500">Correct Answers</div>}
                         </FormItem>
                     )}
                 />
