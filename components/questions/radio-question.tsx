@@ -70,36 +70,36 @@ export function RadioQuestion({ question, onResponseChange, onValidChange, showC
                                     defaultValue={field.value}
                                     className="flex flex-col space-y-0 gap-0 border-t border-b divide-y"
                                 >
-                                    {question.questionOptions.map((questionOption) => (
-                                        <FormItem key={questionOption.id} className="space-y-0">
-                                            <FormControl className="sr-only">
-                                                <RadioGroupItem id={questionOption.id} value={questionOption.id} className="peer sr-only" disabled={showCorrectAnswer} />
-                                            </FormControl>
-                                            <Label
-                                                htmlFor={questionOption.id}
-                                                className="flex flex-row justify-between p-4 cursor-pointer text-base"
-                                            >
-                                                <span className="flex items-center gap-3">
-                                                    <span className={cn(
-                                                        "mr-2 size-4 rounded-full ring-1 ring-offset-2",
-                                                        field.value === questionOption.id && !showCorrectAnswer ? 'bg-primary ring-primary' :
-                                                            questionOption.isCorrect && field.value === questionOption.id ? 'bg-primary ring-primary' :
-                                                                field.value === questionOption.id ? 'bg-destructive ring-destructive' :
-                                                                    'ring-border'
-                                                    )}></span>
-                                                    <div className="flex flex-col gap-1">
-                                                        {showCorrectAnswer && <div className={cn(
-                                                            "text-sm leading-none",
-                                                            questionOption.isCorrect && field.value === questionOption.id ? "text-primary" :
-                                                                field.value === questionOption.id ? "text-destructive" :
-                                                                    "text-muted-foreground"
-                                                        )}>{questionOption.isCorrect ? "CORRECT" : "INCORRECT"} {field.value === questionOption.id && "(SELECTED)"}:</div>}
-                                                        <h1 className="text-base">{questionOption.value}</h1>
-                                                    </div>
-                                                </span>
-                                            </Label>
-                                        </FormItem>
-                                    ))}
+                                    {question.questionOptions.map((questionOption) => {
+                                        const isCorrect = questionOption.isCorrect;
+                                        const isSelected = field.value === questionOption.id;
+
+                                        return (
+                                            <FormItem key={questionOption.id} className="space-y-0">
+                                                <FormControl className="sr-only">
+                                                    <RadioGroupItem id={questionOption.id} value={questionOption.id} className="peer sr-only" disabled={showCorrectAnswer} />
+                                                </FormControl>
+                                                <Label
+                                                    htmlFor={questionOption.id}
+                                                    className="flex flex-row justify-between p-4 cursor-pointer text-base"
+                                                >
+                                                    <span className="flex items-center gap-3">
+                                                        <span className={cn(
+                                                            "mr-2 size-4 rounded-full ring-1 ring-offset-2",
+                                                            isSelected ? (isCorrect || !showCorrectAnswer ? 'bg-primary ring-primary' : 'bg-destructive ring-destructive') : 'ring-border'
+                                                        )}></span>
+                                                        <div className="flex flex-col gap-1">
+                                                            {showCorrectAnswer && <div className={cn(
+                                                                "text-sm leading-none",
+                                                                isSelected ? (isCorrect ? "text-primary" : "text-destructive") : "text-muted-foreground"
+                                                            )}>{isCorrect ? "CORRECT" : "INCORRECT"} {isSelected && "(SELECTED)"}:</div>}
+                                                            <h1 className="text-base">{questionOption.value}</h1>
+                                                        </div>
+                                                    </span>
+                                                </Label>
+                                            </FormItem>
+                                        );
+                                    })}
                                 </RadioGroup>
                             </FormControl>
                             <FormMessage />
