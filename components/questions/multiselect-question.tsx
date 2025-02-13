@@ -17,7 +17,7 @@ import {
 import { Question } from "@/types"
 import { useEffect } from "react"
 
-export function MultiselectQuestion({ question, onResponseChange, onValidChange }: { question: Question, onResponseChange: (response: string[]) => void, onValidChange: (isValid: boolean) => void }) {
+export function MultiselectQuestion({ question, onResponseChange, onValidChange, showCorrectAnswer }: { question: Question, onResponseChange: (response: string[]) => void, onValidChange: (isValid: boolean) => void, showCorrectAnswer: boolean }) {
     const questionOptionIds = question.questionOptions.map((questionOption) => questionOption.id);
 
     const FormSchema = z.object({
@@ -98,6 +98,7 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange 
                             ))}
                             </div>
                             <FormMessage />
+                            {showCorrectAnswer && <div className="text-green-500">Correct Answers</div>}
                         </FormItem>
                     )}
                 />

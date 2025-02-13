@@ -17,8 +17,9 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Question } from "@/types"
 import { Label } from "../ui/label"
+import { cn } from "@/lib/utils"
 
-export function RadioQuestion({ question, onResponseChange, onValidChange }: { question: Question, onResponseChange: (response: string) => void, onValidChange: (isValid: boolean) => void }) {
+export function RadioQuestion({ question, onResponseChange, onValidChange, showCorrectAnswer }: { question: Question, onResponseChange: (response: string) => void, onValidChange: (isValid: boolean) => void, showCorrectAnswer: boolean }) {
     const questionOptionIds = question.questionOptions.map((questionOption) => questionOption.id);
 
     if (questionOptionIds.length === 0) {
@@ -72,15 +73,29 @@ export function RadioQuestion({ question, onResponseChange, onValidChange }: { q
                                     {question.questionOptions.map((questionOptions) => (
                                         <FormItem key={questionOptions.id} className="space-y-0">
                                             <FormControl className="sr-only">
-                                                <RadioGroupItem id={questionOptions.id} value={questionOptions.id} className="peer sr-only" />
+                                                <RadioGroupItem id={questionOptions.id} value={questionOptions.id} className="peer sr-only" disabled={showCorrectAnswer} />
                                             </FormControl>
                                             <Label
                                                 htmlFor={questionOptions.id}
                                                 className="flex flex-row justify-between p-4 cursor-pointer text-base"
                                             >
                                                 <span className="flex items-center gap-3">
-                                                    <span className={`mr-2 size-4 rounded-full ${field.value === questionOptions.id ? 'bg-primary ring-primary' : 'ring-border'} ring-1 ring-offset-2`}></span>
-                                                    {questionOptions.value}
+                                                    <span className={cn(
+                                                        "mr-2 size-4 rounded-full ring-1 ring-offset-2",
+                                                        field.value === questionOptions.id && !showCorrectAnswer ? 'bg-primary ring-primary' :
+                                                            questionOptions.isCorrect && field.value === questionOptions.id ? 'bg-primary ring-primary' :
+                                                                field.value === questionOptions.id ? 'bg-destructive ring-destructive' :
+                                                                    'ring-border'
+                                                    )}></span>
+                                                    <div className="flex flex-col gap-1">
+                                                        {showCorrectAnswer && <div className={cn(
+                                                            "text-sm leading-none",
+                                                            questionOptions.isCorrect && field.value === questionOptions.id ? "text-primary" :
+                                                                field.value === questionOptions.id ? "text-destructive" :
+                                                                    "text-muted-foreground"
+                                                        )}>{questionOptions.isCorrect ? "CORRECT" : "INCORRECT"} {field.value === questionOptions.id && "(SELECTED)"}:</div>}
+                                                        <h1 className="text-base">{questionOptions.value}</h1>
+                                                    </div>
                                                 </span>
                                             </Label>
                                         </FormItem>
