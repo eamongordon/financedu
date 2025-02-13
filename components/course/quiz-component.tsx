@@ -17,7 +17,8 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
     const [response, setResponse] = useState<Response>([]);
     const [validity, setValidity] = useState(false);
     const [showAnswer, setShowAnswer] = useState(false);
-    
+    const [questionResponses, setQuestionResponses] = useState<boolean[]>([]); // New state to track correctness
+
     const currentQuestion = activity.activityToQuestions[currentQuestionIndex].question;
 
     useEffect(() => {
@@ -59,6 +60,10 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
     const handleSubmit = () => {
         if (validity) {
             console.log("Submitted answers:", response);
+            const isCorrect = checkAnswer(response); // Function to check if the response is correct
+            const updatedResponses = [...questionResponses];
+            updatedResponses[currentQuestionIndex] = isCorrect;
+            setQuestionResponses(updatedResponses); // Update questionResponses state
         } else {
             console.log("Some questions are invalid.");
         }
@@ -71,6 +76,30 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
             }
         } else {
             setShowAnswer(true);
+        }
+    };
+
+    const checkAnswer = (response: Response): boolean => {
+        switch (currentQuestion.type) {
+            case "radio":
+                return response === currentQuestion.questionOptions.find((option) => option.isCorrect)?.id;
+            case "multiselect":
+                const selectedOptions = response as string[];
+                const correctOptions = currentQuestion.questionOptions.filter((option) => option.isCorrect).map((option) => option.id);
+                return selectedOptions.every((selectedOption) => correctOptions.includes(selectedOption)) &&
+                       correctOptions.every((correctOption) => selectedOptions.includes(correctOption));
+            case "numeric":
+                return response === currentQuestion.questionOptions[0].id;
+            case "text":
+                return true;
+            case "matching":
+                return (response as string[]).every((selectedOption) =>
+                    currentQuestion.questionOptions.find((option) => option.id === selectedOption)?.isCorrect
+                );
+            case "info":
+                return true;
+            default:
+                return false;
         }
     };
 
@@ -112,6 +141,9 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
                 )}
             </div>
             <div className="border-t w-full p-4 flex justify-end absolute bottom-0">
+                <div className="w-full text-center mb-4">
+                    Progress: {((currentQuestionIndex + 1) / activity.activityToQuestions.length) * 100}%
+                </div>
                 <Button onClick={handleNextQuestion} className="mr-2">Next</Button>
                 <Button onClick={handleSubmit} disabled={!validity}>Submit</Button>
             </div>
