@@ -76,7 +76,7 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
 
     return (
         <div className="flex flex-col items-center sm:min-h-[calc(100vh-181px)] relative">
-            <div className="py-8 w-full flex justify-center">
+            <div className="py-8 w-full flex justify-center h-[calc(100vh-254px)] overflow-scroll">
                 {currentQuestion.type === "radio" && (
                     <RadioQuestion
                         question={currentQuestion}
