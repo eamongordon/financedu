@@ -70,31 +70,31 @@ export function RadioQuestion({ question, onResponseChange, onValidChange, showC
                                     defaultValue={field.value}
                                     className="flex flex-col space-y-0 gap-0 border-t border-b divide-y"
                                 >
-                                    {question.questionOptions.map((questionOptions) => (
-                                        <FormItem key={questionOptions.id} className="space-y-0">
+                                    {question.questionOptions.map((questionOption) => (
+                                        <FormItem key={questionOption.id} className="space-y-0">
                                             <FormControl className="sr-only">
-                                                <RadioGroupItem id={questionOptions.id} value={questionOptions.id} className="peer sr-only" disabled={showCorrectAnswer} />
+                                                <RadioGroupItem id={questionOption.id} value={questionOption.id} className="peer sr-only" disabled={showCorrectAnswer} />
                                             </FormControl>
                                             <Label
-                                                htmlFor={questionOptions.id}
+                                                htmlFor={questionOption.id}
                                                 className="flex flex-row justify-between p-4 cursor-pointer text-base"
                                             >
                                                 <span className="flex items-center gap-3">
                                                     <span className={cn(
                                                         "mr-2 size-4 rounded-full ring-1 ring-offset-2",
-                                                        field.value === questionOptions.id && !showCorrectAnswer ? 'bg-primary ring-primary' :
-                                                            questionOptions.isCorrect && field.value === questionOptions.id ? 'bg-primary ring-primary' :
-                                                                field.value === questionOptions.id ? 'bg-destructive ring-destructive' :
+                                                        field.value === questionOption.id && !showCorrectAnswer ? 'bg-primary ring-primary' :
+                                                            questionOption.isCorrect && field.value === questionOption.id ? 'bg-primary ring-primary' :
+                                                                field.value === questionOption.id ? 'bg-destructive ring-destructive' :
                                                                     'ring-border'
                                                     )}></span>
                                                     <div className="flex flex-col gap-1">
                                                         {showCorrectAnswer && <div className={cn(
                                                             "text-sm leading-none",
-                                                            questionOptions.isCorrect && field.value === questionOptions.id ? "text-primary" :
-                                                                field.value === questionOptions.id ? "text-destructive" :
+                                                            questionOption.isCorrect && field.value === questionOption.id ? "text-primary" :
+                                                                field.value === questionOption.id ? "text-destructive" :
                                                                     "text-muted-foreground"
-                                                        )}>{questionOptions.isCorrect ? "CORRECT" : "INCORRECT"} {field.value === questionOptions.id && "(SELECTED)"}:</div>}
-                                                        <h1 className="text-base">{questionOptions.value}</h1>
+                                                        )}>{questionOption.isCorrect ? "CORRECT" : "INCORRECT"} {field.value === questionOption.id && "(SELECTED)"}:</div>}
+                                                        <h1 className="text-base">{questionOption.value}</h1>
                                                     </div>
                                                 </span>
                                             </Label>
