@@ -5,10 +5,10 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useEffect } from "react"
 
-import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Question } from "@/types"
+import { Label } from "../ui/label"
 
 export function RadioQuestion({ question, onResponseChange, onValidChange }: { question: Question, onResponseChange: (response: string) => void, onValidChange: (isValid: boolean) => void }) {
     const questionOptionIds = question.questionOptions.map((questionOption) => questionOption.id);
@@ -29,7 +30,7 @@ export function RadioQuestion({ question, onResponseChange, onValidChange }: { q
             required_error: "You need to select a notification type.",
         }),
     });
-    
+
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         mode: "onChange"
@@ -47,13 +48,18 @@ export function RadioQuestion({ question, onResponseChange, onValidChange }: { q
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="w-4/5 space-y-6">
                 <FormField
                     control={form.control}
                     name="type"
                     render={({ field }) => (
                         <FormItem className="space-y-3">
-                            <FormLabel>Notify me about...</FormLabel>
+                            <div className="mb-4 space-y-4">
+                                <FormLabel className="text-base font-semibold">{question.instructions}</FormLabel>
+                                <FormDescription>
+                                    Choose 1 answer:
+                                </FormDescription>
+                            </div>
                             <FormControl>
                                 <RadioGroup
                                     onValueChange={(value) => {
@@ -61,16 +67,22 @@ export function RadioQuestion({ question, onResponseChange, onValidChange }: { q
                                         onResponseChange(value);
                                     }}
                                     defaultValue={field.value}
-                                    className="flex flex-col space-y-1"
+                                    className="flex flex-col space-y-0 gap-0 border-t border-b divide-y"
                                 >
                                     {question.questionOptions.map((questionOptions) => (
-                                        <FormItem key={questionOptions.id} className="flex items-center space-x-3 space-y-0">
-                                            <FormControl>
-                                                <RadioGroupItem value={questionOptions.id} />
+                                        <FormItem key={questionOptions.id} className="space-y-0">
+                                            <FormControl className="sr-only">
+                                                <RadioGroupItem id={questionOptions.id} value={questionOptions.id} className="peer sr-only" />
                                             </FormControl>
-                                            <FormLabel className="font-normal">
-                                                {questionOptions.value}
-                                            </FormLabel>
+                                            <Label
+                                                htmlFor={questionOptions.id}
+                                                className="flex flex-row justify-between p-4 cursor-pointer text-base"
+                                            >
+                                                <span className="flex items-center gap-3">
+                                                    <span className={`mr-2 size-4 rounded-full ${field.value === questionOptions.id ? 'bg-primary ring-primary' : 'ring-border'} ring-1 ring-offset-2`}></span>
+                                                    {questionOptions.value}
+                                                </span>
+                                            </Label>
                                         </FormItem>
                                     ))}
                                 </RadioGroup>
@@ -79,7 +91,6 @@ export function RadioQuestion({ question, onResponseChange, onValidChange }: { q
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Submit</Button>
             </form>
         </Form>
     )

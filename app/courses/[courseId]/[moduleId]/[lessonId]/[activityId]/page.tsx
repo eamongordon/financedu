@@ -1,5 +1,6 @@
 import { getActivity } from "@/lib/actions";
 import QuizComponent from "@/components/course/quiz-component";
+import { CircleHelp } from "lucide-react";
 
 export default async function LessonPage({
     params,
@@ -10,14 +11,24 @@ export default async function LessonPage({
     const activity = await getActivity(activityId);
     console.log("activity", activity);
     return (
-        <main>
+        <main className="w-full">
+            <section className="p-8 border-b">
+                <div className="flex flex-row items-center gap-4">
+                    <CircleHelp className="text-secondary" size={50} strokeWidth={1.5} />
+                    <div className="flex flex-col space-y-1">
+                        <h1 className="text-2xl font-bold leading-none">{activity.title}</h1>
+                        <p className="font-semibold text-secondary">Quiz</p>
+                    </div>
+
+                </div>
+                <p>{activity.description}</p>
+            </section>
             {activity.type === "Article" && (
                 <div className="flex flex-col gap-4">
                     <h1 className="font-semibold text-xl md:text-2xl lg:text-4xl">{activity.title}</h1>
                     <div dangerouslySetInnerHTML={{ __html: activity.content! }} />
                 </div>
             )}
-            <p>Activity: {activity.title}</p>
             {activity.type === "Quiz" && (
                 <QuizComponent activity={activity} />
             )}

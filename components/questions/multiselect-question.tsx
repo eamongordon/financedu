@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
     Form,
@@ -48,18 +47,20 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange 
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="w-4/5 space-y-6">
                 <FormField
                     control={form.control}
                     name="items"
                     render={() => (
-                        <FormItem>
-                            <div className="mb-4">
-                                <FormLabel className="text-base">Sidebar</FormLabel>
+                        <FormItem
+                        >
+                            <div className="mb-4 space-y-4">
+                                <FormLabel className="text-base font-semibold">{question.instructions}</FormLabel>
                                 <FormDescription>
-                                    Select the items you want to display in the sidebar.
+                                    Select all that apply:
                                 </FormDescription>
                             </div>
+                            <div className="flex flex-col space-y-0 gap-0 border-t border-b divide-y">
                             {question.questionOptions.map((questionOption) => (
                                 <FormField
                                     key={questionOption.id}
@@ -69,7 +70,7 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange 
                                         return (
                                             <FormItem
                                                 key={questionOption.id}
-                                                className="flex flex-row items-start space-x-3 space-y-0"
+                                                className="flex flex-row items-center gap-3 space-x-3 space-y-0 p-4"
                                             >
                                                 <FormControl>
                                                     <Checkbox
@@ -84,9 +85,10 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange 
                                                             onResponseChange(newValue);
                                                             onValidChange(form.formState.isValid);
                                                         }}
+                                                        className="scale-125 border-border data-[state=checked]:border-primary"
                                                     />
                                                 </FormControl>
-                                                <FormLabel className="text-sm font-normal">
+                                                <FormLabel className="text-base font-normal">
                                                     {questionOption.value}
                                                 </FormLabel>
                                             </FormItem>
@@ -94,11 +96,11 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange 
                                     }}
                                 />
                             ))}
+                            </div>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Submit</Button>
             </form>
         </Form>
     )

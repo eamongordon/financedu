@@ -12,7 +12,7 @@ export default async function LessonLayout({
     const lesson = await getLessonWithActivities(lessonId);
     return (
         <div
-            className="w-full flex flex-col sm:flex-row sm:flex-grow sm:divide-x divide-muted"
+            className="w-full flex flex-col sm:flex-row sm:flex-grow sm:divide-x divide-border"
         >
             <div
                 className="py-4 sm:w-1/3 flex flex-col gap-4 items-start px-2 sm:px-8 text-left sm:sticky top-[64px] mb-4 sm:mb-0 sm:h-[calc(100vh-64px)] overflow-auto"
@@ -29,7 +29,7 @@ export default async function LessonLayout({
                 </div>
             </div>
             <div
-                className="py-4 sm:w-2/3 flex flex-col items-center mx-auto px-2 sm:px-8 overflow-auto"
+                className="sm:w-2/3 flex flex-col items-center mx-auto overflow-auto"
             >
                 {children}
             </div>

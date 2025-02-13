@@ -69,43 +69,43 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
     };
 
     return (
-        <div>
-            <h2>Test Text</h2>
-            <div className="bg-gray-500"></div>
-            <h2>{currentQuestion.id}</h2>
-            {/* Render question based on type */}
-            {currentQuestion.type === "radio" && (
-                <RadioQuestion
-                    question={currentQuestion}
-                    onResponseChange={handleResponseChange}
-                    onValidChange={handleValidChange}
-                />
-            )}
-            {currentQuestion.type === "multiselect" && (
-                <MultiselectQuestion
-                    question={currentQuestion}
-                    onResponseChange={handleResponseChange}
-                    onValidChange={handleValidChange}
-                />
-            )}
-            {currentQuestion.type === "numeric" && (
-                <NumericQuestion
-                    question={currentQuestion}
-                    onResponseChange={handleResponseChange}
-                    onValidChange={handleValidChange}
-                />
-            )}
-            {currentQuestion.type === "text" && (
-                <TextQuestion question={currentQuestion} />
-            )}
-            {currentQuestion.type === "matching" && (
-                <MatchingQuestion question={currentQuestion} />
-            )}
-            {currentQuestion.type === "info" && (
-                <InfoQuestion question={currentQuestion} />
-            )}
-            <Button onClick={handleSubmit} disabled={!validity}>Submit</Button>
-            <Button onClick={handleNextQuestion}>Next Question</Button>
+        <div className="flex flex-col items-center sm:min-h-[calc(100vh-181px)] relative">
+            <div className="py-8 w-full flex justify-center">
+                {currentQuestion.type === "radio" && (
+                    <RadioQuestion
+                        question={currentQuestion}
+                        onResponseChange={handleResponseChange}
+                        onValidChange={handleValidChange}
+                    />
+                )}
+                {currentQuestion.type === "multiselect" && (
+                    <MultiselectQuestion
+                        question={currentQuestion}
+                        onResponseChange={handleResponseChange}
+                        onValidChange={handleValidChange}
+                    />
+                )}
+                {currentQuestion.type === "numeric" && (
+                    <NumericQuestion
+                        question={currentQuestion}
+                        onResponseChange={handleResponseChange}
+                        onValidChange={handleValidChange}
+                    />
+                )}
+                {currentQuestion.type === "text" && (
+                    <TextQuestion question={currentQuestion} />
+                )}
+                {currentQuestion.type === "matching" && (
+                    <MatchingQuestion question={currentQuestion} />
+                )}
+                {currentQuestion.type === "info" && (
+                    <InfoQuestion question={currentQuestion} />
+                )}
+            </div>
+            <div className="border-t w-full p-4 flex justify-end absolute bottom-0">
+                <Button onClick={handleNextQuestion} className="mr-2">Next</Button>
+                <Button onClick={handleSubmit} disabled={!validity}>Submit</Button>
+            </div>
         </div>
     );
 }
