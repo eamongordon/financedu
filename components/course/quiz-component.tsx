@@ -16,7 +16,7 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [response, setResponse] = useState<Response>([]);
     const [validity, setValidity] = useState(false);
-    const [showCorrectAnswer, setShowCorrectAnswer] = useState(false);
+    const [showAnswer, setShowAnswer] = useState(false);
     
     const currentQuestion = activity.activityToQuestions[currentQuestionIndex].question;
 
@@ -43,7 +43,7 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
             default:
                 setResponse("");
         }
-        setShowCorrectAnswer(false); // Reset showCorrectAnswer when currentQuestion changes
+        setShowAnswer(false); // Reset showAnswer when currentQuestion changes
     }, [currentQuestion]);
 
     const handleResponseChange = (response: Response) => {
@@ -65,12 +65,12 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
     };
 
     const handleNextQuestion = () => {
-        if (showCorrectAnswer) {
+        if (showAnswer) {
             if (currentQuestionIndex < activity.activityToQuestions.length - 1) {
                 setCurrentQuestionIndex(currentQuestionIndex + 1);
             }
         } else {
-            setShowCorrectAnswer(true);
+            setShowAnswer(true);
         }
     };
 
@@ -82,7 +82,7 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
                         question={currentQuestion}
                         onResponseChange={handleResponseChange}
                         onValidChange={handleValidChange}
-                        showCorrectAnswer={showCorrectAnswer} // Pass showCorrectAnswer prop
+                        showAnswer={showAnswer} // Pass showAnswer prop
                     />
                 )}
                 {currentQuestion.type === "multiselect" && (
@@ -90,7 +90,7 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
                         question={currentQuestion}
                         onResponseChange={handleResponseChange}
                         onValidChange={handleValidChange}
-                        showCorrectAnswer={showCorrectAnswer} // Pass showCorrectAnswer prop
+                        showAnswer={showAnswer} // Pass showAnswer prop
                     />
                 )}
                 {currentQuestion.type === "numeric" && (
@@ -98,7 +98,7 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
                         question={currentQuestion}
                         onResponseChange={handleResponseChange}
                         onValidChange={handleValidChange}
-                        showCorrectAnswer={showCorrectAnswer} // Pass showCorrectAnswer prop
+                        showAnswer={showAnswer} // Pass showAnswer prop
                     />
                 )}
                 {currentQuestion.type === "text" && (

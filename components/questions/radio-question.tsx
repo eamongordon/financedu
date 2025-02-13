@@ -19,7 +19,7 @@ import { Question } from "@/types"
 import { Label } from "../ui/label"
 import { cn } from "@/lib/utils"
 
-export function RadioQuestion({ question, onResponseChange, onValidChange, showCorrectAnswer }: { question: Question, onResponseChange: (response: string) => void, onValidChange: (isValid: boolean) => void, showCorrectAnswer: boolean }) {
+export function RadioQuestion({ question, onResponseChange, onValidChange, showAnswer }: { question: Question, onResponseChange: (response: string) => void, onValidChange: (isValid: boolean) => void, showAnswer: boolean }) {
     const questionOptionIds = question.questionOptions.map((questionOption) => questionOption.id);
 
     if (questionOptionIds.length === 0) {
@@ -77,7 +77,7 @@ export function RadioQuestion({ question, onResponseChange, onValidChange, showC
                                         return (
                                             <FormItem key={questionOption.id} className="space-y-0">
                                                 <FormControl className="sr-only">
-                                                    <RadioGroupItem id={questionOption.id} value={questionOption.id} className="peer sr-only" disabled={showCorrectAnswer} />
+                                                    <RadioGroupItem id={questionOption.id} value={questionOption.id} className="peer sr-only" disabled={showAnswer} />
                                                 </FormControl>
                                                 <Label
                                                     htmlFor={questionOption.id}
@@ -86,10 +86,10 @@ export function RadioQuestion({ question, onResponseChange, onValidChange, showC
                                                     <span className="flex items-center gap-3">
                                                         <span className={cn(
                                                             "mr-2 size-4 rounded-full ring-1 ring-offset-2",
-                                                            isSelected ? (isCorrect || !showCorrectAnswer ? 'bg-primary ring-primary' : 'bg-destructive ring-destructive') : 'ring-border'
+                                                            isSelected ? (isCorrect || !showAnswer ? 'bg-primary ring-primary' : 'bg-destructive ring-destructive') : 'ring-border'
                                                         )}></span>
                                                         <div className="flex flex-col gap-1">
-                                                            {showCorrectAnswer && <div className={cn(
+                                                            {showAnswer && <div className={cn(
                                                                 "text-sm leading-none",
                                                                 isSelected ? (isCorrect ? "text-primary" : "text-destructive") : "text-muted-foreground"
                                                             )}>{isCorrect ? "CORRECT" : "INCORRECT"} {isSelected && "(SELECTED)"}:</div>}

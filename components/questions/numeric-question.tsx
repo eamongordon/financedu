@@ -22,7 +22,7 @@ const FormSchema = z.object({
   response: z.coerce.number(),
 })
 
-export function NumericQuestion({ question, onResponseChange, onValidChange, showCorrectAnswer }: { question: Question, onResponseChange: (response: number) => void, onValidChange: (isValid: boolean) => void, showCorrectAnswer: boolean }) {
+export function NumericQuestion({ question, onResponseChange, onValidChange, showAnswer }: { question: Question, onResponseChange: (response: number) => void, onValidChange: (isValid: boolean) => void, showAnswer: boolean }) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     mode: "onChange",
@@ -61,7 +61,7 @@ export function NumericQuestion({ question, onResponseChange, onValidChange, sho
                 Enter a Response
               </FormDescription>
               <FormMessage />
-              {showCorrectAnswer && <div className="text-green-500">Correct Answers</div>}
+              {showAnswer && <div className="text-green-500">Correct Answers</div>}
             </FormItem>
           )}
         />

@@ -18,7 +18,7 @@ import { Question } from "@/types"
 import { useEffect } from "react"
 import { cn } from "@/lib/utils"
 
-export function MultiselectQuestion({ question, onResponseChange, onValidChange, showCorrectAnswer }: { question: Question, onResponseChange: (response: string[]) => void, onValidChange: (isValid: boolean) => void, showCorrectAnswer: boolean }) {
+export function MultiselectQuestion({ question, onResponseChange, onValidChange, showAnswer }: { question: Question, onResponseChange: (response: string[]) => void, onValidChange: (isValid: boolean) => void, showAnswer: boolean }) {
     const questionOptionIds = question.questionOptions.map((questionOption) => questionOption.id);
 
     const FormSchema = z.object({
@@ -88,10 +88,10 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange,
                                                                 onResponseChange(newValue);
                                                                 onValidChange(form.formState.isValid);
                                                             }}
-                                                            disabled={showCorrectAnswer}
+                                                            disabled={showAnswer}
                                                             className={cn(
                                                                 "scale-125 border-border",
-                                                                showCorrectAnswer
+                                                                showAnswer
                                                                     ? isSelected
                                                                         ? isCorrect
                                                                             ? "bg-primary border-primary"
@@ -106,7 +106,7 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange,
                                                         />
                                                     </FormControl>
                                                     <FormLabel className="flex flex-col gap-1">
-                                                        {showCorrectAnswer && <div className={cn(
+                                                        {showAnswer && <div className={cn(
                                                             "text-sm leading-none",
                                                             isCorrect ? (isSelected ? "text-primary" : "text-destructive") :
                                                                 isSelected ? "text-destructive" :
