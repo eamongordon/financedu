@@ -163,6 +163,7 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
                         ))}
                     </div>
                 </div>
+                <Button onClick={handleNextQuestion} variant="outline" className="mr-2">Skip</Button>
                 <Button onClick={handleNextQuestion} className="mr-2" disabled={!validity}>{showAnswer ? "Next Question" : "Check Answer"}</Button>
             </div>
         </div>
