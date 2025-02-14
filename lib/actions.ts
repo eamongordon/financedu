@@ -199,7 +199,7 @@ export async function getNextActivity(activityId: string) {
     const currentOrder = currentActivity.lessonToActivities[0].order;
 
     // Check for next activity in the current lesson
-    let nextActivity = await db.query.lessonToActivities.findFirst({
+    const nextActivity = await db.query.lessonToActivities.findFirst({
         where: and(eq(lessonToActivities.lessonId, currentLessonId), gt(lessonToActivities.order, currentOrder)),
         orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)],
         with: {
@@ -295,7 +295,7 @@ export async function getNextLesson(lessonId: string) {
     const currentOrder = currentLesson.order;
 
     // Check for next lesson in the current module
-    let nextLesson = await db.query.lessons.findFirst({
+    const nextLesson = await db.query.lessons.findFirst({
         where: and(eq(lessons.moduleId, currentModuleId), gt(lessons.order, currentOrder)),
         orderBy: (lessons, { asc }) => [asc(lessons.order)]
     });
@@ -325,7 +325,7 @@ export async function getNextLesson(lessonId: string) {
             hasNext: true,
             lesson: nextModule.lessons[0],
             module: nextModule
-        };
+        }
     } else {
         // Done with the course, return the course
         return {
