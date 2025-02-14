@@ -35,7 +35,7 @@ export function NumericQuestion({ question, onResponseChange, onValidChange, sho
     onValidChange(form.formState.isValid);
   }, [form.formState.isValid, onValidChange]);
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  function onChange(data: z.infer<typeof FormSchema>) {
     console.log(data);
     console.log(question);
     onResponseChange(data.response);
@@ -44,7 +44,7 @@ export function NumericQuestion({ question, onResponseChange, onValidChange, sho
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+      <form onChange={form.handleSubmit(onChange)} className="w-2/3 space-y-6">
         <FormField
           control={form.control}
           name="response"
@@ -52,10 +52,7 @@ export function NumericQuestion({ question, onResponseChange, onValidChange, sho
             <FormItem>
               <FormLabel>Number</FormLabel>
               <FormControl>
-                <Input type="number" {...field} onChange={(e) => {
-                  field.onChange(e);
-                  onResponseChange(Number(e.target.value));
-                }} />
+                <Input type="number" {...field} onChange={field.onChange} />
               </FormControl>
               <FormDescription>
                 Enter a Response

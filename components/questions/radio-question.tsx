@@ -41,7 +41,7 @@ export function RadioQuestion({ question, onResponseChange, onValidChange, showA
         onValidChange(form.formState.isValid);
     }, [form.formState.isValid, onValidChange]);
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
+    function onChange(data: z.infer<typeof FormSchema>) {
         console.log(data);
         onResponseChange(data.type);
         onValidChange(form.formState.isValid);
@@ -49,7 +49,7 @@ export function RadioQuestion({ question, onResponseChange, onValidChange, showA
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-4/5 space-y-6">
+            <form onChange={form.handleSubmit(onChange)} className="w-4/5 space-y-6">
                 <FormField
                     control={form.control}
                     name="type"
@@ -63,10 +63,7 @@ export function RadioQuestion({ question, onResponseChange, onValidChange, showA
                             </div>
                             <FormControl>
                                 <RadioGroup
-                                    onValueChange={(value) => {
-                                        field.onChange(value);
-                                        onResponseChange(value);
-                                    }}
+                                    onValueChange={field.onChange}
                                     defaultValue={field.value}
                                     className="flex flex-col space-y-0 gap-0 border-t border-b divide-y"
                                 >

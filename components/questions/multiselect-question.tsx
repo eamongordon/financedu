@@ -37,7 +37,7 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange,
         mode: "onChange"
     })
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
+    function onChange(data: z.infer<typeof FormSchema>) {
         console.log(data);
         onResponseChange(data.items);
     }
@@ -48,7 +48,7 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange,
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-4/5 space-y-6">
+            <form onChange={form.handleSubmit(onChange)} className="w-4/5 space-y-6">
                 <FormField
                     control={form.control}
                     name="items"
@@ -79,14 +79,13 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange,
                                                         <Checkbox
                                                             checked={isSelected}
                                                             onCheckedChange={(checked) => {
-                                                                const newValue = checked
-                                                                    ? [...field.value, questionOption.id]
-                                                                    : field.value?.filter(
-                                                                        (value) => value !== questionOption.id
+                                                                return checked
+                                                                    ? field.onChange([...field.value, questionOption.id])
+                                                                    : field.onChange(
+                                                                        field.value?.filter(
+                                                                            (value) => value !== questionOption.id
+                                                                        )
                                                                     );
-                                                                field.onChange(newValue);
-                                                                onResponseChange(newValue);
-                                                                onValidChange(form.formState.isValid);
                                                             }}
                                                             disabled={showAnswer}
                                                             className={cn(
