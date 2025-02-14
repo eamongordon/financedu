@@ -8,18 +8,28 @@ import { TextQuestion } from "@/components/questions/text-question";
 import { MatchingQuestion } from "@/components/questions/matching-question";
 import { InfoQuestion } from "@/components/questions/info-question";
 import { type Activity } from "@/types";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
+import { getNextActivity } from "@/lib/actions";
+import Link from "next/link";
+import { useParams } from 'next/navigation'
 
 type Response = string | string[] | number | { id: string, response: string }[];
+type NextActivityResult = Awaited<ReturnType<typeof getNextActivity>>;
 
-export default function QuizComponent({ activity }: { activity: Activity }) {
+export default function QuizComponent({ activity, nextActivity }: { activity: Activity, nextActivity: NextActivityResult }) {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [response, setResponse] = useState<Response>([]);
     const [validity, setValidity] = useState(false);
     const [showAnswer, setShowAnswer] = useState(false);
     const [questionResponses, setQuestionResponses] = useState<boolean[]>([]); // New state to track correctness
+    const [isQuizFinished, setIsQuizFinished] = useState(false); // New state to track if the quiz is finished
 
     const currentQuestion = activity.activityToQuestions[currentQuestionIndex].question;
+
+    const params = useParams<{ lessonId: string; moduleId: string, courseId: string }>();
+    const currentLessonId = params!.lessonId;
+    const currentModuleId = params!.moduleId;
+    const currentCourseId = params!.courseId;
 
     useEffect(() => {
         switch (currentQuestion.type) {
@@ -79,6 +89,8 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
         if (showAnswer) {
             if (currentQuestionIndex < activity.activityToQuestions.length - 1) {
                 setCurrentQuestionIndex(currentQuestionIndex + 1);
+            } else {
+                setIsQuizFinished(true); // Set quiz as finished
             }
         } else {
             setShowAnswer(true);
@@ -122,44 +134,41 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
     return (
         <div className="flex flex-col items-center sm:min-h-[calc(100vh-181px)] relative">
             <div className="py-8 w-full flex justify-center h-[calc(100vh-254px)] overflow-scroll">
-                {currentQuestion.type === "radio" && (
+                {isQuizFinished ? (
+                    <p>You finished the quiz</p>
+                ) : currentQuestion.type === "radio" ? (
                     <RadioQuestion
                         question={currentQuestion}
                         onResponseChange={handleResponseChange}
                         onValidChange={handleValidChange}
                         showAnswer={showAnswer}
                     />
-                )}
-                {currentQuestion.type === "multiselect" && (
+                ) : currentQuestion.type === "multiselect" ? (
                     <MultiselectQuestion
                         question={currentQuestion}
                         onResponseChange={handleResponseChange}
                         onValidChange={handleValidChange}
                         showAnswer={showAnswer}
                     />
-                )}
-                {currentQuestion.type === "numeric" && (
+                ) : currentQuestion.type === "numeric" ? (
                     <NumericQuestion
                         question={currentQuestion}
                         onResponseChange={handleResponseChange}
                         onValidChange={handleValidChange}
                         showAnswer={showAnswer}
                     />
-                )}
-                {currentQuestion.type === "text" && (
+                ) : currentQuestion.type === "text" ? (
                     <TextQuestion question={currentQuestion} />
-                )}
-                {currentQuestion.type === "matching" && (
+                ) : currentQuestion.type === "matching" ? (
                     <MatchingQuestion
                         question={currentQuestion}
                         onResponseChange={handleResponseChange}
                         onValidChange={handleValidChange}
-                        showAnswer={showAnswer} // Pass showAnswer prop
+                        showAnswer={showAnswer}
                     />
-                )}
-                {currentQuestion.type === "info" && (
+                ) : currentQuestion.type === "info" ? (
                     <InfoQuestion question={currentQuestion} />
-                )}
+                ) : null}
             </div>
             <div className="border-t w-full p-4 flex justify-end items-center absolute bottom-0">
                 <div className="w-full text-center flex flex-row gap-4 justify-center items-center space-x-2">
@@ -170,8 +179,35 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
                         ))}
                     </div>
                 </div>
-                <Button onClick={handleNextQuestion} variant="outline" className="mr-2">Skip</Button>
-                <Button onClick={handleNextQuestion} className="mr-2" disabled={!validity}>{showAnswer ? "Next Question" : "Check Answer"}</Button>
+                <Button onClick={handleNextQuestion} variant="outline" className="mr-2" disabled={isQuizFinished}>Skip</Button>
+                {isQuizFinished && nextActivity ? (
+                    <Link
+                        href={
+                            nextActivity.module ? `/courses/${currentCourseId}/${nextActivity.module.id}/${nextActivity.lesson.id}/${nextActivity.lesson.lessonToActivities[0].activity.id}` :
+                                nextActivity.lesson ? `/courses/${currentCourseId}/${currentModuleId}/${nextActivity.lesson.id}` :
+                                    nextActivity.activity ? `/courses/${currentCourseId}/${currentModuleId}/${currentLessonId}/${nextActivity.activity.id}` :
+                                        `/courses/${nextActivity.course.id}`
+                        }
+                        className={buttonVariants()}
+                    >
+                        {nextActivity.module ?
+                            `Next: Module ${nextActivity.module.order}` :
+                            nextActivity.lesson ? `Next: Lesson ${nextActivity.lesson.order}` :
+                                nextActivity.activity ? `Next: ${nextActivity.activity.type}` : "All Done!"
+                        }
+                    </Link>
+                ) : (
+                    <Button onClick={handleNextQuestion} className="mr-2" disabled={!validity && !isQuizFinished}>
+                        {isQuizFinished ?
+                            "Finish Quiz"
+                            :
+                            showAnswer ?
+                                currentQuestionIndex + 1 === activity.activityToQuestions.length ? "Finish Quiz" :
+                                    "Next Question" :
+                                "Check Answer"
+                        }
+                    </Button>
+                )}
             </div>
         </div>
     );

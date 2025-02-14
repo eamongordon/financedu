@@ -1,4 +1,4 @@
-import { getActivity } from "@/lib/actions";
+import { getActivity, getNextActivity } from "@/lib/actions";
 import QuizComponent from "@/components/course/quiz-component";
 import { CircleHelp, FileText } from "lucide-react";
 
@@ -9,7 +9,9 @@ export default async function LessonPage({
 }) {
     const { activityId } = await params;
     const activity = await getActivity(activityId);
+    const nextActivity = await getNextActivity(activityId);
     console.log("activity", activity);
+    console.log("nextActiviy", nextActivity);
     return (
         <main className="w-full">
             <section className="border-b flex justify-center">
@@ -31,7 +33,7 @@ export default async function LessonPage({
                 </div>
             )}
             {activity.type === "Quiz" && (
-                <QuizComponent activity={activity} />
+                <QuizComponent activity={activity} nextActivity={nextActivity} />
             )}
         </main>
     );
