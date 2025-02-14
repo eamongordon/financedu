@@ -10,7 +10,7 @@ import { InfoQuestion } from "@/components/questions/info-question";
 import { type Activity } from "@/types";
 import { Button } from "../ui/button";
 
-type Response = string | string[] | number;
+type Response = string | string[] | number | { id: string, response: string }[];
 
 export default function QuizComponent({ activity }: { activity: Activity }) {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -100,9 +100,11 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
             case "text":
                 return true;
             case "matching":
-                return (response as string[]).every((selectedOption) =>
-                    currentQuestion.questionOptions.find((option) => option.id === selectedOption)?.isCorrect
-                );
+                const matchingResponses = response as { id: string, response: string }[];
+                return matchingResponses.every(({ id, response }) => {
+                    const subquestion = currentQuestion.matchingSubquestions.find(sub => sub.id === id);
+                    return subquestion && subquestion.correctMatchingOptionId === response;
+                });
             case "info":
                 return true;
             default:
@@ -125,7 +127,7 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
                         question={currentQuestion}
                         onResponseChange={handleResponseChange}
                         onValidChange={handleValidChange}
-                        showAnswer={showAnswer} // Pass showAnswer prop
+                        showAnswer={showAnswer}
                     />
                 )}
                 {currentQuestion.type === "multiselect" && (
@@ -133,7 +135,7 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
                         question={currentQuestion}
                         onResponseChange={handleResponseChange}
                         onValidChange={handleValidChange}
-                        showAnswer={showAnswer} // Pass showAnswer prop
+                        showAnswer={showAnswer}
                     />
                 )}
                 {currentQuestion.type === "numeric" && (
@@ -141,14 +143,19 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
                         question={currentQuestion}
                         onResponseChange={handleResponseChange}
                         onValidChange={handleValidChange}
-                        showAnswer={showAnswer} // Pass showAnswer prop
+                        showAnswer={showAnswer}
                     />
                 )}
                 {currentQuestion.type === "text" && (
                     <TextQuestion question={currentQuestion} />
                 )}
                 {currentQuestion.type === "matching" && (
-                    <MatchingQuestion question={currentQuestion} />
+                    <MatchingQuestion
+                        question={currentQuestion}
+                        onResponseChange={handleResponseChange}
+                        onValidChange={handleValidChange}
+                        showAnswer={showAnswer} // Pass showAnswer prop
+                    />
                 )}
                 {currentQuestion.type === "info" && (
                     <InfoQuestion question={currentQuestion} />
