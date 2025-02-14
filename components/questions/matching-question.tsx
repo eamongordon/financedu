@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 export function MatchingQuestion({ question, onResponseChange, onValidChange, showAnswer }: { question: Question, onResponseChange: (response: { id: string, response: string }[]) => void, onValidChange: (isValid: boolean) => void, showAnswer: boolean }) {
     const subquestionSchema = question.matchingSubquestions.reduce((schema: { [key: string]: z.ZodString }, subquestion) => {
-        schema[subquestion.id] = z.string().nonempty({ message: "This field is required" });
+        schema[subquestion.id] = z.string();
         return schema;
     }, {});
 
@@ -18,10 +18,6 @@ export function MatchingQuestion({ question, onResponseChange, onValidChange, sh
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
-        defaultValues: question.matchingSubquestions.reduce((values, subquestion) => {
-            values[subquestion.id] = "";
-            return values;
-        }, {} as { [key: string]: string }),
         mode: "onChange"
     });
 
@@ -30,60 +26,52 @@ export function MatchingQuestion({ question, onResponseChange, onValidChange, sh
     }, [form.formState.isValid, onValidChange]);
 
     function onChange(data: z.infer<typeof FormSchema>) {
-        console.log("onChange")
-        console.log(data);
         const responseArray = Object.entries(data).map(([id, response]) => ({ id, response }));
         onResponseChange(responseArray);
     }
 
     return (
         <Form {...form}>
-            {/* OnChange handler not working */}
-            <form className="w-4/5 space-y-6">
-                <div className="mb-4 space-y-4">
+            <form onChange={form.handleSubmit(onChange)} className="w-4/5">
+                <div className="pb-4 space-y-4 border-b">
                     <FormLabel className="text-base font-semibold" dangerouslySetInnerHTML={{ __html: question.instructions ?? "" }} />
                 </div>
-                <div className="flex flex-col space-y-0 gap-0 border-t border-b divide-y">
-                    {question.matchingSubquestions?.map((subquestion) => (
-                        <FormField
-                            key={subquestion.id}
-                            control={form.control}
-                            name={subquestion.id}
-                            render={({ field }) => {
-                                const isCorrect = field.value === subquestion.correctMatchingOptionId;
-                                return (
-                                    <FormItem className="flex justify-between items-center space-y-0 p-4">
-                                        <FormLabel className="flex flex-col gap-2">
-                                            {showAnswer && (<p className={cn("leading-none", isCorrect ? "text-primary" : "text-destructive")}>{isCorrect ? "CORRECT" : "INCORRECT"}</p>)}
-                                            <p>{subquestion.instructions}</p>
-                                        </FormLabel>
-                                        <FormControl className="flex justify-center items-center">
-                                            <Select
-                                                onValueChange={(value) => {
-                                                    field.onChange(value);
-                                                    onChange(form.getValues());
-                                                }}
-                                                defaultValue={field.value}
+                {question.matchingSubquestions?.map((subquestion) => (
+                    <FormField
+                        key={subquestion.id}
+                        control={form.control}
+                        name={subquestion.id}
+                        render={({ field }) => {
+                            const isCorrect = field.value === subquestion.correctMatchingOptionId;
+                            return (
+                                <FormItem className="flex justify-between items-center space-y-0 p-4 border-b">
+                                    <FormLabel className="flex flex-col gap-2 text-inherit">
+                                        {showAnswer && (<p className={cn("leading-none", isCorrect ? "text-primary" : "text-destructive")}>{isCorrect ? "CORRECT" : "INCORRECT"}</p>)}
+                                        <p>{subquestion.instructions}</p>
+                                    </FormLabel>
+                                    <FormControl className="flex justify-center items-center">
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                            disabled={showAnswer}
+                                        >
+                                            <SelectTrigger
+                                                className={cn("w-[180px]", showAnswer && (isCorrect ? "border-primary" : "border-destructive"))}
                                             >
-                                                <SelectTrigger
-                                                    className={cn("w-[180px]", showAnswer && (isCorrect ? "border-primary" : "border-destructive"))}
-                                                >
-                                                    <SelectValue placeholder="Select an option" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {question.matchingOptions?.map((option) => (
-                                                        <SelectItem key={option.id} value={option.id}>{option.value}</SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                );
-                            }}
-                        />
-                    ))}
-                </div>
+                                                <SelectValue placeholder="Select an option" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {question.matchingOptions?.map((option) => (
+                                                    <SelectItem key={option.id} value={option.id}>{option.value}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                </FormItem>
+                            );
+                        }}
+                    />
+                ))}
             </form>
         </Form>
     );
