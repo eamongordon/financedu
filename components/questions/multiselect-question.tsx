@@ -73,7 +73,7 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange,
                                             render={({ field }) => (
                                                 <FormItem
                                                     key={questionOption.id}
-                                                    className="flex flex-row items-center gap-3 space-x-3 space-y-0 p-4"
+                                                    className="flex flex-row items-center gap-3 space-x-3 space-y-0 p-4 cursor-pointer group"
                                                 >
                                                     <FormControl>
                                                         <Checkbox
@@ -89,7 +89,7 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange,
                                                             }}
                                                             disabled={showAnswer}
                                                             className={cn(
-                                                                "scale-125 border-border",
+                                                                "scale-125 border-input group-hover:border-foreground",
                                                                 showAnswer
                                                                     ? isSelected
                                                                         ? isCorrect
@@ -97,14 +97,14 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange,
                                                                             : "data-[state=checked]:bg-destructive bg-destructive border-destructive"
                                                                         : isCorrect
                                                                             ? "bg-destructive border-destructive"
-                                                                            : "border-border"
+                                                                            : "border-input"
                                                                     : isSelected
                                                                         ? "bg-primary border-primary"
-                                                                        : "border-border"
+                                                                        : "border-input"
                                                             )}
                                                         />
                                                     </FormControl>
-                                                    <FormLabel className="flex flex-col gap-1">
+                                                    <FormLabel className="flex flex-col gap-1 cursor-pointer">
                                                         {showAnswer && <div className={cn(
                                                             "text-sm leading-none",
                                                             isCorrect ? (isSelected ? "text-primary" : "text-destructive") :

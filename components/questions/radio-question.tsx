@@ -78,12 +78,12 @@ export function RadioQuestion({ question, onResponseChange, onValidChange, showA
                                                 </FormControl>
                                                 <Label
                                                     htmlFor={questionOption.id}
-                                                    className="flex flex-row justify-between p-4 cursor-pointer text-base"
+                                                    className="flex flex-row justify-between p-4 cursor-pointer text-base group"
                                                 >
                                                     <span className="flex items-center gap-3">
                                                         <span className={cn(
-                                                            "mr-2 size-4 rounded-full ring-1 ring-offset-2",
-                                                            isSelected ? (isCorrect || !showAnswer ? 'bg-primary ring-primary' : 'bg-destructive ring-destructive') : 'ring-border'
+                                                            "mr-2 size-4 rounded-full outline outline-1 outline-offset-2 group-hover:outline-foreground",
+                                                            isSelected ? (isCorrect || !showAnswer ? 'bg-primary outline-primary' : 'bg-destructive outline-destructive') : 'outline-input'
                                                         )}></span>
                                                         <div className="flex flex-col gap-1">
                                                             {showAnswer && <div className={cn(
