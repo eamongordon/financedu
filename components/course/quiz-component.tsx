@@ -25,21 +25,27 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
         switch (currentQuestion.type) {
             case "radio":
                 setResponse("");
+                setValidity(false);
                 break;
             case "multiselect":
                 setResponse([]);
+                setValidity(false);
                 break;
             case "numeric":
                 setResponse(0);
+                setValidity(false);
                 break;
             case "text":
                 setResponse("");
+                setValidity(true);
                 break;
             case "matching":
                 setResponse([]);
+                setValidity(false);
                 break;
             case "info":
                 setResponse("");
+                setValidity(true);
                 break;
             default:
                 setResponse("");
@@ -76,6 +82,7 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
             }
         } else {
             setShowAnswer(true);
+            handleSubmit();
         }
     };
 
@@ -87,7 +94,7 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
                 const selectedOptions = response as string[];
                 const correctOptions = currentQuestion.questionOptions.filter((option) => option.isCorrect).map((option) => option.id);
                 return selectedOptions.every((selectedOption) => correctOptions.includes(selectedOption)) &&
-                       correctOptions.every((correctOption) => selectedOptions.includes(correctOption));
+                    correctOptions.every((correctOption) => selectedOptions.includes(correctOption));
             case "numeric":
                 return response === currentQuestion.questionOptions[0].id;
             case "text":
@@ -101,6 +108,13 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
             default:
                 return false;
         }
+    };
+
+    const getDotClass = (index: number) => {
+        if (index < questionResponses.length) {
+            return questionResponses[index] ? "bg-primary border-primary" : "bg-muted";
+        }
+        return "";
     };
 
     return (
@@ -140,12 +154,16 @@ export default function QuizComponent({ activity }: { activity: Activity }) {
                     <InfoQuestion question={currentQuestion} />
                 )}
             </div>
-            <div className="border-t w-full p-4 flex justify-end absolute bottom-0">
-                <div className="w-full text-center mb-4">
-                    Progress: {((currentQuestionIndex + 1) / activity.activityToQuestions.length) * 100}%
+            <div className="border-t w-full p-4 flex justify-end items-center absolute bottom-0">
+                <div className="w-full text-center flex flex-row gap-4 justify-center items-center space-x-2">
+                    <p className="font-semibold text-muted-foreground">{questionResponses.length ? `${questionResponses.length} / ${activity.activityToQuestions.length} Done` : `${activity.activityToQuestions.length} Question${activity.activityToQuestions.length === 1 ? "" : "s"}`}</p>
+                    <div className="flex flex-row gap-2">
+                        {activity.activityToQuestions.map((_, index) => (
+                            <div key={index} className={`size-3 rounded-full border-2 ${getDotClass(index)}`}></div>
+                        ))}
+                    </div>
                 </div>
-                <Button onClick={handleNextQuestion} className="mr-2">Next</Button>
-                <Button onClick={handleSubmit} disabled={!validity}>Submit</Button>
+                <Button onClick={handleNextQuestion} className="mr-2" disabled={!validity}>{showAnswer ? "Next Question" : "Check Answer"}</Button>
             </div>
         </div>
     );

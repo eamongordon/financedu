@@ -12,8 +12,8 @@ export default async function LessonPage({
     console.log("activity", activity);
     return (
         <main className="w-full">
-            <section className="p-8 border-b">
-                <div className="flex flex-row items-center gap-4">
+            <section className="border-b flex justify-center">
+                <div className="w-4/5 py-8 flex flex-row items-center gap-4">
                     <CircleHelp className="text-secondary" size={50} strokeWidth={1.5} />
                     <div className="flex flex-col space-y-1">
                         <h1 className="text-2xl font-bold leading-none">{activity.title}</h1>
