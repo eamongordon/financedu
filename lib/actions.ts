@@ -1,7 +1,7 @@
 "use server";
 
-import { eq } from "drizzle-orm";
-import { courses, users, modules, lessons, activities } from "./db/schema";
+import { eq, gt, and } from "drizzle-orm";
+import { courses, users, modules, lessons, activities, lessonToActivities } from "./db/schema";
 import { db } from "./db";
 import { hash, compare } from "bcrypt";
 import { type Roles } from "./db/schema";
@@ -165,4 +165,139 @@ export async function getActivity(activityId: string) {
     }
 
     return activity;
+}
+
+export async function getNextActivity(activityId: string) {
+    const currentActivity = await db.query.activities.findFirst({
+        where: eq(activities.id, activityId),
+        with: {
+            lessonToActivities: true
+        }
+    });
+
+    if (!currentActivity || !currentActivity.lessonToActivities.length) {
+        throw new Error("Activity not found or not associated with any lesson");
+    }
+
+    const currentLessonId = currentActivity.lessonToActivities[0].lessonId;
+    const currentLesson = await db.query.lessons.findFirst({
+        where: eq(lessons.id, currentLessonId),
+        with: {
+            module: true
+        }
+    });
+
+    if (!currentLesson) {
+        throw new Error("Lesson not found");
+    }
+
+    const currentModuleId = currentLesson.moduleId;
+    const currentOrder = currentActivity.lessonToActivities[0].order;
+
+    // Check for next activity in the current lesson
+    let nextActivity = await db.query.lessonToActivities.findFirst({
+        where: and(eq(lessonToActivities.lessonId, currentLessonId), gt(lessonToActivities.order, currentOrder)),
+        orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)],
+        with: {
+            activity: true
+        }
+    });
+
+    if (nextActivity) {
+        return nextActivity.activity;
+    }
+
+    // Check for next lesson in the current module
+    const nextLesson = await db.query.lessons.findFirst({
+        where: and(eq(lessons.moduleId, currentModuleId), gt(lessons.order, currentLesson.order)),
+        orderBy: (lessons, { asc }) => [asc(lessons.order)],
+        with: {
+            lessonToActivities: {
+                orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)],
+                limit: 1,
+                with: {
+                    activity: true
+                }
+            }
+        }
+    });
+
+    if (nextLesson && nextLesson.lessonToActivities.length) {
+        return nextLesson.lessonToActivities[0].activity;
+    }
+
+    // Check for next module in the current course
+    const nextModule = await db.query.modules.findFirst({
+        where: and(eq(modules.courseId, currentLesson.module.courseId), gt(modules.order, currentLesson.module.order)),
+        orderBy: (modules, { asc }) => [asc(modules.order)],
+        with: {
+            lessons: {
+                orderBy: (lessons, { asc }) => [asc(lessons.order)],
+                limit: 1,
+                with: {
+                    lessonToActivities: {
+                        orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)],
+                        limit: 1,
+                        with: {
+                            activity: true
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    if (nextModule && nextModule.lessons.length && nextModule.lessons[0].lessonToActivities.length) {
+        // Return the first activity of the first lesson of the next module
+        return nextModule.lessons[0].lessonToActivities[0].activity;
+    } else {
+        //  Done with the course
+        return null;
+    }
+}
+
+export async function getNextLesson(lessonId: string) {
+    const currentLesson = await db.query.lessons.findFirst({
+        where: eq(lessons.id, lessonId),
+        with: {
+            module: true
+        }
+    });
+
+    if (!currentLesson) {
+        throw new Error("Lesson not found");
+    }
+
+    const currentModuleId = currentLesson.moduleId;
+    const currentOrder = currentLesson.order;
+
+    // Check for next lesson in the current module
+    let nextLesson = await db.query.lessons.findFirst({
+        where: and(eq(lessons.moduleId, currentModuleId), gt(lessons.order, currentOrder)),
+        orderBy: (lessons, { asc }) => [asc(lessons.order)]
+    });
+
+    if (nextLesson) {
+        return nextLesson;
+    }
+
+    // Check for next module in the current course
+    const nextModule = await db.query.modules.findFirst({
+        where: and(eq(modules.courseId, currentLesson.module.courseId), gt(modules.order, currentLesson.module.order)),
+        orderBy: (modules, { asc }) => [asc(modules.order)],
+        with: {
+            lessons: {
+                orderBy: (lessons, { asc }) => [asc(lessons.order)],
+                limit: 1
+            }
+        }
+    });
+
+    if (nextModule && nextModule.lessons.length) {
+        // Return the first lesson of the next module
+        return nextModule.lessons[0];
+    } else {
+        // Done with the course
+        return null;
+    }
 }
