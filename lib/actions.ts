@@ -183,7 +183,11 @@ export async function getNextActivity(activityId: string) {
     const currentLesson = await db.query.lessons.findFirst({
         where: eq(lessons.id, currentLessonId),
         with: {
-            module: true
+            module: {
+                with: {
+                    course: true
+                }
+            }
         }
     });
 
@@ -204,7 +208,10 @@ export async function getNextActivity(activityId: string) {
     });
 
     if (nextActivity) {
-        return nextActivity.activity;
+        return {
+            hasNext: true,
+            activity: nextActivity.activity
+        };
     }
 
     // Check for next lesson in the current module
@@ -223,7 +230,11 @@ export async function getNextActivity(activityId: string) {
     });
 
     if (nextLesson && nextLesson.lessonToActivities.length) {
-        return nextLesson.lessonToActivities[0].activity;
+        return {
+            hasNext: true,
+            activity: nextLesson.lessonToActivities[0].activity,
+            lesson: nextLesson
+        };
     }
 
     // Check for next module in the current course
@@ -249,10 +260,18 @@ export async function getNextActivity(activityId: string) {
 
     if (nextModule && nextModule.lessons.length && nextModule.lessons[0].lessonToActivities.length) {
         // Return the first activity of the first lesson of the next module
-        return nextModule.lessons[0].lessonToActivities[0].activity;
+        return {
+            hasNext: true,
+            activity: nextModule.lessons[0].lessonToActivities[0].activity,
+            lesson: nextModule.lessons[0],
+            module: nextModule
+        };
     } else {
-        //  Done with the course
-        return null;
+        // Done with the course, return the course
+        return {
+            hasNext: false,
+            course: currentLesson.module.course
+        };
     }
 }
 
@@ -260,7 +279,11 @@ export async function getNextLesson(lessonId: string) {
     const currentLesson = await db.query.lessons.findFirst({
         where: eq(lessons.id, lessonId),
         with: {
-            module: true
+            module: {
+                with: {
+                    course: true
+                }
+            }
         }
     });
 
@@ -278,7 +301,10 @@ export async function getNextLesson(lessonId: string) {
     });
 
     if (nextLesson) {
-        return nextLesson;
+        return {
+            hasNext: true,
+            lesson: nextLesson
+        };
     }
 
     // Check for next module in the current course
@@ -295,9 +321,16 @@ export async function getNextLesson(lessonId: string) {
 
     if (nextModule && nextModule.lessons.length) {
         // Return the first lesson of the next module
-        return nextModule.lessons[0];
+        return {
+            hasNext: true,
+            lesson: nextModule.lessons[0],
+            module: nextModule
+        };
     } else {
-        // Done with the course
-        return null;
+        // Done with the course, return the course
+        return {
+            hasNext: false,
+            course: currentLesson.module.course
+        };
     }
 }
