@@ -132,8 +132,8 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
     };
 
     return (
-        <div className="flex flex-col items-center sm:min-h-[calc(100vh-181px)] relative">
-            <div className="py-8 w-full flex justify-center h-[calc(100vh-254px)] overflow-scroll">
+        <div className="flex flex-col items-center sm:min-h-[calc(100vh-196px)] relative">
+            <div className="py-8 w-full flex justify-center h-[calc(100vh-268px)] overflow-scroll">
                 {isQuizFinished ? (
                     <p>You finished the quiz</p>
                 ) : currentQuestion.type === "radio" ? (
