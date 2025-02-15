@@ -34,14 +34,14 @@ export function ActivityNav({ className, activities, ...props }: ActivityNavProp
           href={activity.href}
           className={cn(
             buttonVariants({ variant: "ghost" }),
-            "border-l-4 border-l-transparent py-8 rounded-none text-base [&_svg]:size-4",
+            "border-l-4 border-l-transparent py-8 rounded-none text-base [&_svg]:size-4 whitespace-normal",
             currentActivityId === activity.id
               ? "border-l-primary bg-accent hover:bg-muted"
               : "",
             "justify-start"
           )}
         >
-          <div className={cn("border flex justify-center items-center size-8 rounded-md mr-4", currentActivityId === activity.id ? "dark:border-muted-foreground" : "")}>
+          <div className={cn("border flex justify-center items-center size-8 shrink-0 rounded-md mr-4", currentActivityId === activity.id ? "dark:border-muted-foreground" : "")}>
             {activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
           </div>
           {activity.title}

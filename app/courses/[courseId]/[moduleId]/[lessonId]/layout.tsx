@@ -27,8 +27,12 @@ export default async function LessonLayout({
                         <ChartLine />
                     </div>
                     <div className="flex flex-col justify-center gap-2">
-                        <h2 className="text-xl font-bold leading-none">Financial Foundations</h2>
-                        <p className="font-semibold text-secondary leading-none">Module 6: Saving</p>
+                        <Link href={`/courses/${courseId}`}>
+                            <h2 className="text-xl font-bold leading-none">Financial Foundations</h2>
+                        </Link>
+                        <Link href={`courses/${courseId}/${moduleId}`}>
+                            <p className="font-semibold text-secondary leading-none">Module 6: Saving</p>
+                        </Link>
                     </div>
                 </div>
                 <div className="w-full flex flex-row justify-between items-center px-2 md:px-8 py-3">
