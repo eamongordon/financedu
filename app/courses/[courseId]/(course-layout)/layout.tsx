@@ -23,6 +23,7 @@ export default async function CourseLayout({
                 <ModuleNav modules={course.modules.map(module => ({
                     id: module.id,
                     title: module.title,
+                    icon: module.icon,
                     href: `/courses/${slug}/${module.id}`
                 }))} />
             </div>

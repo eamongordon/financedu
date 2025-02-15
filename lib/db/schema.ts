@@ -130,6 +130,7 @@ export const modules = pgTable("module", {
   description: text("description"),
   objectives: text("objectives"),
   order: integer("order").notNull(),
+  icon: text("icon"),
 })
 
 export const lessons = pgTable("lesson", {

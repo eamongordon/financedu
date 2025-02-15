@@ -5,12 +5,14 @@ import { useSelectedLayoutSegments } from "next/navigation"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "../ui/button"
-import { FileText } from "lucide-react"
+import { DynamicIcon, dynamicIconImports } from 'lucide-react/dynamic';
+import { GraduationCap } from "lucide-react"
 
 interface ModuleNavProps extends React.HTMLAttributes<HTMLElement> {
   modules: {
     id: string
     title: string
+    icon?: string | null,
     href: string
   }[]
 }
@@ -41,7 +43,7 @@ export function ModuleNav({ className, modules, ...props }: ModuleNavProps) {
           )}
         >
           <div className={cn("border flex justify-center items-center size-8 shrink-0 rounded-md mr-4", currentModuleId === module.id ? "dark:border-muted-foreground" : "")}>
-            <FileText strokeWidth={1.5} />
+            {module.icon ? <DynamicIcon name={module.icon as keyof typeof dynamicIconImports} strokeWidth={1.5} /> : <GraduationCap strokeWidth={1.5} />}
           </div>
           {module.title}
         </Link>
