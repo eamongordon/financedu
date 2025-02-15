@@ -272,8 +272,8 @@ export const userProgress = pgTable("userProgress", {
     .references(() => lessons.id, { onDelete: "cascade" }),
   activityId: text("activityId")
     .references(() => activities.id, { onDelete: "cascade" }),
-  progressStatus: text("progressStatus", { enum: ["not started", "in progress", "completed"] }).notNull(),
-  updatedAt: timestamp("updatedAt", { mode: "date", withTimezone: true }).defaultNow().$onUpdateFn(() => new Date()),
+  startedAt: timestamp("startedAt", { mode: "date", withTimezone: true }).defaultNow(),
+  completedAt: timestamp("completedAt", { mode: "date", withTimezone: true }),
 }, (userProgress) => [
   {
     compositePK: primaryKey({
