@@ -23,9 +23,9 @@ export default async function LessonPage({
                     <div className="border size-16 flex justify-center items-center rounded-lg">
                         {activity.type === "Quiz" ? <CircleHelp className="text-secondary" size={50} strokeWidth={1.5} /> : <FileText className="text-secondary" size={50} strokeWidth={1.5} />}
                     </div>
-                    <div className="flex flex-col space-y-1">
+                    <div className="flex flex-col gap-2">
                         <h1 className="text-2xl font-bold leading-none">{activity.title}</h1>
-                        <p className="font-semibold text-secondary">{activity.type}</p>
+                        <p className="font-semibold text-secondary leading-none">{activity.type}</p>
                     </div>
 
                 </div>

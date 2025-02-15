@@ -25,7 +25,7 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange,
         items: z.array(z.string().refine((item) => questionOptionIds.includes(item), {
             message: "Invalid item selected.",
         })).refine((value) => value.some((item) => item), {
-            message: "You have to select at least one item.",
+            message: "Please select at least each one option.",
         }),
     });
 

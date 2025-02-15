@@ -21,15 +21,15 @@ export default async function LessonLayout({
             className="w-full flex flex-col sm:flex-row sm:flex-grow sm:divide-x divide-border"
         >
             <div
-                className="py-4 sm:w-1/3 flex flex-col gap-4 items-start text-left sm:sticky top-[64px] mb-4 sm:mb-0 sm:h-[calc(100vh-64px)] overflow-auto"
+                className="pt-4 sm:w-1/3 flex flex-col gap-4 items-start text-left sm:sticky top-[64px] mb-4 sm:mb-0 sm:h-[calc(100vh-64px)] overflow-auto"
             >
                 <div className="flex flex-row items-center gap-4 px-2 md:px-8">
                     <div className="size-12 aspect-square bg-gradient-to-br from-[#00B5EA] to-[#02CF46] dark:from-[#00B5EA]/60 dark:to-[#02CF46]/60 rounded-lg flex justify-center items-center text-background">
                         <ChartLine />
                     </div>
-                    <div className="flex flex-col justify-center gap-1">
+                    <div className="flex flex-col justify-center gap-2">
                         <h2 className="text-xl font-bold leading-none">Financial Foundations</h2>
-                        <p className="font-semibold text-secondary">Module 6: Saving</p>
+                        <p className="font-semibold text-secondary leading-none">Module 6: Saving</p>
                     </div>
                 </div>
                 <Separator />
