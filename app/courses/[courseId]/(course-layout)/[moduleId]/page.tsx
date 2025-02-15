@@ -14,7 +14,7 @@ export default async function CourseLayout({
     const moduleObj = await getModuleWithLessonsAndActivities(moduleId);
     console.log("module", moduleObj);
     return (
-        <div>
+        <div className="w-full">
             {moduleObj.lessons.map(lesson => (
                 <Card key={lesson.id} className="mb-4">
                     <CardHeader>
