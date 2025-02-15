@@ -5,10 +5,12 @@ import { useSelectedLayoutSegments } from "next/navigation"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "../ui/button"
+import { CircleHelp, FileText } from "lucide-react"
 
 interface ActivityNavProps extends React.HTMLAttributes<HTMLElement> {
   activities: {
-    id: string
+    id: string,
+    type: "Article" | "Quiz",
     title: string
     href: string
   }[]
@@ -21,7 +23,7 @@ export function ActivityNav({ className, activities, ...props }: ActivityNavProp
   return (
     <nav
       className={cn(
-        "flex space-x-2 md:flex-col md:space-x-0 md:space-y-1",
+        "flex md:flex-col divide-y border-t border-b",
         className
       )}
       {...props}
@@ -32,12 +34,16 @@ export function ActivityNav({ className, activities, ...props }: ActivityNavProp
           href={activity.href}
           className={cn(
             buttonVariants({ variant: "ghost" }),
+            "border-l-4 border-l-transparent py-8 rounded-none text-base [&_svg]:size-4",
             currentActivityId === activity.id
-              ? "bg-muted hover:bg-muted"
-              : "hover:bg-transparent hover:underline",
+              ? "border-l-primary bg-accent hover:bg-muted"
+              : "",
             "justify-start"
           )}
         >
+          <div className={cn("border flex justify-center items-center size-8 rounded-md mr-4", currentActivityId === activity.id ? "dark:border-muted-foreground" : "")}>
+            {activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
+          </div>
           {activity.title}
         </Link>
       ))}
