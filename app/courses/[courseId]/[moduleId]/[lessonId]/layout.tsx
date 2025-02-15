@@ -1,8 +1,8 @@
-import { getLessonWithActivities, getNextLesson } from "@/lib/actions"
+import { getLessonWithActivities, getNextLesson, getPreviousLesson } from "@/lib/actions"
 import { ActivityNav } from "@/components/course/activity-nav"
 import { ChartLine, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default async function LessonLayout({
@@ -15,6 +15,7 @@ export default async function LessonLayout({
     const { courseId, moduleId, lessonId } = await params;
     const lesson = await getLessonWithActivities(lessonId);
     const nextLesson = await getNextLesson(lessonId);
+    const previousLesson = await getPreviousLesson(lessonId);
     return (
         <div
             className="w-full flex flex-col sm:flex-row sm:flex-grow sm:divide-x divide-border"
@@ -36,13 +37,37 @@ export default async function LessonLayout({
                     </div>
                 </div>
                 <div className="w-full flex flex-row justify-between items-center px-2 md:px-8 py-3">
-                    <Link href={nextLesson.lesson ? `/courses/${courseId}/${moduleId}/${nextLesson.lesson.id}` : ``} className={cn(buttonVariants({ variant: "ghost" }), "[&_svg]:size-6 p-0")}>
-                        <ChevronLeft className="text-muted-foreground" />
-                    </Link>
+                    {previousLesson.lesson ?
+                        <Link
+                            href={`/courses/${courseId}/${moduleId}/${previousLesson.lesson.id}`}
+                            className={cn(buttonVariants({ variant: "ghost" }), "[&_svg]:size-6 p-0")}
+                        >
+                            <ChevronLeft className="text-muted-foreground" />
+                        </Link> :
+                        <Button
+                            disabled
+                            className="[&_svg]:size-6 p-0"
+                            variant="ghost"
+                        >
+                            <ChevronLeft className="text-muted-foreground" />
+                        </Button>
+                    }
                     <h1 className="mx-2 text-lg font-bold text-center">{lesson.title}</h1>
-                    <Link href={nextLesson.lesson ? `/courses/${courseId}/${moduleId}/${nextLesson.lesson.id}` : ``} className={cn(buttonVariants({ variant: "ghost" }), "[&_svg]:size-6 p-0")}>
-                        <ChevronRight className="text-muted-foreground" />
-                    </Link>
+                    {nextLesson.lesson ?
+                        <Link
+                            href={`/courses/${courseId}/${moduleId}/${nextLesson.lesson.id}`}
+                            className={cn(buttonVariants({ variant: "ghost" }), "[&_svg]:size-6 p-0")}
+                        >
+                            <ChevronRight className="text-muted-foreground" />
+                        </Link> :
+                        <Button
+                            disabled
+                            className="[&_svg]:size-6 p-0"
+                            variant="ghost"
+                        >
+                            <ChevronRight className="text-muted-foreground" />
+                        </Button>
+                    }
                 </div>
                 <div className="w-full">
                     <ActivityNav activities={lesson.lessonToActivities.map(lessonToActivitiesObj => ({

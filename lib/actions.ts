@@ -1,6 +1,6 @@
 "use server";
 
-import { eq, gt, and } from "drizzle-orm";
+import { eq, gt, lt, and } from "drizzle-orm";
 import { courses, users, modules, lessons, activities, lessonToActivities } from "./db/schema";
 import { db } from "./db";
 import { hash, compare } from "bcrypt";
@@ -330,6 +330,63 @@ export async function getNextLesson(lessonId: string) {
         // Done with the course, return the course
         return {
             hasNext: false,
+            course: currentLesson.module.course
+        };
+    }
+}
+
+export async function getPreviousLesson(lessonId: string) {
+    const currentLesson = await db.query.lessons.findFirst({
+        where: eq(lessons.id, lessonId),
+        with: {
+            module: {
+                with: {
+                    course: true
+                }
+            }
+        }
+    });
+
+    if (!currentLesson) {
+        throw new Error("Lesson not found");
+    }
+
+    // Check for previous lesson in the current module
+    const previousLesson = await db.query.lessons.findFirst({
+        where: and(eq(lessons.moduleId, currentLesson.moduleId), lt(lessons.order, currentLesson.order)),
+        orderBy: (lessons, { desc }) => [desc(lessons.order)]
+    });
+
+    if (previousLesson) {
+        return {
+            hasPrevious: true,
+            lesson: previousLesson
+        };
+    }
+
+    // Check for previous module in the current course
+    const previousModule = await db.query.modules.findFirst({
+        where: and(eq(modules.courseId, currentLesson.module.courseId), lt(modules.order, currentLesson.module.order)),
+        orderBy: (modules, { desc }) => [desc(modules.order)],
+        with: {
+            lessons: {
+                orderBy: (lessons, { desc }) => [desc(lessons.order)],
+                limit: 1
+            }
+        }
+    });
+
+    if (previousModule && previousModule.lessons.length) {
+        // Return the last lesson of the previous module
+        return {
+            hasPrevious: true,
+            lesson: previousModule.lessons[0],
+            module: previousModule
+        }
+    } else {
+        // No previous lesson or module, return the course
+        return {
+            hasPrevious: false,
             course: currentLesson.module.course
         };
     }
