@@ -25,8 +25,8 @@ export const users = pgTable("user", {
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
   password: text("password"),
-  createdDate: timestamp("createdDate", { mode: "date", withTimezone: true }).defaultNow(),
-  updatedDate: timestamp("updatedDate", { mode: "date", withTimezone: true }).defaultNow().$onUpdateFn(() => new Date()),
+  createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date", withTimezone: true }).defaultNow().$onUpdateFn(() => new Date()),
   roles: text('roles', { enum: ["learner", "teacher", "parent"] })
     .array()
     .notNull()
@@ -273,7 +273,7 @@ export const userProgress = pgTable("userProgress", {
   activityId: text("activityId")
     .references(() => activities.id, { onDelete: "cascade" }),
   progressStatus: text("progressStatus", { enum: ["not started", "in progress", "completed"] }).notNull(),
-  updatedDate: timestamp("updatedDate", { mode: "date", withTimezone: true }).defaultNow().$onUpdateFn(() => new Date()),
+  updatedAt: timestamp("updatedAt", { mode: "date", withTimezone: true }).defaultNow().$onUpdateFn(() => new Date()),
 }, (userProgress) => [
   {
     compositePK: primaryKey({
