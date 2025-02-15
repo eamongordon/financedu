@@ -3,6 +3,7 @@ import QuizComponent from "@/components/course/quiz-component";
 import { CircleHelp, FileText } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { getNextActivityLink } from "@/lib/utils";
 
 export default async function LessonPage({
     params,
@@ -12,6 +13,7 @@ export default async function LessonPage({
     const { activityId, lessonId, moduleId, courseId } = await params;
     const activity = await getActivity(activityId);
     const nextActivity = await getNextActivity(activityId);
+    const { href, label } = getNextActivityLink(courseId, moduleId, lessonId, nextActivity);
     console.log("activity", activity);
     console.log("nextActiviy", nextActivity);
     return (
@@ -35,20 +37,8 @@ export default async function LessonPage({
                         <div className="w-4/5" dangerouslySetInnerHTML={{ __html: activity.content! }} />
                     </div>
                     <div className="border-t w-full p-4 flex justify-end items-center absolute bottom-0">
-                        <Link
-                            href={
-                                nextActivity.module ? `/courses/${courseId}/${nextActivity.module.id}/${nextActivity.lesson.id}/${nextActivity.lesson.lessonToActivities[0].activity.id}` :
-                                    nextActivity.lesson ? `/courses/${courseId}/${moduleId}/${nextActivity.lesson.id}` :
-                                        nextActivity.activity ? `/courses/${courseId}/${moduleId}/${lessonId}/${nextActivity.activity.id}` :
-                                            `/courses/${nextActivity.course.id}`
-                            }
-                            className={buttonVariants()}
-                        >
-                            {nextActivity.module ?
-                                `Next: Module ${nextActivity.module.order}` :
-                                nextActivity.lesson ? `Next: Lesson ${nextActivity.lesson.order}` :
-                                    nextActivity.activity ? `Next: ${nextActivity.activity.type}` : "All Done!"
-                            }
+                        <Link href={href} className={buttonVariants()}>
+                            {label}
                         </Link>
                     </div>
                 </div>

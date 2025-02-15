@@ -7,16 +7,15 @@ import { NumericQuestion } from "@/components/questions/numeric-question";
 import { TextQuestion } from "@/components/questions/text-question";
 import { MatchingQuestion } from "@/components/questions/matching-question";
 import { InfoQuestion } from "@/components/questions/info-question";
-import { type Activity } from "@/types";
+import { type NextActivity, type Activity } from "@/types";
 import { Button, buttonVariants } from "../ui/button";
-import { getNextActivity } from "@/lib/actions";
 import Link from "next/link";
 import { useParams } from 'next/navigation'
+import { getNextActivityLink } from "@/lib/utils";
 
 type Response = string | string[] | number | { id: string, response: string }[];
-type NextActivityResult = Awaited<ReturnType<typeof getNextActivity>>;
 
-export default function QuizComponent({ activity, nextActivity }: { activity: Activity, nextActivity: NextActivityResult }) {
+export default function QuizComponent({ activity, nextActivity }: { activity: Activity, nextActivity: NextActivity }) {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [response, setResponse] = useState<Response>([]);
     const [validity, setValidity] = useState(false);
@@ -131,6 +130,8 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
         return "";
     };
 
+    const { href, label } = getNextActivityLink(currentCourseId, currentModuleId, currentLessonId, nextActivity);
+    
     return (
         <div className="flex flex-col items-center sm:min-h-[calc(100vh-196px)] relative">
             <div className="py-8 w-full flex justify-center h-[calc(100vh-268px)] overflow-scroll">
@@ -181,21 +182,9 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
                 </div>
                 <Button onClick={handleNextQuestion} variant="outline" className="mr-2" disabled={isQuizFinished}>Skip</Button>
                 {isQuizFinished && nextActivity ? (
-                    <Link
-                        href={
-                            nextActivity.module ? `/courses/${currentCourseId}/${nextActivity.module.id}/${nextActivity.lesson.id}/${nextActivity.lesson.lessonToActivities[0].activity.id}` :
-                                nextActivity.lesson ? `/courses/${currentCourseId}/${currentModuleId}/${nextActivity.lesson.id}` :
-                                    nextActivity.activity ? `/courses/${currentCourseId}/${currentModuleId}/${currentLessonId}/${nextActivity.activity.id}` :
-                                        `/courses/${nextActivity.course.id}`
-                        }
-                        className={buttonVariants()}
-                    >
-                        {nextActivity.module ?
-                            `Next: Module ${nextActivity.module.order}` :
-                            nextActivity.lesson ? `Next: Lesson ${nextActivity.lesson.order}` :
-                                nextActivity.activity ? `Next: ${nextActivity.activity.type}` : "All Done!"
-                        }
-                    </Link>
+                    <Link href={href} className={buttonVariants()}>
+                    {label}
+                </Link>
                 ) : (
                     <Button onClick={handleNextQuestion} className="mr-2" disabled={!validity && !isQuizFinished}>
                         {isQuizFinished ?
