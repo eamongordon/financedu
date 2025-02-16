@@ -5,7 +5,7 @@ import { useSelectedLayoutSegments } from "next/navigation"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "../ui/button"
-import { CircleHelp, FileText } from "lucide-react"
+import { Check, CircleHelp, FileText } from "lucide-react"
 
 interface ActivityNavProps extends React.HTMLAttributes<HTMLElement> {
   activities: {
@@ -42,12 +42,19 @@ export function ActivityNav({ className, activities, ...props }: ActivityNavProp
             "justify-start"
           )}
         >
-          <div className={
-            cn("border flex justify-center items-center size-8 shrink-0 rounded-md mr-4",
-              currentActivityId === activity.id ? "dark:border-muted-foreground" : "",
-              activity.isComplete ? "border-primary text-primary" : "")}
-          >
-            {activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
+          <div className="relative">
+            <div className={
+              cn("border flex justify-center items-center size-8 shrink-0 rounded-md mr-4 relative",
+                currentActivityId === activity.id ? "dark:border-muted-foreground" : "",
+                activity.isComplete ? "border-primary text-primary" : "")}
+            >
+              {activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
+              {activity.isComplete && (
+                <div className="text-white absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-primary rounded-full size-4 flex items-center justify-center [&_svg]:size-3">
+                  <Check />
+                </div>
+              )}
+            </div>
           </div>
           {activity.title}
         </Link>
