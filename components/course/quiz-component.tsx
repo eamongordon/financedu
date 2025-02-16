@@ -13,7 +13,7 @@ import Link from "next/link";
 import { useParams } from 'next/navigation'
 import { getNextActivityLink } from "@/lib/utils";
 import { useSession } from "next-auth/react";
-import { markActivityComplete, markLessonComplete, markModuleComplete, markCourseComplete } from "@/lib/actions";
+import { markActivityComplete } from "@/lib/actions";
 
 type Response = string | string[] | number | { id: string, response: string }[];
 
@@ -131,15 +131,6 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
     const handleQuizComplete = async () => {
         if (session && session.user && session.user.id) {
             await markActivityComplete(activity.id, currentLessonId, currentModuleId, currentCourseId);
-            if (!nextActivity.hasNext) {
-                await markLessonComplete(currentLessonId, currentModuleId, currentCourseId);
-                if (!nextActivity.lesson) {
-                    await markModuleComplete(currentModuleId, currentCourseId);
-                    if (!nextActivity.module) {
-                        await markCourseComplete(currentCourseId);
-                    }
-                }
-            }
         }
     };
 

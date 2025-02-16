@@ -1,4 +1,4 @@
-import { getActivity, getNextActivity, markActivityComplete, markLessonComplete, markModuleComplete, markCourseComplete } from "@/lib/actions";
+import { getActivity, getNextActivity, markActivityComplete } from "@/lib/actions";
 import QuizComponent from "@/components/course/quiz-component";
 import { CircleHelp, FileText } from "lucide-react";
 import Link from "next/link";
@@ -19,20 +19,8 @@ export default async function LessonPage({
 
     const session = await auth();
 
-    if (session && session.user && session.user.id) {
-        if (activity.type === "Article") {
-            await markActivityComplete(activityId, lessonId, moduleId, courseId);
-        }
-
-        if (!nextActivity.hasNext) {
-            await markLessonComplete(lessonId, moduleId, courseId);
-            if (!nextActivity.lesson) {
-                await markModuleComplete(moduleId, courseId);
-                if (!nextActivity.module) {
-                    await markCourseComplete(courseId);
-                }
-            }
-        }
+    if (session && session.user && session.user.id && activity.type === "Article") {
+        await markActivityComplete(activityId, lessonId, moduleId, courseId);
     }
 
     return (

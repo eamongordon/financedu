@@ -399,66 +399,44 @@ export async function markActivityComplete(activityId: string, lessonId: string,
     }
     const userId = session.user.id;
 
-    await db.insert(userCompletion).values({
-        userId,
-        activityId,
-        lessonId,
-        moduleId,
-        courseId,
-        completedAt: new Date(),
-    }).onConflictDoNothing({
-        target: [userCompletion.userId, userCompletion.activityId]
-    });
-}
+    await db.transaction(async (trx) => {
+        await trx.insert(userCompletion).values({
+            userId,
+            activityId,
+            lessonId,
+            moduleId,
+            courseId,
+            completedAt: new Date(),
+        }).onConflictDoNothing({
+            target: [userCompletion.userId, userCompletion.activityId]
+        });
 
-export async function markLessonComplete(lessonId: string, moduleId: string, courseId: string) {
-    const session = await auth();
-    if (!session || !session.user || !session.user.id) {
-        throw new Error("Not authenticated");
-    }
-    const userId = session.user.id;
+        await trx.insert(userCompletion).values({
+            userId,
+            lessonId,
+            moduleId,
+            courseId,
+            completedAt: new Date(),
+        }).onConflictDoNothing({
+            target: [userCompletion.userId, userCompletion.lessonId]
+        });
 
-    await db.insert(userCompletion).values({
-        userId,
-        lessonId,
-        moduleId,
-        courseId,
-        completedAt: new Date(),
-    }).onConflictDoNothing({
-        target: [userCompletion.userId, userCompletion.lessonId]
-    });
-}
+        await trx.insert(userCompletion).values({
+            userId,
+            moduleId,
+            courseId,
+            completedAt: new Date(),
+        }).onConflictDoNothing({
+            target: [userCompletion.userId, userCompletion.moduleId]
+        });
 
-export async function markModuleComplete(moduleId: string, courseId: string) {
-    const session = await auth();
-    if (!session || !session.user || !session.user.id) {
-        throw new Error("Not authenticated");
-    }
-    const userId = session.user.id;
-
-    await db.insert(userCompletion).values({
-        userId,
-        moduleId,
-        courseId,
-        completedAt: new Date(),
-    }).onConflictDoNothing({
-        target: [userCompletion.userId, userCompletion.moduleId]
-    });
-}
-
-export async function markCourseComplete(courseId: string) {
-    const session = await auth();
-    if (!session || !session.user || !session.user.id) {
-        throw new Error("Not authenticated");
-    }
-    const userId = session.user.id;
-
-    await db.insert(userCompletion).values({
-        userId,
-        courseId,
-        completedAt: new Date(),
-    }).onConflictDoNothing({
-        target: [userCompletion.userId, userCompletion.courseId]
+        await trx.insert(userCompletion).values({
+            userId,
+            courseId,
+            completedAt: new Date(),
+        }).onConflictDoNothing({
+            target: [userCompletion.userId, userCompletion.courseId]
+        });
     });
 }
 
