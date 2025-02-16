@@ -1,9 +1,11 @@
-import { getActivity, getNextActivity } from "@/lib/actions";
+import { getActivity, getNextActivity, trackUserProgress, markActivityComplete, markLessonComplete, markModuleComplete, markCourseComplete } from "@/lib/actions";
 import QuizComponent from "@/components/course/quiz-component";
 import { CircleHelp, FileText } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { getNextActivityLink } from "@/lib/utils";
+import { auth } from "@/lib/auth";
+import { SessionProvider } from "next-auth/react";
 
 export default async function LessonPage({
     params,
@@ -14,8 +16,27 @@ export default async function LessonPage({
     const activity = await getActivity(activityId);
     const nextActivity = await getNextActivity(activityId);
     const { href, label } = getNextActivityLink(courseId, moduleId, lessonId, nextActivity);
-    console.log("activity", activity);
-    console.log("nextActiviy", nextActivity);
+
+    const session = await auth();
+
+    if (session && session.user && session.user.id) {
+        await trackUserProgress(courseId, moduleId, lessonId, activityId);
+
+        if (activity.type === "Article") {
+            await markActivityComplete(activityId);
+        }
+
+        if (!nextActivity.hasNext) {
+            await markLessonComplete(lessonId);
+            if (!nextActivity.lesson) {
+                await markModuleComplete(moduleId);
+                if (!nextActivity.module) {
+                    await markCourseComplete(courseId);
+                }
+            }
+        }
+    }
+
     return (
         <main className="w-full">
             <section className="border-b flex justify-center">
@@ -44,7 +65,9 @@ export default async function LessonPage({
                 </div>
             )}
             {activity.type === "Quiz" && (
-                <QuizComponent activity={activity} nextActivity={nextActivity} />
+                <SessionProvider>
+                    <QuizComponent activity={activity} nextActivity={nextActivity} />
+                </SessionProvider>
             )}
         </main>
     );

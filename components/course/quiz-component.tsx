@@ -12,6 +12,8 @@ import { Button, buttonVariants } from "../ui/button";
 import Link from "next/link";
 import { useParams } from 'next/navigation'
 import { getNextActivityLink } from "@/lib/utils";
+import { markActivityComplete, markLessonComplete, markModuleComplete, markCourseComplete } from "@/lib/actions";
+import { useSession } from "next-auth/react";
 
 type Response = string | string[] | number | { id: string, response: string }[];
 
@@ -29,6 +31,8 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
     const currentLessonId = params!.lessonId;
     const currentModuleId = params!.moduleId;
     const currentCourseId = params!.courseId;
+
+    const { data: session } = useSession();
 
     useEffect(() => {
         switch (currentQuestion.type) {
@@ -84,16 +88,32 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
         }
     };
 
-    const handleNextQuestion = () => {
+    const handleNextQuestion = async () => {
         if (showAnswer) {
             if (currentQuestionIndex < activity.activityToQuestions.length - 1) {
                 setCurrentQuestionIndex(currentQuestionIndex + 1);
             } else {
                 setIsQuizFinished(true); // Set quiz as finished
+                await handleQuizComplete(); // Call the handleQuizComplete function
             }
         } else {
             setShowAnswer(true);
             handleSubmit();
+        }
+    };
+
+    const handleQuizComplete = async () => {
+        if (session && session.user && session.user.id) {
+            await markActivityComplete(activity.id);
+            if (!nextActivity.hasNext) {
+                await markLessonComplete(currentLessonId);
+                if (!nextActivity.lesson) {
+                    await markModuleComplete(currentModuleId);
+                    if (!nextActivity.module) {
+                        await markCourseComplete(currentCourseId);
+                    }
+                }
+            }
         }
     };
 
@@ -131,7 +151,7 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
     };
 
     const { href, label } = getNextActivityLink(currentCourseId, currentModuleId, currentLessonId, nextActivity);
-    
+
     return (
         <div className="flex flex-col items-center sm:min-h-[calc(100vh-196px)] relative">
             <div className="py-8 w-full flex justify-center h-[calc(100vh-268px)] overflow-scroll">
@@ -183,8 +203,8 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
                 <Button onClick={handleNextQuestion} variant="outline" className="mr-2" disabled={isQuizFinished}>Skip</Button>
                 {isQuizFinished && nextActivity ? (
                     <Link href={href} className={buttonVariants()}>
-                    {label}
-                </Link>
+                        {label}
+                    </Link>
                 ) : (
                     <Button onClick={handleNextQuestion} className="mr-2" disabled={!validity && !isQuizFinished}>
                         {isQuizFinished ?

@@ -1,7 +1,7 @@
 "use server";
 
 import { eq, gt, lt, and } from "drizzle-orm";
-import { courses, users, modules, lessons, activities, lessonToActivities } from "./db/schema";
+import { courses, users, modules, lessons, activities, lessonToActivities, userProgress } from "./db/schema";
 import { db } from "./db";
 import { hash, compare } from "bcrypt";
 import { type Roles } from "./db/schema";
@@ -390,4 +390,81 @@ export async function getPreviousLesson(lessonId: string) {
             course: currentLesson.module.course
         };
     }
+}
+
+export async function trackUserProgress(courseId: string, moduleId?: string, lessonId?: string, activityId?: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    const existingProgress = await db.query.userProgress.findFirst({
+        where: and(
+            eq(userProgress.userId, userId),
+            eq(userProgress.courseId, courseId),
+            moduleId ? eq(userProgress.moduleId, moduleId) : undefined,
+            lessonId ? eq(userProgress.lessonId, lessonId) : undefined,
+            activityId ? eq(userProgress.activityId, activityId) : undefined
+        )
+    });
+
+    if (!existingProgress) {
+        await db.insert(userProgress).values({
+            userId,
+            courseId,
+            moduleId,
+            lessonId,
+            activityId,
+            completedAt: activityId ? null : new Date(),
+        });
+    }
+}
+
+export async function markActivityComplete(activityId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    await db.update(userProgress)
+        .set({ completedAt: new Date() })
+        .where(and(eq(userProgress.userId, userId), eq(userProgress.activityId, activityId)));
+}
+
+export async function markLessonComplete(lessonId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    await db.update(userProgress)
+        .set({ completedAt: new Date() })
+        .where(and(eq(userProgress.userId, userId), eq(userProgress.lessonId, lessonId)));
+}
+
+export async function markModuleComplete(moduleId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    await db.update(userProgress)
+        .set({ completedAt: new Date() })
+        .where(and(eq(userProgress.userId, userId), eq(userProgress.moduleId, moduleId)));
+}
+
+export async function markCourseComplete(courseId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    await db.update(userProgress)
+        .set({ completedAt: new Date() })
+        .where(and(eq(userProgress.userId, userId), eq(userProgress.courseId, courseId)));
 }
