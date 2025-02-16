@@ -408,7 +408,7 @@ export async function markActivityComplete(activityId: string, lessonId: string,
             courseId,
             completedAt: new Date(),
         }).onConflictDoNothing({
-            target: [userCompletion.userId, userCompletion.activityId]
+            target: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId]
         });
 
         await trx.insert(userCompletion).values({
@@ -418,7 +418,7 @@ export async function markActivityComplete(activityId: string, lessonId: string,
             courseId,
             completedAt: new Date(),
         }).onConflictDoNothing({
-            target: [userCompletion.userId, userCompletion.lessonId]
+            target: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId]
         });
 
         await trx.insert(userCompletion).values({
@@ -427,7 +427,7 @@ export async function markActivityComplete(activityId: string, lessonId: string,
             courseId,
             completedAt: new Date(),
         }).onConflictDoNothing({
-            target: [userCompletion.userId, userCompletion.moduleId]
+            target: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId]
         });
 
         await trx.insert(userCompletion).values({
@@ -435,7 +435,7 @@ export async function markActivityComplete(activityId: string, lessonId: string,
             courseId,
             completedAt: new Date(),
         }).onConflictDoNothing({
-            target: [userCompletion.userId, userCompletion.courseId]
+            target: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId]
         });
     });
 }
