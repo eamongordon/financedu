@@ -73,7 +73,7 @@ export default async function LessonLayout({ params, children }: LessonLayoutPro
                         type: lessonToActivitiesObj.activity.type,
                         title: lessonToActivitiesObj.activity.title,
                         href: `/courses/${courseId}/${moduleId}/${lessonId}/${lessonToActivitiesObj.activity.id}`,
-                        isComplete: isLoggedIn ? (lessonToActivitiesObj as LessonWithActivitiesAndUserProgress["lessonToActivities"][number]).activity.userCompletion.some(userProgress => userProgress.activityId === lessonToActivitiesObj.activity.id && userProgress.completedAt) : undefined,
+                        isComplete: isLoggedIn ? (lessonToActivitiesObj as LessonWithActivitiesAndUserProgress["lessonToActivities"][number]).activity.userCompletion.some(userProgress => userProgress.activityId === lessonToActivitiesObj.activity.id) : undefined,
                     }))} />
                 </div>
             </div>
