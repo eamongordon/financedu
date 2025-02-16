@@ -259,7 +259,7 @@ export const standards = pgTable("standard", {
   objectives: text("objectives"),
 })
 
-export const userProgress = pgTable("userProgress", {
+export const userCompletion = pgTable("userCompletion", {
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
@@ -272,12 +272,11 @@ export const userProgress = pgTable("userProgress", {
     .references(() => lessons.id, { onDelete: "cascade" }),
   activityId: text("activityId")
     .references(() => activities.id, { onDelete: "cascade" }),
-  startedAt: timestamp("startedAt", { mode: "date", withTimezone: true }).defaultNow(),
-  completedAt: timestamp("completedAt", { mode: "date", withTimezone: true }),
-}, (userProgress) => [
+  completedAt: timestamp("completedAt", { mode: "date", withTimezone: true }).defaultNow(),
+}, (userCompletion) => [
   {
     compositePK: primaryKey({
-      columns: [userProgress.userId, userProgress.courseId, userProgress.moduleId, userProgress.lessonId, userProgress.activityId],
+      columns: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId],
     }),
   },
 ])
@@ -286,7 +285,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   sessions: many(sessions),
   authenticators: many(authenticators),
-  userProgress: many(userProgress),
+  userCompletion: many(userCompletion),
 }))
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -312,7 +311,7 @@ export const authenticatorsRelations = relations(authenticators, ({ one }) => ({
 
 export const coursesRelations = relations(courses, ({ many }) => ({
   modules: many(modules),
-  userProgress: many(userProgress),
+  userCompletion: many(userCompletion),
 }))
 
 export const modulesRelations = relations(modules, ({ one, many }) => ({
@@ -321,7 +320,7 @@ export const modulesRelations = relations(modules, ({ one, many }) => ({
     references: [courses.id],
   }),
   lessons: many(lessons),
-  userProgress: many(userProgress),
+  userCompletion: many(userCompletion),
 }))
 
 export const lessonsRelations = relations(lessons, ({ one, many }) => ({
@@ -330,14 +329,14 @@ export const lessonsRelations = relations(lessons, ({ one, many }) => ({
     references: [modules.id],
   }),
   lessonToActivities: many(lessonToActivities),
-  userProgress: many(userProgress),
+  userCompletion: many(userCompletion),
 }))
 
 export const activitiesRelations = relations(activities, ({ many }) => ({
   lessonToActivities: many(lessonToActivities),
   activityToQuestions: many(activityToQuestions),
   activityToStandards: many(activityToStandards),
-  userProgress: many(userProgress),
+  userCompletion: many(userCompletion),
 }))
 
 export const lessonToActivitiesRelations = relations(lessonToActivities, ({ one }) => ({
@@ -410,25 +409,25 @@ export const activityStandardsRelations = relations(activityToStandards, ({ one 
   }),
 }))
 
-export const userProgressRelations = relations(userProgress, ({ one }) => ({
+export const userCompletionRelations = relations(userCompletion, ({ one }) => ({
   user: one(users, {
-    fields: [userProgress.userId],
+    fields: [userCompletion.userId],
     references: [users.id],
   }),
   course: one(courses, {
-    fields: [userProgress.courseId],
+    fields: [userCompletion.courseId],
     references: [courses.id],
   }),
   module: one(modules, {
-    fields: [userProgress.moduleId],
+    fields: [userCompletion.moduleId],
     references: [modules.id],
   }),
   lesson: one(lessons, {
-    fields: [userProgress.lessonId],
+    fields: [userCompletion.lessonId],
     references: [lessons.id],
   }),
   activity: one(activities, {
-    fields: [userProgress.activityId],
+    fields: [userCompletion.activityId],
     references: [activities.id],
   }),
 }))

@@ -1,7 +1,7 @@
 "use server";
 
 import { eq, gt, lt, and } from "drizzle-orm";
-import { courses, users, modules, lessons, activities, lessonToActivities, userProgress } from "./db/schema";
+import { courses, users, modules, lessons, activities, lessonToActivities, userCompletion } from "./db/schema";
 import { db } from "./db";
 import { hash, compare } from "bcrypt";
 import { type Roles } from "./db/schema";
@@ -392,69 +392,58 @@ export async function getPreviousLesson(lessonId: string) {
     }
 }
 
-export async function trackUserProgress(courseId: string, moduleId?: string, lessonId?: string, activityId?: string) {
+export async function markActivityComplete(activityId: string, lessonId: string, moduleId: string, courseId: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
     const userId = session.user.id;
 
-    const existingProgress = await db.query.userProgress.findFirst({
-        where: and(
-            eq(userProgress.userId, userId),
-            eq(userProgress.courseId, courseId),
-            moduleId ? eq(userProgress.moduleId, moduleId) : undefined,
-            lessonId ? eq(userProgress.lessonId, lessonId) : undefined,
-            activityId ? eq(userProgress.activityId, activityId) : undefined
-        )
+    await db.insert(userCompletion).values({
+        userId,
+        activityId,
+        lessonId,
+        moduleId,
+        courseId,
+        completedAt: new Date(),
+    }).onConflictDoNothing({
+        target: [userCompletion.userId, userCompletion.activityId]
     });
-
-    if (!existingProgress) {
-        await db.insert(userProgress).values({
-            userId,
-            courseId,
-            moduleId,
-            lessonId,
-            activityId,
-            completedAt: activityId ? null : new Date(),
-        });
-    }
 }
 
-export async function markActivityComplete(activityId: string) {
+export async function markLessonComplete(lessonId: string, moduleId: string, courseId: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
     const userId = session.user.id;
 
-    await db.update(userProgress)
-        .set({ completedAt: new Date() })
-        .where(and(eq(userProgress.userId, userId), eq(userProgress.activityId, activityId)));
+    await db.insert(userCompletion).values({
+        userId,
+        lessonId,
+        moduleId,
+        courseId,
+        completedAt: new Date(),
+    }).onConflictDoNothing({
+        target: [userCompletion.userId, userCompletion.lessonId]
+    });
 }
 
-export async function markLessonComplete(lessonId: string) {
+export async function markModuleComplete(moduleId: string, courseId: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
     const userId = session.user.id;
 
-    await db.update(userProgress)
-        .set({ completedAt: new Date() })
-        .where(and(eq(userProgress.userId, userId), eq(userProgress.lessonId, lessonId)));
-}
-
-export async function markModuleComplete(moduleId: string) {
-    const session = await auth();
-    if (!session || !session.user || !session.user.id) {
-        throw new Error("Not authenticated");
-    }
-    const userId = session.user.id;
-
-    await db.update(userProgress)
-        .set({ completedAt: new Date() })
-        .where(and(eq(userProgress.userId, userId), eq(userProgress.moduleId, moduleId)));
+    await db.insert(userCompletion).values({
+        userId,
+        moduleId,
+        courseId,
+        completedAt: new Date(),
+    }).onConflictDoNothing({
+        target: [userCompletion.userId, userCompletion.moduleId]
+    });
 }
 
 export async function markCourseComplete(courseId: string) {
@@ -464,9 +453,13 @@ export async function markCourseComplete(courseId: string) {
     }
     const userId = session.user.id;
 
-    await db.update(userProgress)
-        .set({ completedAt: new Date() })
-        .where(and(eq(userProgress.userId, userId), eq(userProgress.courseId, courseId)));
+    await db.insert(userCompletion).values({
+        userId,
+        courseId,
+        completedAt: new Date(),
+    }).onConflictDoNothing({
+        target: [userCompletion.userId, userCompletion.courseId]
+    });
 }
 
 export async function getLessonWithActivitiesAndUserProgress(lessonId: string) {
@@ -482,14 +475,14 @@ export async function getLessonWithActivitiesAndUserProgress(lessonId: string) {
                 with: {
                     activity: {
                         with: {
-                            userProgress: true
+                            userCompletion: true
                         }
                     }
                 },
                 orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
             },
-            userProgress: {
-                where: eq(userProgress.userId, userId)
+            userCompletion: {
+                where: eq(userCompletion.userId, userId)
             }
         }
     });

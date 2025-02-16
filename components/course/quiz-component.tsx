@@ -12,8 +12,8 @@ import { Button, buttonVariants } from "../ui/button";
 import Link from "next/link";
 import { useParams } from 'next/navigation'
 import { getNextActivityLink } from "@/lib/utils";
-import { markActivityComplete, markLessonComplete, markModuleComplete, markCourseComplete } from "@/lib/actions";
 import { useSession } from "next-auth/react";
+import { markActivityComplete, markLessonComplete, markModuleComplete, markCourseComplete } from "@/lib/actions";
 
 type Response = string | string[] | number | { id: string, response: string }[];
 
@@ -94,26 +94,11 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
                 setCurrentQuestionIndex(currentQuestionIndex + 1);
             } else {
                 setIsQuizFinished(true); // Set quiz as finished
-                await handleQuizComplete(); // Call the handleQuizComplete function
+                await handleQuizComplete(); // Call handleQuizComplete when quiz is finished
             }
         } else {
             setShowAnswer(true);
             handleSubmit();
-        }
-    };
-
-    const handleQuizComplete = async () => {
-        if (session && session.user && session.user.id) {
-            await markActivityComplete(activity.id);
-            if (!nextActivity.hasNext) {
-                await markLessonComplete(currentLessonId);
-                if (!nextActivity.lesson) {
-                    await markModuleComplete(currentModuleId);
-                    if (!nextActivity.module) {
-                        await markCourseComplete(currentCourseId);
-                    }
-                }
-            }
         }
     };
 
@@ -140,6 +125,21 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
                 return true;
             default:
                 return false;
+        }
+    };
+
+    const handleQuizComplete = async () => {
+        if (session && session.user && session.user.id) {
+            await markActivityComplete(activity.id, currentLessonId, currentModuleId, currentCourseId);
+            if (!nextActivity.hasNext) {
+                await markLessonComplete(currentLessonId, currentModuleId, currentCourseId);
+                if (!nextActivity.lesson) {
+                    await markModuleComplete(currentModuleId, currentCourseId);
+                    if (!nextActivity.module) {
+                        await markCourseComplete(currentCourseId);
+                    }
+                }
+            }
         }
     };
 
