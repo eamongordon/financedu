@@ -13,6 +13,7 @@ interface ActivityNavProps extends React.HTMLAttributes<HTMLElement> {
     type: "Article" | "Quiz",
     title: string
     href: string
+    isComplete?: boolean
   }[]
 }
 
@@ -41,7 +42,11 @@ export function ActivityNav({ className, activities, ...props }: ActivityNavProp
             "justify-start"
           )}
         >
-          <div className={cn("border flex justify-center items-center size-8 shrink-0 rounded-md mr-4", currentActivityId === activity.id ? "dark:border-muted-foreground" : "")}>
+          <div className={
+            cn("border flex justify-center items-center size-8 shrink-0 rounded-md mr-4",
+              currentActivityId === activity.id ? "dark:border-muted-foreground" : "",
+              activity.isComplete ? "border-primary text-primary" : "")}
+          >
             {activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
           </div>
           {activity.title}

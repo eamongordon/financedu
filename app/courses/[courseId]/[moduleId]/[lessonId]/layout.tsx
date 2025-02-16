@@ -1,9 +1,10 @@
-import { getLessonWithActivities, getNextLesson, getPreviousLesson } from "@/lib/actions"
+import { getLessonWithActivities, getLessonWithActivitiesAndUserProgress, getNextLesson, getPreviousLesson } from "@/lib/actions"
 import { ActivityNav } from "@/components/course/activity-nav"
 import { ChartLine, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { auth } from "@/lib/auth";
 
 export default async function LessonLayout({
     params,
@@ -13,9 +14,18 @@ export default async function LessonLayout({
     children: React.ReactNode
 }) {
     const { courseId, moduleId, lessonId } = await params;
-    const lesson = await getLessonWithActivities(lessonId);
     const nextLesson = await getNextLesson(lessonId);
     const previousLesson = await getPreviousLesson(lessonId);
+    const session = await auth();
+
+    let lesson: Awaited<ReturnType<typeof getLessonWithActivitiesAndUserProgress>> | Awaited<ReturnType<typeof getLessonWithActivities>>;
+    const isLoggedIn = session && session.user && session.user.id
+    if (isLoggedIn) {
+        lesson = await getLessonWithActivitiesAndUserProgress(lessonId);
+    } else {
+        lesson = await getLessonWithActivities(lessonId);
+    }
+
     return (
         <div
             className="w-full flex flex-col sm:flex-row sm:flex-grow sm:divide-x divide-border"
@@ -74,7 +84,8 @@ export default async function LessonLayout({
                         id: lessonToActivitiesObj.activity.id,
                         type: lessonToActivitiesObj.activity.type,
                         title: lessonToActivitiesObj.activity.title,
-                        href: `/courses/${courseId}/${moduleId}/${lessonId}/${lessonToActivitiesObj.activity.id}`
+                        href: `/courses/${courseId}/${moduleId}/${lessonId}/${lessonToActivitiesObj.activity.id}`,
+                        isComplete: isLoggedIn && 'userProgress' in lessonToActivitiesObj.activity ? lessonToActivitiesObj.activity.userProgress.some(userProgress => userProgress.activityId === lessonToActivitiesObj.activity.id && userProgress.completedAt) : undefined,
                     }))} />
                 </div>
             </div>

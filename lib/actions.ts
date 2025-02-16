@@ -468,3 +468,35 @@ export async function markCourseComplete(courseId: string) {
         .set({ completedAt: new Date() })
         .where(and(eq(userProgress.userId, userId), eq(userProgress.courseId, courseId)));
 }
+
+export async function getLessonWithActivitiesAndUserProgress(lessonId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+    const lesson = await db.query.lessons.findFirst({
+        where: eq(lessons.id, lessonId),
+        with: {
+            lessonToActivities: {
+                with: {
+                    activity: {
+                        with: {
+                            userProgress: true
+                        }
+                    }
+                },
+                orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+            },
+            userProgress: {
+                where: eq(userProgress.userId, userId)
+            }
+        }
+    });
+
+    if (!lesson) {
+        throw new Error("Lesson not found");
+    }
+
+    return lesson;
+}
