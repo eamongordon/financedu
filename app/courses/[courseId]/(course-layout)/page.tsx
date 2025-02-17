@@ -21,11 +21,11 @@ export default async function Page({
                 <div className="flex flex-row gap-10 md:gap-12">
                     <div>
                         <p className="font-semibold">Length (Hrs.):</p>
-                        <p className="text-muted-foreground text-2xl">32 - 56</p>
+                        <p className="text-muted-foreground text-2xl">{course.courseLength}</p>
                     </div>
                     <div>
                         <p className="font-semibold">Grade Levels:</p>
-                        <p className="text-muted-foreground text-2xl">7 - 12</p>
+                        <p className="text-muted-foreground text-2xl">{course.gradeLevels}</p>
                     </div>
                 </div>
             </section>
