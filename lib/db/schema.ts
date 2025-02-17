@@ -5,8 +5,7 @@ import {
   text,
   primaryKey,
   integer,
-  decimal,
-  unique,
+  decimal
 } from "drizzle-orm/pg-core"
 import { sql } from 'drizzle-orm'
 import type { AdapterAccountType } from "next-auth/adapters"
@@ -268,15 +267,18 @@ export const userCompletion = pgTable("userCompletion", {
     .notNull()
     .references(() => courses.id, { onDelete: "cascade" }),
   moduleId: text("moduleId")
+    .notNull()
     .references(() => modules.id, { onDelete: "cascade" }),
   lessonId: text("lessonId")
+    .notNull()
     .references(() => lessons.id, { onDelete: "cascade" }),
   activityId: text("activityId")
+    .notNull()
     .references(() => activities.id, { onDelete: "cascade" }),
   completedAt: timestamp("completedAt", { mode: "date", withTimezone: true }).defaultNow(),
 }, (userCompletion) => [
-  unique().on(userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId).nullsNotDistinct()
-])
+  primaryKey({ columns: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId] })
+]);
 
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),

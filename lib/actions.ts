@@ -399,44 +399,15 @@ export async function markActivityComplete(activityId: string, lessonId: string,
     }
     const userId = session.user.id;
 
-    await db.transaction(async (trx) => {
-        await trx.insert(userCompletion).values({
-            userId,
-            activityId,
-            lessonId,
-            moduleId,
-            courseId,
-            completedAt: new Date(),
-        }).onConflictDoNothing({
-            target: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId]
-        });
-
-        await trx.insert(userCompletion).values({
-            userId,
-            lessonId,
-            moduleId,
-            courseId,
-            completedAt: new Date(),
-        }).onConflictDoNothing({
-            target: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId]
-        });
-
-        await trx.insert(userCompletion).values({
-            userId,
-            moduleId,
-            courseId,
-            completedAt: new Date(),
-        }).onConflictDoNothing({
-            target: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId]
-        });
-
-        await trx.insert(userCompletion).values({
-            userId,
-            courseId,
-            completedAt: new Date(),
-        }).onConflictDoNothing({
-            target: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId]
-        });
+    await db.insert(userCompletion).values({
+        userId,
+        activityId,
+        lessonId,
+        moduleId,
+        courseId,
+        completedAt: new Date(),
+    }).onConflictDoNothing({
+        target: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId]
     });
 }
 
@@ -486,18 +457,18 @@ export async function getModuleWithLessonsAndActivitiesAndUserCompletion(moduleI
                 with: {
                     lessonToActivities: {
                         with: {
-                            activity: true
+                            activity: {
+                                with: {
+                                    userCompletion: {
+                                        where: eq(userCompletion.userId, userId)
+                                    }
+                                }
+                            }
                         },
                         orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
-                    },
-                    userCompletion: {
-                        where: eq(userCompletion.userId, userId)
                     }
                 },
                 orderBy: (lessons, { asc }) => [asc(lessons.order)]
-            },
-            userCompletion: {
-                where: eq(userCompletion.userId, userId)
             }
         }
     });
@@ -521,18 +492,26 @@ export async function getCourseWithModulesAndLessonsAndUserCompletion(courseId: 
             modules: {
                 with: {
                     lessons: {
+                        with: {
+                            lessonToActivities: {
+                                with: {
+                                    activity: {
+                                        with: {
+                                            userCompletion: {
+                                                where: eq(userCompletion.userId, userId)
+                                            }
+                                        }
+                                    }
+                                },
+                                orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+                            }
+                        },
                         orderBy: (lessons, { asc }) => [asc(lessons.order)]
-                    },
-                    userCompletion: {
-                        where: eq(userCompletion.userId, userId)
                     }
                 },
                 orderBy: (modules, { asc }) => [asc(modules.order)],
-            },
-            userCompletion: {
-                where: eq(userCompletion.userId, userId)
             }
-        },
+        }
     });
 
     if (!course) {
