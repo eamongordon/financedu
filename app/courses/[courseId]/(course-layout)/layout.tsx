@@ -3,8 +3,6 @@ import { ModuleNav } from "@/components/course/module-nav"
 import { CourseHeader } from "@/components/course/course-header";
 import { auth } from "@/lib/auth";
 
-type getCourseWithModulesAndLessonsAndUserCompletionReturnType = Awaited<ReturnType<typeof getCourseWithModulesAndLessonsAndUserCompletion>>;
-
 export default async function CourseLayout({
     params,
     children,
@@ -34,8 +32,7 @@ export default async function CourseLayout({
                     id: module.id,
                     title: module.title,
                     icon: module.icon,
-                    href: `/courses/${slug}/${module.id}`,
-                    isComplete: isLoggedIn ? (module as getCourseWithModulesAndLessonsAndUserCompletionReturnType["modules"][number]).userCompletion.some((userCompletionObj) => userCompletionObj.completedAt && !userCompletionObj.lessonId) : undefined
+                    href: `/courses/${slug}/${module.id}`
                 }))} />
             </div>
             <div
