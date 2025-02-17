@@ -302,7 +302,10 @@ export async function getNextLesson(lessonId: string) {
     // Check for next lesson in the current module
     const nextLesson = await db.query.lessons.findFirst({
         where: and(eq(lessons.moduleId, currentModuleId), gt(lessons.order, currentOrder)),
-        orderBy: (lessons, { asc }) => [asc(lessons.order)]
+        orderBy: (lessons, { asc }) => [asc(lessons.order)],
+        with: {
+            lessonToActivities: true
+        }
     });
 
     if (nextLesson) {
@@ -319,7 +322,10 @@ export async function getNextLesson(lessonId: string) {
         with: {
             lessons: {
                 orderBy: (lessons, { asc }) => [asc(lessons.order)],
-                limit: 1
+                limit: 1,
+                with: {
+                    lessonToActivities: true
+                }
             }
         }
     });
@@ -359,7 +365,10 @@ export async function getPreviousLesson(lessonId: string) {
     // Check for previous lesson in the current module
     const previousLesson = await db.query.lessons.findFirst({
         where: and(eq(lessons.moduleId, currentLesson.moduleId), lt(lessons.order, currentLesson.order)),
-        orderBy: (lessons, { desc }) => [desc(lessons.order)]
+        orderBy: (lessons, { desc }) => [desc(lessons.order)],
+        with: {
+            lessonToActivities: true
+        }
     });
 
     if (previousLesson) {
@@ -376,7 +385,10 @@ export async function getPreviousLesson(lessonId: string) {
         with: {
             lessons: {
                 orderBy: (lessons, { desc }) => [desc(lessons.order)],
-                limit: 1
+                limit: 1,
+                with: {
+                    lessonToActivities: true
+                }
             }
         }
     });

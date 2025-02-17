@@ -44,7 +44,7 @@ export default async function LessonLayout({ params, children }: LessonLayoutPro
                 <div className="w-full flex flex-row justify-between items-center px-2 md:px-8 py-3">
                     {previousLesson.lesson ? (
                         <Link
-                            href={`/courses/${courseId}/${moduleId}/${previousLesson.lesson.id}`}
+                            href={`/courses/${courseId}/${moduleId}/${previousLesson.lesson.id}/${previousLesson.lesson.lessonToActivities[0].activityId}`}
                             className={cn(buttonVariants({ variant: "ghost" }), "[&_svg]:size-6 p-0")}
                         >
                             <ChevronLeft className="text-muted-foreground" />
@@ -57,7 +57,7 @@ export default async function LessonLayout({ params, children }: LessonLayoutPro
                     <h1 className="mx-2 text-lg font-bold text-center">{lesson.title}</h1>
                     {nextLesson.lesson ? (
                         <Link
-                            href={`/courses/${courseId}/${moduleId}/${nextLesson.lesson.id}`}
+                            href={`/courses/${courseId}/${moduleId}/${nextLesson.lesson.id}/${nextLesson.lesson.lessonToActivities[0].activityId}`}
                             className={cn(buttonVariants({ variant: "ghost" }), "[&_svg]:size-6 p-0")}
                         >
                             <ChevronRight className="text-muted-foreground" />
