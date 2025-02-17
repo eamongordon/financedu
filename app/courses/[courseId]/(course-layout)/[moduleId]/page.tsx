@@ -3,8 +3,9 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { getModuleWithLessonsAndActivities, getModuleWithLessonsAndActivitiesAndUserCompletion } from "@/lib/actions";
 import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
-import { Check, CircleHelp, FileText } from "lucide-react";
 import Link from "next/link";
+import { CompletionIcon } from "@/components/ui/completion-icon";
+import { CircleHelp, FileText } from "lucide-react";
 
 type ModuleWithLessonsAndActivitiesAndUserCompletion = Awaited<ReturnType<typeof getModuleWithLessonsAndActivitiesAndUserCompletion>>;
 
@@ -40,17 +41,10 @@ export default async function CourseLayout({
                                     )}
                                 >
                                     <div className="relative">
-                                        <div className={
-                                            cn("border flex justify-center items-center size-8 shrink-0 rounded-md mr-4 relative",
-                                                isLoggedIn && (lessonToActivitiesObj as ModuleWithLessonsAndActivitiesAndUserCompletion["lessons"][number]["lessonToActivities"][number]).activity.userCompletion.length ? "border-primary text-primary" : "")}
-                                        >
-                                            {lessonToActivitiesObj.activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
-                                            {isLoggedIn && (lessonToActivitiesObj as ModuleWithLessonsAndActivitiesAndUserCompletion["lessons"][number]["lessonToActivities"][number]).activity.userCompletion.length > 0 && (
-                                                <div className="text-white absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-primary rounded-full size-4 flex items-center justify-center [&_svg]:size-[11px]">
-                                                    <Check />
-                                                </div>
-                                            )}
-                                        </div>
+                                        <CompletionIcon
+                                            isComplete={(isLoggedIn && (lessonToActivitiesObj as ModuleWithLessonsAndActivitiesAndUserCompletion["lessons"][number]["lessonToActivities"][number]).activity.userCompletion.length > 0) || false}
+                                            icon={lessonToActivitiesObj.activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
+                                        />
                                     </div>
                                     {lessonToActivitiesObj.activity.title}
                                 </Link>

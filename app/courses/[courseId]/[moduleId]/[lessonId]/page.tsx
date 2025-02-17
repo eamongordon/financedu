@@ -3,7 +3,8 @@ import { getLessonWithActivities, getLessonWithActivitiesAndUserProgress } from 
 import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import Link from "next/link"
-import { FileText, CircleHelp, Check } from "lucide-react";
+import { FileText, CircleHelp } from "lucide-react";
+import { CompletionIcon } from "@/components/ui/completion-icon";
 
 type LessonWithActivitiesAndUserProgress = Awaited<ReturnType<typeof getLessonWithActivitiesAndUserProgress>>;
 
@@ -44,19 +45,10 @@ export default async function LessonPage({
                             "py-8 text-base text-foreground [&_svg]:size-4 whitespace-normal justify-start",
                         )}
                     >
-                        <div className="relative">
-                            <div className={
-                                cn("border flex justify-center items-center size-8 shrink-0 rounded-md mr-4 relative",
-                                    isLoggedIn && lessonToActivitiesObj.activity ? "border-primary text-primary" : "")}
-                            >
-                                {lessonToActivitiesObj.activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
-                                {isLoggedIn && (lessonToActivitiesObj as LessonWithActivitiesAndUserProgress["lessonToActivities"][number]).activity.userCompletion.length > 0 && (
-                                    <div className="text-white absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-primary rounded-full size-4 flex items-center justify-center [&_svg]:size-[11px]">
-                                        <Check />
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+                        <CompletionIcon
+                            isComplete={isLoggedIn ? (lessonToActivitiesObj as LessonWithActivitiesAndUserProgress["lessonToActivities"][number]).activity.userCompletion.length > 0 : false}
+                            icon={lessonToActivitiesObj.activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
+                        />
                         {lessonToActivitiesObj.activity.title}
                     </Link>
                 ))}
