@@ -36,7 +36,7 @@ export default async function LessonLayout({ params, children }: LessonLayoutPro
                         <Link href={`/courses/${courseId}`}>
                             <h2 className="text-xl font-bold leading-none">{lesson.module.course.title}</h2>
                         </Link>
-                        <Link href={`courses/${courseId}/${moduleId}`}>
+                        <Link href={`/courses/${courseId}/${moduleId}`}>
                             <p className="font-semibold text-secondary leading-none">{lesson.module.title}</p>
                         </Link>
                     </div>
