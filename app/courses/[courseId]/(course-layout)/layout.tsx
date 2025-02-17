@@ -3,6 +3,8 @@ import { ModuleNav } from "@/components/course/module-nav"
 import { CourseHeader } from "@/components/course/course-header";
 import { auth } from "@/lib/auth";
 
+type courseWithModulesAndLessonsAndUserCompletion = Awaited<ReturnType<typeof getCourseWithModulesAndLessonsAndUserCompletion>>;
+
 export default async function CourseLayout({
     params,
     children,
@@ -19,7 +21,7 @@ export default async function CourseLayout({
         ? await getCourseWithModulesAndLessonsAndUserCompletion(slug)
         : await getCourseWithModulesAndLessons(slug);
 
-        console.log(course);
+        console.log("courseM", course);
     return (
         <div
             className="w-full flex flex-col sm:flex-row sm:flex-grow sm:divide-x divide"
@@ -32,7 +34,8 @@ export default async function CourseLayout({
                     id: module.id,
                     title: module.title,
                     icon: module.icon,
-                    href: `/courses/${slug}/${module.id}`
+                    href: `/courses/${slug}/${module.id}`,
+                    isComplete: (module as courseWithModulesAndLessonsAndUserCompletion["modules"][number]).lessons.every(lesson => lesson.lessonToActivities.every(lessonToActivityObj => lessonToActivityObj.activity.userCompletion.length > 0))
                 }))} />
             </div>
             <div
