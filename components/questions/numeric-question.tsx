@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useEffect } from "react"
 
-import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -27,7 +26,7 @@ export function NumericQuestion({ question, onResponseChange, onValidChange, sho
     resolver: zodResolver(FormSchema),
     mode: "onChange",
     defaultValues: {
-      response: "" as unknown as number
+      response: 0,
     }
   })
 
@@ -48,21 +47,22 @@ export function NumericQuestion({ question, onResponseChange, onValidChange, sho
         <FormField
           control={form.control}
           name="response"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Number</FormLabel>
-              <FormControl>
-                <Input type="number" {...field} onChange={field.onChange} />
-              </FormControl>
-              <FormDescription>
-                Enter a Response
-              </FormDescription>
-              <FormMessage />
-              {showAnswer && <div className="text-green-500">Correct Answers</div>}
-            </FormItem>
-          )}
+          render={({ field }) => {
+            const isCorrect = Number(field.value) === Number(question.numericAnswer);
+            return (
+              <FormItem>
+                <FormLabel dangerouslySetInnerHTML={{ __html: question.instructions ?? "" }} />
+                <FormControl>
+                  <Input disabled={showAnswer} type="number" {...field} onChange={field.onChange} />
+                </FormControl>
+                <FormDescription className={showAnswer ? isCorrect ? "text-primary" : "text-destructive" : ""}>
+                  {showAnswer && (isCorrect ? "Correct!" : "Not quite.")}
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
         />
-        <Button type="submit">Submit</Button>
       </form>
     </Form>
   )

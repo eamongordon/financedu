@@ -113,7 +113,7 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
                 return selectedOptions.every((selectedOption) => correctOptions.includes(selectedOption)) &&
                     correctOptions.every((correctOption) => selectedOptions.includes(correctOption));
             case "numeric":
-                return response === currentQuestion.questionOptions[0].id;
+                return Number(response) === Number(currentQuestion.numericAnswer)
             case "text":
                 return true;
             case "matching":
