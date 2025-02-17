@@ -10,7 +10,7 @@ import { InfoQuestion } from "@/components/questions/info-question";
 import { type NextActivity, type Activity } from "@/types";
 import { Button, buttonVariants } from "../ui/button";
 import Link from "next/link";
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { getNextActivityLink } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { markActivityComplete } from "@/lib/actions";
@@ -32,6 +32,7 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
     const currentModuleId = params!.moduleId;
     const currentCourseId = params!.courseId;
 
+    const router = useRouter();
     const { data: session } = useSession();
 
     useEffect(() => {
@@ -131,6 +132,7 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
     const handleQuizComplete = async () => {
         if (session && session.user && session.user.id) {
             await markActivityComplete(activity.id, currentLessonId, currentModuleId, currentCourseId);
+            await router.refresh();
         }
     };
 
