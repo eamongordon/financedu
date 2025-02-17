@@ -4,17 +4,24 @@ import { ChartLine, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getActivity, getNextActivity, markActivityComplete } from "@/lib/actions";
+import QuizComponent from "@/components/course/quiz-component";
+import { CircleHelp, FileText } from "lucide-react";
+import { getNextActivityLink } from "@/lib/utils";
+import { SessionProvider } from "next-auth/react";
 import { auth } from "@/lib/auth";
 
-interface LessonLayoutProps {
-    params: Promise<{ courseId: string, moduleId: string, lessonId: string }>,
-    children: React.ReactNode
+interface LessonActivityPageProps {
+    params: Promise<{ courseId: string, moduleId: string, slug: string[] }>
 }
 
 type LessonWithActivitiesAndUserProgress = Awaited<ReturnType<typeof getLessonWithActivitiesAndUserProgress>>;
 
-export default async function LessonLayout({ params, children }: LessonLayoutProps) {
-    const { courseId, moduleId, lessonId } = await params;
+export default async function LessonActivityPage({ params }: LessonActivityPageProps) {
+    const { courseId, moduleId, slug } = await params;
+    const lessonId = slug[0];
+    const activityId = slug[1];
+
     const nextLesson = await getNextLesson(lessonId);
     const previousLesson = await getPreviousLesson(lessonId);
     const session = await auth();
@@ -23,6 +30,17 @@ export default async function LessonLayout({ params, children }: LessonLayoutPro
     const lesson = isLoggedIn
         ? await getLessonWithActivitiesAndUserProgress(lessonId)
         : await getLessonWithActivities(lessonId);
+
+    console.log("lessonId", lessonId);
+    console.log("activityId", activityId);
+
+    const activity = await getActivity(activityId);
+    const nextActivity = await getNextActivity(activityId);
+    const { href, label } = getNextActivityLink(courseId, moduleId, lessonId, nextActivity);
+
+    if (session && session.user && session.user.id && activity.type === "Article") {
+        await markActivityComplete(activityId, lessonId, moduleId, courseId);
+    }
 
     return (
         <div className="w-full flex flex-col sm:flex-row sm:flex-grow sm:divide-x divide-border">
@@ -73,12 +91,45 @@ export default async function LessonLayout({ params, children }: LessonLayoutPro
                         type: lessonToActivitiesObj.activity.type,
                         title: lessonToActivitiesObj.activity.title,
                         href: `/courses/${courseId}/${moduleId}/${lessonId}/${lessonToActivitiesObj.activity.id}`,
-                        isComplete: isLoggedIn ? (lessonToActivitiesObj as LessonWithActivitiesAndUserProgress["lessonToActivities"][number]).activity.userCompletion.some(userProgress => userProgress.activityId === lessonToActivitiesObj.activity.id) : undefined,
+                        isActive: lessonToActivitiesObj.activity.id === activityId,
+                        isComplete: isLoggedIn ? ((lessonToActivitiesObj as LessonWithActivitiesAndUserProgress["lessonToActivities"][number]).activity.userCompletion.some(userProgress => userProgress.activityId === lessonToActivitiesObj.activity.id) || (lessonToActivitiesObj.activity.id === activityId && lessonToActivitiesObj.activity.type === "Article")) : undefined,
                     }))} />
                 </div>
             </div>
             <div className="sm:w-2/3 flex flex-col items-center mx-auto overflow-auto">
-                {children}
+                {!activityId ? (<></>) : (
+                    <main className="w-full">
+                        <section className="border-b flex justify-center">
+                            <div className="w-4/5 py-8 flex flex-row items-center gap-4">
+                                <div className="border size-16 flex justify-center items-center rounded-lg">
+                                    {activity.type === "Quiz" ? <CircleHelp className="text-secondary" size={50} strokeWidth={1.5} /> : <FileText className="text-secondary" size={50} strokeWidth={1.5} />}
+                                </div>
+                                <div className="flex flex-col gap-2">
+                                    <h1 className="text-2xl font-bold leading-none">{activity.title}</h1>
+                                    <p className="font-semibold text-secondary leading-none">{activity.type}</p>
+                                </div>
+
+                            </div>
+                            <p>{activity.description}</p>
+                        </section>
+                        {activity.type === "Article" && (
+                            <div className="flex flex-col items-center sm:min-h-[calc(100vh-196px)] relative">
+                                <div className="py-8 w-full flex justify-center h-[calc(100vh-268px)] overflow-scroll">
+                                    <article className="w-4/5" dangerouslySetInnerHTML={{ __html: activity.content! }} />
+                                </div>
+                                <div className="border-t w-full p-4 flex justify-end items-center absolute bottom-0">
+                                    <Link href={href} className={buttonVariants()}>
+                                        {label}
+                                    </Link>
+                                </div>
+                            </div>
+                        )}
+                        {activity.type === "Quiz" && (
+                            <SessionProvider>
+                                <QuizComponent activity={activity} nextActivity={nextActivity} />
+                            </SessionProvider>
+                        )}
+                    </main>)}
             </div>
         </div>
     );
