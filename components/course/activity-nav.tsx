@@ -43,7 +43,7 @@ export function ActivityNav({ className, activities, ...props }: ActivityNavProp
           href={activity.href}
           className={cn(
             buttonVariants({ variant: "ghost" }),
-            "border-l-4 border-l-transparent py-8 rounded-none text-base [&_svg]:size-4 whitespace-normal",
+            "border-l-4 border-l-transparent py-8 rounded-none text-base whitespace-normal",
             currentActivityId === activity.id
               ? "border-l-primary bg-accent hover:bg-muted"
               : "",
@@ -58,7 +58,7 @@ export function ActivityNav({ className, activities, ...props }: ActivityNavProp
             >
               {activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
               {(activity.isComplete || browsedArticles.includes(activity.id)) && (
-                <div className="text-white absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-primary rounded-full size-4 flex items-center justify-center [&_svg]:size-3">
+                <div className="text-white absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-primary rounded-full size-4 flex items-center justify-center [&_svg]:size-[11px]">
                   <Check />
                 </div>
               )}
