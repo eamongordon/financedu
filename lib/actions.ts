@@ -126,6 +126,11 @@ export async function getLessonWithActivities(lessonId: string) {
                     activity: true
                 },
                 orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+            },
+            module: {
+                with: {
+                    course: true
+                }
             }
         }
     });
@@ -429,6 +434,11 @@ export async function getLessonWithActivitiesAndUserProgress(lessonId: string) {
                     }
                 },
                 orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+            },
+            module: {
+                with: {
+                    course: true
+                }
             },
             userCompletion: {
                 where: eq(userCompletion.userId, userId)
