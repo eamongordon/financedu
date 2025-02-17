@@ -40,10 +40,10 @@ export default async function CourseLayout({
                                     <div className="relative">
                                         <div className={
                                             cn("border flex justify-center items-center size-8 shrink-0 rounded-md mr-4 relative",
-                                                lessonToActivitiesObj.activity.userCompletion.length ? "border-primary text-primary" : "")}
+                                                isLoggedIn && lessonToActivitiesObj.activity.userCompletion.length ? "border-primary text-primary" : "")}
                                         >
                                             {lessonToActivitiesObj.activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
-                                            {lessonToActivitiesObj.activity.userCompletion.length > 0 && (
+                                            {isLoggedIn && lessonToActivitiesObj.activity.userCompletion.length > 0 && (
                                                 <div className="text-white absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-primary rounded-full size-4 flex items-center justify-center [&_svg]:size-[11px]">
                                                     <Check />
                                                 </div>
