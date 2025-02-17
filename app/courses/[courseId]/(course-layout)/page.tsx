@@ -48,7 +48,7 @@ export default async function Page({
                                 {module.lessons.map((lesson) => (
                                     <Link
                                         key={lesson.id}
-                                        href={`/courses/${course.id}/${module.id}/${lesson.id}`}
+                                        href={`/courses/${course.id}/${module.id}/${lesson.id}/${lesson.lessonToActivities.length > 0 ? lesson.lessonToActivities[0].activityId : ""}`}
                                         className={cn(
                                             buttonVariants({ variant: "link" }),
                                             "text-muted-foreground [&_svg]:size-4 whitespace-normal justify-start",
