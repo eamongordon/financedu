@@ -1,6 +1,9 @@
-import { getCourseWithModulesAndLessons } from "@/lib/actions"
+import { getCourseWithModulesAndLessons, getCourseWithModulesAndLessonsAndUserCompletion } from "@/lib/actions"
 import { ModuleNav } from "@/components/course/module-nav"
 import { CourseHeader } from "@/components/course/course-header";
+import { auth } from "@/lib/auth";
+
+type getCourseWithModulesAndLessonsAndUserCompletionReturnType = Awaited<ReturnType<typeof getCourseWithModulesAndLessonsAndUserCompletion>>;
 
 export default async function CourseLayout({
     params,
@@ -10,8 +13,15 @@ export default async function CourseLayout({
     children: React.ReactNode
 }) {
     const slug = (await params).courseId;
-    const course = await getCourseWithModulesAndLessons(slug);
-    console.log("course", course);
+
+    const session = await auth();
+
+    const isLoggedIn = session && session.user && session.user.id;
+    const course = isLoggedIn
+        ? await getCourseWithModulesAndLessonsAndUserCompletion(slug)
+        : await getCourseWithModulesAndLessons(slug);
+
+        console.log(course);
     return (
         <div
             className="w-full flex flex-col sm:flex-row sm:flex-grow sm:divide-x divide"
@@ -19,12 +29,13 @@ export default async function CourseLayout({
             <div
                 className="sm:w-1/3 flex flex-col items-start text-left sm:sticky top-[64px] mb-4 sm:mb-0 sm:h-[calc(100vh-64px)] overflow-auto"//todo: figure out proper height for scolling
             >
-                <CourseHeader course={course}/>
+                <CourseHeader course={course} />
                 <ModuleNav modules={course.modules.map(module => ({
                     id: module.id,
                     title: module.title,
                     icon: module.icon,
-                    href: `/courses/${slug}/${module.id}`
+                    href: `/courses/${slug}/${module.id}`,
+                    isComplete: isLoggedIn ? (module as getCourseWithModulesAndLessonsAndUserCompletionReturnType["modules"][number]).userCompletion.some((userCompletionObj) => userCompletionObj.completedAt && !userCompletionObj.lessonId) : undefined
                 }))} />
             </div>
             <div

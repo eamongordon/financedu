@@ -471,3 +471,73 @@ export async function getLessonWithActivitiesAndUserProgress(lessonId: string) {
 
     return lesson;
 }
+
+
+export async function getModuleWithLessonsAndActivitiesAndUserCompletion(moduleId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+    const moduleObj = await db.query.modules.findFirst({
+        where: eq(modules.id, moduleId),
+        with: {
+            lessons: {
+                with: {
+                    lessonToActivities: {
+                        with: {
+                            activity: true
+                        },
+                        orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+                    },
+                    userCompletion: {
+                        where: eq(userCompletion.userId, userId)
+                    }
+                },
+                orderBy: (lessons, { asc }) => [asc(lessons.order)]
+            },
+            userCompletion: {
+                where: eq(userCompletion.userId, userId)
+            }
+        }
+    });
+
+    if (!moduleObj) {
+        throw new Error("Module not found");
+    }
+
+    return moduleObj;
+}
+
+export async function getCourseWithModulesAndLessonsAndUserCompletion(courseId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+    const course = await db.query.courses.findFirst({
+        where: eq(courses.id, courseId),
+        with: {
+            modules: {
+                with: {
+                    lessons: {
+                        orderBy: (lessons, { asc }) => [asc(lessons.order)]
+                    },
+                    userCompletion: {
+                        where: eq(userCompletion.userId, userId)
+                    }
+                },
+                orderBy: (modules, { asc }) => [asc(modules.order)],
+            },
+            userCompletion: {
+                where: eq(userCompletion.userId, userId)
+            }
+        },
+    });
+
+    if (!course) {
+        throw new Error("Course not found");
+    }
+
+    return course;
+}
