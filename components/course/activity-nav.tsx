@@ -33,7 +33,7 @@ export function ActivityNav({ className, activities, ...props }: ActivityNavProp
   return (
     <nav
       className={cn(
-        "flex md:flex-col divide-y border-t border-b",
+        "flex flex-col divide-y border-t border-b",
         className
       )}
       {...props}
