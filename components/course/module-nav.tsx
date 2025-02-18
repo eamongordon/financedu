@@ -37,7 +37,7 @@ export function ModuleNav({ className, modules, ...props }: ModuleNavProps) {
           href={module.href}
           className={cn(
             buttonVariants({ variant: "ghost" }),
-            "border-l-4 border-l-transparent py-8 rounded-none text-base [&_svg]:size-4 whitespace-normal",
+            "border-l-4 border-l-transparent py-8 rounded-none text-base [&_svg]:size-4 whitespace-normal gap-6",
             currentModuleId === module.id
               ? "border-l-primary bg-accent hover:bg-muted"
               : "",

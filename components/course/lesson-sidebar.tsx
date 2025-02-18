@@ -196,7 +196,7 @@ function ActivityNav({ lessonToActivities, courseId, moduleId, lessonId, activit
                     href={`/courses/${courseId}/${moduleId}/${lessonId}/${lessonToActivitiesObj.activityId}`}
                     className={cn(
                         buttonVariants({ variant: "ghost" }),
-                        "border-l-4 border-l-transparent py-8 rounded-none text-base whitespace-normal",
+                        "border-l-4 border-l-transparent py-8 rounded-none text-base whitespace-normal gap-6",
                         activityId === lessonToActivitiesObj.activityId
                             ? "border-l-primary bg-accent hover:bg-muted"
                             : "",

@@ -37,7 +37,7 @@ export default async function CourseLayout({
                                     href={`/courses/${moduleObj.courseId}/${moduleObj.id}/${lesson.id}/${lessonToActivitiesObj.activity.id}`}
                                     className={cn(
                                         buttonVariants({ variant: "link" }),
-                                        "py-8 text-base text-foreground [&_svg]:size-4 whitespace-normal justify-start",
+                                        "py-8 text-base text-foreground [&_svg]:size-4 whitespace-normal justify-start gap-6",
                                     )}
                                 >
                                     <div className="relative">

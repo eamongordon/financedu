@@ -11,7 +11,7 @@ export function CompletionIcon({ isComplete, icon, isCurrent }: CompletionIconPr
   return (
     <div className="relative">
       <div className={
-        cn("border flex justify-center items-center size-8 shrink-0 rounded-md mr-4 relative",
+        cn("border flex justify-center items-center size-8 shrink-0 rounded-md relative",
           isCurrent ? "dark:border-muted-foreground" : "",
           isComplete ? "border-primary text-primary" : "")}
       >
