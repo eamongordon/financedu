@@ -102,6 +102,7 @@ export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn
                                                 : "",
                                             "justify-start"
                                         )}
+                                        onClick={() => activityId === lessonToActivitiesObj.activityId && setIsDrawerOpen(false)}
                                     >
                                         <CompletionIcon
                                             isComplete={isLoggedIn ? ((activityId === lessonToActivitiesObj.activityId && lessonToActivitiesObj.activity.type === "Article") || (lessonToActivitiesObj as LessonWithActivitiesAndUserProgress["lessonToActivities"][number]).activity.userCompletion.some(userProgress => userProgress.activityId === lessonToActivitiesObj.activity.id)) : false}
@@ -154,6 +155,7 @@ export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn
                                     : "",
                                 "justify-start"
                             )}
+                            onClick={() => activityId === lessonToActivitiesObj.activityId && setIsDrawerOpen(false)}
                         >
                             <CompletionIcon
                                 isComplete={isLoggedIn ? ((activityId === lessonToActivitiesObj.activityId && lessonToActivitiesObj.activity.type === "Article") || (lessonToActivitiesObj as LessonWithActivitiesAndUserProgress["lessonToActivities"][number]).activity.userCompletion.some(userProgress => userProgress.activityId === lessonToActivitiesObj.activity.id)) : false}
