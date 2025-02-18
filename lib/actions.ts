@@ -547,3 +547,64 @@ export async function getCourseWithModulesAndLessonsAndUserCompletion(courseId: 
 
     return course;
 }
+
+export async function getUserCoursesWithProgressAndNextActivity(userId: string) {
+    const coursesWithProgress = await db.query.courses.findMany({
+        with: {
+            modules: {
+                with: {
+                    lessons: {
+                        with: {
+                            lessonToActivities: {
+                                with: {
+                                    activity: {
+                                        with: {
+                                            userCompletion: {
+                                                where: (userCompletion) => eq(userCompletion.userId, userId)
+                                            }
+                                        }
+                                    }
+                                },
+                                orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+                            }
+                        },
+                        orderBy: (lessons, { asc }) => [asc(lessons.order)]
+                    }
+                },
+                orderBy: (modules, { asc }) => [asc(modules.order)]
+            }
+        }
+    });
+
+    // Find the next activity for each course
+    const coursesWithNextActivity = coursesWithProgress.map(course => {
+        let nextActivity = null;
+
+        for (const moduleObj of course.modules) {
+            if (nextActivity) break;
+            for (const lesson of moduleObj.lessons) {
+                if (nextActivity) break;
+                for (const lessonToActivity of lesson.lessonToActivities) {
+                    const activity = lessonToActivity.activity;
+                    const userCompletion = activity.userCompletion.find(uc => uc.userId === userId);
+                    if (!userCompletion) {
+                        nextActivity = {
+                            activity,
+                            lesson,
+                            module: moduleObj,
+                            course
+                        };
+                        break;
+                    }
+                }
+            }
+        }
+
+        return {
+            ...course,
+            nextActivity
+        };
+    });
+
+    return coursesWithNextActivity;
+}
