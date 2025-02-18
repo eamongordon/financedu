@@ -10,6 +10,8 @@ import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle } from 
 import { ActivityNav } from "./activity-nav";
 import { useParams } from "next/navigation";
 import { getNextLesson, getPreviousLesson } from "@/lib/actions";
+import { useEffect, useState } from "react";
+import { usePathname } from 'next/navigation'
 
 type LessonWithActivities = Awaited<ReturnType<typeof getLessonWithActivities>>;
 type LessonWithActivitiesAndUserProgress = Awaited<ReturnType<typeof getLessonWithActivitiesAndUserProgress>>;
@@ -41,10 +43,20 @@ type LessonSidebarProps = LessonSidebarLoggedOutProps | LessonSidebarLoggedInPro
 export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn, nextLesson, previousLesson }: LessonSidebarProps) {
     const params = useParams<{ activityId: string }>();
     const activityId = params?.activityId;
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const pathname = usePathname();
+
+    useEffect(() => {
+        setIsDrawerOpen(false);
+    }, [pathname]);
+    
     return (
         <>
             <div className="sm:hidden">
-                <Drawer>
+                <Drawer
+                    open={isDrawerOpen}
+                    onOpenChange={setIsDrawerOpen}
+                >
                     <DrawerTrigger asChild>
                         <div className="flex justify-center items-center w-full mt-2">
                             <Button variant="outline" className="w-4/5">
