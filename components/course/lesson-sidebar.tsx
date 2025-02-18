@@ -2,16 +2,16 @@
 
 import { getLessonWithActivities, getLessonWithActivitiesAndUserProgress } from "@/lib/actions";
 import { cn } from "@/lib/utils";
-import { Menu, GraduationCap, ChevronLeft, ChevronRight } from "lucide-react";
+import { Menu, GraduationCap, ChevronLeft, ChevronRight, FileText, CircleHelp } from "lucide-react";
 import Link from "next/link";
 import { DynamicIcon, dynamicIconImports } from "lucide-react/dynamic";
 import { Button, buttonVariants } from "../ui/button";
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle } from "../ui/drawer";
-import { ActivityNav } from "./activity-nav";
 import { useParams } from "next/navigation";
 import { getNextLesson, getPreviousLesson } from "@/lib/actions";
 import { useEffect, useState } from "react";
 import { usePathname } from 'next/navigation'
+import { CompletionIcon } from "../ui/completion-icon";
 
 type LessonWithActivities = Awaited<ReturnType<typeof getLessonWithActivities>>;
 type LessonWithActivitiesAndUserProgress = Awaited<ReturnType<typeof getLessonWithActivitiesAndUserProgress>>;
@@ -49,7 +49,7 @@ export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn
     useEffect(() => {
         setIsDrawerOpen(false);
     }, [pathname]);
-    
+
     return (
         <>
             <div className="sm:hidden">
@@ -87,13 +87,31 @@ export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn
                                 moduleId={moduleId}
                                 courseId={courseId}
                             />
-                            <ActivityNav activities={lesson.lessonToActivities.map(lessonToActivitiesObj => ({
-                                id: lessonToActivitiesObj.activity.id,
-                                type: lessonToActivitiesObj.activity.type,
-                                title: lessonToActivitiesObj.activity.title,
-                                href: `/courses/${courseId}/${moduleId}/${lessonId}/${lessonToActivitiesObj.activity.id}`,
-                                isComplete: isLoggedIn ? ((activityId === lessonToActivitiesObj.activityId && lessonToActivitiesObj.activity.type === "Article") || (lessonToActivitiesObj as LessonWithActivitiesAndUserProgress["lessonToActivities"][number]).activity.userCompletion.some(userProgress => userProgress.activityId === lessonToActivitiesObj.activity.id)) : undefined,
-                            }))} />
+                            <nav
+                                className="flex flex-col divide-y border-t border-b w-full"
+                            >
+                                {lesson.lessonToActivities.map((lessonToActivitiesObj) => (
+                                    <Link
+                                        key={lessonToActivitiesObj.activityId}
+                                        href={`/courses/${courseId}/${lessonId}/${lessonToActivitiesObj.activityId}`}
+                                        className={cn(
+                                            buttonVariants({ variant: "ghost" }),
+                                            "border-l-4 border-l-transparent py-8 rounded-none text-base whitespace-normal",
+                                            activityId === lessonToActivitiesObj.activityId
+                                                ? "border-l-primary bg-accent hover:bg-muted"
+                                                : "",
+                                            "justify-start"
+                                        )}
+                                    >
+                                        <CompletionIcon
+                                            isComplete={isLoggedIn ? ((activityId === lessonToActivitiesObj.activityId && lessonToActivitiesObj.activity.type === "Article") || (lessonToActivitiesObj as LessonWithActivitiesAndUserProgress["lessonToActivities"][number]).activity.userCompletion.some(userProgress => userProgress.activityId === lessonToActivitiesObj.activity.id)) : false}
+                                            icon={lessonToActivitiesObj.activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
+                                            isCurrent={activityId === lessonToActivitiesObj.activityId}
+                                        />
+                                        {lessonToActivitiesObj.activity.title}
+                                    </Link>
+                                ))}
+                            </nav>
                         </div>
                     </DrawerContent>
                 </Drawer>
@@ -121,13 +139,31 @@ export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn
                     moduleId={moduleId}
                     courseId={courseId}
                 />
-                <ActivityNav activities={lesson.lessonToActivities.map(lessonToActivitiesObj => ({
-                    id: lessonToActivitiesObj.activity.id,
-                    type: lessonToActivitiesObj.activity.type,
-                    title: lessonToActivitiesObj.activity.title,
-                    href: `/courses/${courseId}/${moduleId}/${lessonId}/${lessonToActivitiesObj.activity.id}`,
-                    isComplete: isLoggedIn ? ((activityId === lessonToActivitiesObj.activityId && lessonToActivitiesObj.activity.type === "Article") || (lessonToActivitiesObj as LessonWithActivitiesAndUserProgress["lessonToActivities"][number]).activity.userCompletion.some(userProgress => userProgress.activityId === lessonToActivitiesObj.activity.id)) : undefined,
-                }))} />
+                <nav
+                    className="flex flex-col divide-y border-t border-b w-full"
+                >
+                    {lesson.lessonToActivities.map((lessonToActivitiesObj) => (
+                        <Link
+                            key={lessonToActivitiesObj.activityId}
+                            href={`/courses/${courseId}/${lessonId}/${lessonToActivitiesObj.activityId}`}
+                            className={cn(
+                                buttonVariants({ variant: "ghost" }),
+                                "border-l-4 border-l-transparent py-8 rounded-none text-base whitespace-normal",
+                                activityId === lessonToActivitiesObj.activityId
+                                    ? "border-l-primary bg-accent hover:bg-muted"
+                                    : "",
+                                "justify-start"
+                            )}
+                        >
+                            <CompletionIcon
+                                isComplete={isLoggedIn ? ((activityId === lessonToActivitiesObj.activityId && lessonToActivitiesObj.activity.type === "Article") || (lessonToActivitiesObj as LessonWithActivitiesAndUserProgress["lessonToActivities"][number]).activity.userCompletion.some(userProgress => userProgress.activityId === lessonToActivitiesObj.activity.id)) : false}
+                                icon={lessonToActivitiesObj.activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
+                                isCurrent={activityId === lessonToActivitiesObj.activityId}
+                            />
+                            {lessonToActivitiesObj.activity.title}
+                        </Link>
+                    ))}
+                </nav>
             </div>
         </>
     );
