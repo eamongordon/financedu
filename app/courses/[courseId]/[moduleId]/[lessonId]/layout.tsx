@@ -7,10 +7,11 @@ interface LessonLayoutProps {
     children: React.ReactNode
 }
 
+type LessonWithActivities = Awaited<ReturnType<typeof getLessonWithActivities>>;
 type LessonWithActivitiesAndUserProgress = Awaited<ReturnType<typeof getLessonWithActivitiesAndUserProgress>>;
 
 export default async function LessonLayout({ params, children }: LessonLayoutProps) {
-    const { lessonId } = await params;
+    const { lessonId, courseId, moduleId } = await params;
     const nextLesson = await getNextLesson(lessonId);
     const previousLesson = await getPreviousLesson(lessonId);
     const session = await auth();
@@ -23,9 +24,25 @@ export default async function LessonLayout({ params, children }: LessonLayoutPro
     return (
         <div className="w-full flex flex-col sm:flex-row sm:flex-grow sm:divide-x divide-border">
             {isLoggedIn ? (
-                <LessonSidebar lesson={lesson as LessonWithActivitiesAndUserProgress} previousLesson={previousLesson} nextLesson={nextLesson} isLoggedIn={true} />
+                <LessonSidebar
+                    lesson={lesson as LessonWithActivitiesAndUserProgress}
+                    previousLesson={previousLesson}
+                    nextLesson={nextLesson}
+                    isLoggedIn={true}
+                    moduleId={moduleId}
+                    courseId={courseId}
+                    lessonId={lessonId}
+                />
             ) : (
-                <LessonSidebar lesson={lesson} previousLesson={previousLesson} nextLesson={nextLesson} isLoggedIn={false} />
+                <LessonSidebar
+                    lesson={lesson as LessonWithActivities}
+                    previousLesson={previousLesson}
+                    nextLesson={nextLesson}
+                    isLoggedIn={false}
+                    moduleId={moduleId}
+                    courseId={courseId}
+                    lessonId={lessonId}
+                />
             )}
             <div className="sm:w-2/3 flex flex-col items-center mx-auto overflow-auto">
                 {children}
