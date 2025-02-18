@@ -15,7 +15,7 @@ interface ModuleNavProps extends React.HTMLAttributes<HTMLElement> {
     title: string
     icon?: string | null,
     href: string
-    isComplete?: boolean
+    isComplete: boolean
   }[]
 }
 
@@ -45,7 +45,7 @@ export function ModuleNav({ className, modules, ...props }: ModuleNavProps) {
           )}
         >
           <CompletionIcon
-            isComplete={module.isComplete || false}
+            isComplete={module.isComplete}
             icon={module.icon ? <DynamicIcon name={module.icon as keyof typeof dynamicIconImports} strokeWidth={1.5} /> : <GraduationCap strokeWidth={1.5} />}
             isCurrent={currentModuleId === module.id}
           />

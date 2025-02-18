@@ -35,7 +35,7 @@ export default async function CourseLayout({
                     title: module.title,
                     icon: module.icon,
                     href: `/courses/${slug}/${module.id}`,
-                    isComplete: (module as courseWithModulesAndLessonsAndUserCompletion["modules"][number]).lessons.every(lesson => lesson.lessonToActivities.every(lessonToActivityObj => lessonToActivityObj.activity.userCompletion.length > 0))
+                    isComplete: isLoggedIn ? (module as courseWithModulesAndLessonsAndUserCompletion["modules"][number]).lessons.every(lesson => lesson.lessonToActivities.every(lessonToActivityObj => lessonToActivityObj.activity.userCompletion.length > 0)) : false
                 }))} />
             </div>
             <div
