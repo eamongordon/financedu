@@ -32,8 +32,8 @@ export default async function LessonLayout({ params, children }: LessonLayoutPro
             <div className="sm:hidden">
                 <Drawer>
                     <DrawerTrigger asChild>
-                        <div className="flex justify-center items-center w-full">
-                            <Button variant="link" className="w-4/5 px-0 justify-start">
+                        <div className="flex justify-center items-center w-full mt-2">
+                            <Button variant="outline" className="w-4/5">
                                 <Menu className="mr-2" /> {lesson.title}
                             </Button>
                         </div>
