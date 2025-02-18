@@ -39,8 +39,8 @@ export default async function LessonPage({
                 <p>{activity.description}</p>
             </section>
             {activity.type === "Article" && (
-                <div className="flex flex-col items-center sm:min-h-[calc(100vh-196px)] relative">
-                    <div className="py-8 w-full flex justify-center h-[calc(100vh-268px)] overflow-scroll">
+                <div className="flex flex-col items-center h-[calc(100dvh-194px)] sm:min-h-[calc(100vh-196px)] relative">
+                    <div className="py-8 w-full flex justify-center h-[calc(100vh-266px)] sm:h-[calc(100vh-268px)] overflow-scroll">
                         <article className="w-4/5" dangerouslySetInnerHTML={{ __html: activity.content! }} />
                     </div>
                     <div className="border-t w-full p-4 flex justify-end items-center absolute bottom-0">

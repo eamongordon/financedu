@@ -44,7 +44,7 @@ export default async function LessonLayout({ params, children }: LessonLayoutPro
                     lessonId={lessonId}
                 />
             )}
-            <div className="sm:w-2/3 flex flex-col items-center mx-auto overflow-auto">
+            <div className="sm:w-2/3 flex flex-col items-center overflow-auto">
                 {children}
             </div>
         </div>
