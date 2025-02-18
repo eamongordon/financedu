@@ -93,7 +93,7 @@ export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn
                                 {lesson.lessonToActivities.map((lessonToActivitiesObj) => (
                                     <Link
                                         key={lessonToActivitiesObj.activityId}
-                                        href={`/courses/${courseId}/${lessonId}/${lessonToActivitiesObj.activityId}`}
+                                        href={`/courses/${courseId}/${moduleId}/${lessonId}/${lessonToActivitiesObj.activityId}`}
                                         className={cn(
                                             buttonVariants({ variant: "ghost" }),
                                             "border-l-4 border-l-transparent py-8 rounded-none text-base whitespace-normal",
@@ -145,7 +145,7 @@ export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn
                     {lesson.lessonToActivities.map((lessonToActivitiesObj) => (
                         <Link
                             key={lessonToActivitiesObj.activityId}
-                            href={`/courses/${courseId}/${lessonId}/${lessonToActivitiesObj.activityId}`}
+                            href={`/courses/${courseId}/${moduleId}/${lessonId}/${lessonToActivitiesObj.activityId}`}
                             className={cn(
                                 buttonVariants({ variant: "ghost" }),
                                 "border-l-4 border-l-transparent py-8 rounded-none text-base whitespace-normal",
