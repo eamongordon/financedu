@@ -39,7 +39,6 @@ interface LessonSidebarLoggedInProps extends LessonSidebarBaseProps {
 
 type LessonSidebarProps = LessonSidebarLoggedOutProps | LessonSidebarLoggedInProps;
 
-
 export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn, nextLesson, previousLesson }: LessonSidebarProps) {
     const params = useParams<{ activityId: string }>();
     const activityId = params?.activityId;
@@ -87,32 +86,15 @@ export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn
                                 moduleId={moduleId}
                                 courseId={courseId}
                             />
-                            <nav
-                                className="flex flex-col divide-y border-t border-b w-full"
-                            >
-                                {lesson.lessonToActivities.map((lessonToActivitiesObj) => (
-                                    <Link
-                                        key={lessonToActivitiesObj.activityId}
-                                        href={`/courses/${courseId}/${moduleId}/${lessonId}/${lessonToActivitiesObj.activityId}`}
-                                        className={cn(
-                                            buttonVariants({ variant: "ghost" }),
-                                            "border-l-4 border-l-transparent py-8 rounded-none text-base whitespace-normal",
-                                            activityId === lessonToActivitiesObj.activityId
-                                                ? "border-l-primary bg-accent hover:bg-muted"
-                                                : "",
-                                            "justify-start"
-                                        )}
-                                        onClick={() => activityId === lessonToActivitiesObj.activityId && setIsDrawerOpen(false)}
-                                    >
-                                        <CompletionIcon
-                                            isComplete={isLoggedIn ? ((activityId === lessonToActivitiesObj.activityId && lessonToActivitiesObj.activity.type === "Article") || (lessonToActivitiesObj as LessonWithActivitiesAndUserProgress["lessonToActivities"][number]).activity.userCompletion.some(userProgress => userProgress.activityId === lessonToActivitiesObj.activity.id)) : false}
-                                            icon={lessonToActivitiesObj.activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
-                                            isCurrent={activityId === lessonToActivitiesObj.activityId}
-                                        />
-                                        {lessonToActivitiesObj.activity.title}
-                                    </Link>
-                                ))}
-                            </nav>
+                            <ActivityNav
+                                lessonToActivities={lesson.lessonToActivities}
+                                courseId={courseId}
+                                moduleId={moduleId}
+                                lessonId={lessonId}
+                                activityId={activityId}
+                                isLoggedIn={isLoggedIn}
+                                setIsDrawerOpen={setIsDrawerOpen}
+                            />
                         </div>
                     </DrawerContent>
                 </Drawer>
@@ -140,32 +122,15 @@ export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn
                     moduleId={moduleId}
                     courseId={courseId}
                 />
-                <nav
-                    className="flex flex-col divide-y border-t border-b w-full"
-                >
-                    {lesson.lessonToActivities.map((lessonToActivitiesObj) => (
-                        <Link
-                            key={lessonToActivitiesObj.activityId}
-                            href={`/courses/${courseId}/${moduleId}/${lessonId}/${lessonToActivitiesObj.activityId}`}
-                            className={cn(
-                                buttonVariants({ variant: "ghost" }),
-                                "border-l-4 border-l-transparent py-8 rounded-none text-base whitespace-normal",
-                                activityId === lessonToActivitiesObj.activityId
-                                    ? "border-l-primary bg-accent hover:bg-muted"
-                                    : "",
-                                "justify-start"
-                            )}
-                            onClick={() => activityId === lessonToActivitiesObj.activityId && setIsDrawerOpen(false)}
-                        >
-                            <CompletionIcon
-                                isComplete={isLoggedIn ? ((activityId === lessonToActivitiesObj.activityId && lessonToActivitiesObj.activity.type === "Article") || (lessonToActivitiesObj as LessonWithActivitiesAndUserProgress["lessonToActivities"][number]).activity.userCompletion.some(userProgress => userProgress.activityId === lessonToActivitiesObj.activity.id)) : false}
-                                icon={lessonToActivitiesObj.activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
-                                isCurrent={activityId === lessonToActivitiesObj.activityId}
-                            />
-                            {lessonToActivitiesObj.activity.title}
-                        </Link>
-                    ))}
-                </nav>
+                <ActivityNav
+                    lessonToActivities={lesson.lessonToActivities}
+                    courseId={courseId}
+                    moduleId={moduleId}
+                    lessonId={lessonId}
+                    activityId={activityId}
+                    isLoggedIn={isLoggedIn}
+                    setIsDrawerOpen={setIsDrawerOpen}
+                />
             </div>
         </>
     );
@@ -209,5 +174,44 @@ function NavigationButtons({ lesson, previousLesson, nextLesson, moduleId, cours
                 </Button>
             )}
         </div>
+    );
+}
+
+interface ActivityLinkProps {
+    lessonToActivities: (LessonWithActivities | LessonWithActivitiesAndUserProgress)["lessonToActivities"];
+    courseId: string;
+    moduleId: string;
+    lessonId: string;
+    activityId: string | undefined;
+    isLoggedIn: boolean;
+    setIsDrawerOpen: (isOpen: boolean) => void;
+}
+
+function ActivityNav({ lessonToActivities, courseId, moduleId, lessonId, activityId, isLoggedIn, setIsDrawerOpen }: ActivityLinkProps) {
+    return (
+        <nav className="flex flex-col divide-y border-t border-b w-full">
+            {lessonToActivities.map((lessonToActivitiesObj) => (
+                <Link
+                    key={lessonToActivitiesObj.activityId}
+                    href={`/courses/${courseId}/${moduleId}/${lessonId}/${lessonToActivitiesObj.activityId}`}
+                    className={cn(
+                        buttonVariants({ variant: "ghost" }),
+                        "border-l-4 border-l-transparent py-8 rounded-none text-base whitespace-normal",
+                        activityId === lessonToActivitiesObj.activityId
+                            ? "border-l-primary bg-accent hover:bg-muted"
+                            : "",
+                        "justify-start"
+                    )}
+                    onClick={() => activityId === lessonToActivitiesObj.activityId && setIsDrawerOpen(false)}
+                >
+                    <CompletionIcon
+                        isComplete={isLoggedIn ? ((activityId === lessonToActivitiesObj.activityId && lessonToActivitiesObj.activity.type === "Article") || (lessonToActivitiesObj as LessonWithActivitiesAndUserProgress["lessonToActivities"][number]).activity.userCompletion.some(userProgress => userProgress.activityId === lessonToActivitiesObj.activity.id)) : false}
+                        icon={lessonToActivitiesObj.activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
+                        isCurrent={activityId === lessonToActivitiesObj.activityId}
+                    />
+                    {lessonToActivitiesObj.activity.title}
+                </Link>
+            ))}
+        </nav>
     );
 }
