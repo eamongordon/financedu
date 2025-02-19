@@ -146,8 +146,8 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
     const { href, label } = getNextActivityLink(currentCourseId, currentModuleId, currentLessonId, nextActivity);
 
     return (
-        <div className="flex flex-col items-center h-[calc(100dvh-194px)] sm:min-h-[calc(100vh-196px)] relative">
-            <div className="py-8 w-full flex justify-center h-[calc(100vh-266px)] sm:h-[calc(100vh-268px)] overflow-scroll">
+        <div className="flex flex-col items-center h-[calc(100dvh-202px)] sm:min-h-[calc(100vh-196px)] relative">
+            <div className="py-8 w-full flex justify-center h-[calc(100vh-274px)] sm:h-[calc(100vh-268px)] overflow-scroll">
                 {isQuizFinished ? (
                     <p>You finished the quiz</p>
                 ) : currentQuestion.type === "radio" ? (
