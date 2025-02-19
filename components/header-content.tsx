@@ -75,8 +75,14 @@ export default function HeaderComp({
           </div>
           <Separator />
           <div className='flex flex-col gap-2'>
-            <Link href="/signup" className={cn(buttonVariants({ variant: "default" }), "w-full")}>Sign Up</Link>
-            <Link href="/login" className={cn(buttonVariants({ variant: "secondary" }), "w-full")}>Log In</Link>
+            {loggedIn ? (
+                <UserMenu isMobile name={userData.name!} email={userData.email!} />
+            ) : (
+              <div className='flex flex-row gap-2'>
+                <Link href="/login" className={cn(buttonVariants({ variant: "secondary" }), "w-full")}>Log In</Link>
+                <Link href="/signup" className={cn(buttonVariants({ variant: "default" }), "w-full")}>Get Started</Link>
+              </div>
+            )}
           </div>
         </div>
       </div>

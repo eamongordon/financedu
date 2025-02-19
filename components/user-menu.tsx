@@ -20,9 +20,10 @@ interface UserMenuProps {
   imageSrc?: string
   name?: string
   email?: string
+  isMobile?: boolean
 }
 
-export default function UserMenu({ imageSrc, name, email }: UserMenuProps) {
+export default function UserMenu({ imageSrc, name, email, isMobile }: UserMenuProps) {
   const initials = name
     ? name
       .split(' ')
@@ -34,8 +35,8 @@ export default function UserMenu({ imageSrc, name, email }: UserMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
+        <Button variant="ghost" className="relative rounded-full justify-start p-0 hover:bg-inherit gap-5">
+          <Avatar className="size-10 md:size-8">
             {imageSrc ? (
               <AvatarImage src={imageSrc} alt={name || "User avatar"} />
             ) : null}
@@ -43,9 +44,17 @@ export default function UserMenu({ imageSrc, name, email }: UserMenuProps) {
               {initials || <User className="h-4 w-4" />}
             </AvatarFallback>
           </Avatar>
+          <div className="flex md:hidden flex-col justify-start text-start gap-2">
+            <p className="text-sm leading-none text-muted-foreground">
+              Signed in as
+            </p>
+            {name && (
+              <p className="text-base font-semibold leading-none">{name || "Guest User"}</p>
+            )}
+          </div>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
+      <DropdownMenuContent className="w-56" align={isMobile ? "start" : "end"} forceMount>
         <DropdownMenuItem className="flex items-center">
           <div className="flex flex-col space-y-1">
             {name && (
@@ -98,6 +107,6 @@ export default function UserMenu({ imageSrc, name, email }: UserMenuProps) {
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
-    </DropdownMenu>
+    </DropdownMenu >
   )
 }
