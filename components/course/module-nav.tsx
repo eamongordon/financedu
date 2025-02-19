@@ -26,7 +26,7 @@ export function ModuleNav({ className, modules, ...props }: ModuleNavProps) {
   return (
     <nav
       className={cn(
-        "w-full flex md:flex-col divide-y border-t border-b",
+        "w-full hidden sm:flex flex-col divide-y border-b",
         className
       )}
       {...props}
