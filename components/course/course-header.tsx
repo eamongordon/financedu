@@ -30,7 +30,7 @@ export function CourseHeader({ course }: { course: getCourseWithModulesAndLesson
             </Link>
             <Link
                 href={`/courses/${course.id}`}
-                className={cn(buttonVariants({ variant: "link" }), "hidden text-secondary justify-start mx-3 px-0 py-0 text-base", isOnModulePage && "inline-flex sm:hidden")}
+                className={cn(buttonVariants({ variant: "link" }), "my-2 hidden text-secondary justify-start mx-3 px-0 text-base", isOnModulePage && "inline-flex sm:hidden")}
             >
                 <ChevronLeft/>
                 Back to Course: {course.title}
