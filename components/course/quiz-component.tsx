@@ -184,7 +184,7 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
                     <InfoQuestion question={currentQuestion} />
                 ) : null}
             </div>
-            <div className="border-t w-full p-4 flex justify-end items-center absolute bottom-0">
+            <div className="border-t w-full p-4 flex justify-end items-center absolute bottom-0 bg-background">
                 <div className="w-full text-center flex flex-row gap-4 justify-center items-center space-x-2">
                     <p className="font-semibold text-muted-foreground">{questionResponses.length ? `${questionResponses.length} / ${activity.activityToQuestions.length} Done` : `${activity.activityToQuestions.length} Question${activity.activityToQuestions.length === 1 ? "" : "s"}`}</p>
                     <div className="flex flex-row gap-2">

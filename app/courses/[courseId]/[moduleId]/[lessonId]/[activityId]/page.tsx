@@ -43,7 +43,7 @@ export default async function LessonPage({
                     <div className="py-8 w-full flex justify-center h-[calc(100vh-266px)] sm:h-[calc(100vh-268px)] overflow-scroll">
                         <article className="mx-4 sm:mx-0 sm:w-4/5" dangerouslySetInnerHTML={{ __html: activity.content! }} />
                     </div>
-                    <div className="border-t w-full p-4 flex justify-end items-center absolute bottom-0">
+                    <div className="border-t w-full p-4 flex justify-end items-center absolute bottom-0 bg-background">
                         <Link href={href} className={buttonVariants()}>
                             {label}
                         </Link>
