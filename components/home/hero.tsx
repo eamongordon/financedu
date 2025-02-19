@@ -19,7 +19,7 @@ export function Hero() {
                 <div className="flex flex-col text-left md:text-left gap-6 md:gap-12">
                     <h1 className="text-[26px] md:text-left md:text-5xl font-semibold">Financial Education For Youth</h1>
                     <p className="text-lg text-muted-foreground">Empowering youth to live successful financial lives through online, cost-free, and customizable curricula.</p>
-                    <div className="flex flex-row justify-center md:justify-normal flex-wrap gap-2 lg:gap-4">
+                    <div className="flex flex-row justify-center md:justify-normal flex-wrap lg:flex-nowrap gap-2 lg:gap-4">
                         <Link href="/login" className={cn(buttonVariants({ size: "lg" }), "w-full md:w-32 lg:w-[140px]")}>Learners</Link>
                         <Link href="/login" className={cn(buttonVariants({ size: "lg" }), "w-full md:w-32 lg:w-[140px]")}>Parents</Link>
                         <Link href="/login" className={cn(buttonVariants({ size: "lg" }), "w-full md:w-32 lg:w-[140px]")}>Educators</Link>
