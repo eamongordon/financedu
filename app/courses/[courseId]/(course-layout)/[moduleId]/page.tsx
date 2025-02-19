@@ -21,7 +21,12 @@ export default async function CourseLayout({
         ? await getModuleWithLessonsAndActivitiesAndUserCompletion(moduleId)
         : await getModuleWithLessonsAndActivities(moduleId);
     return (
-        <main className="py-4 w-full">
+        <main className="pb-4 sm:py-4 w-full">
+            <section className="flex flex-col gap-2 px-4 sm:px-0 pb-4 border-b">
+                <h1 className="text-2xl font-bold">{moduleObj.title}</h1>
+                <p>{moduleObj.description}</p>
+            </section>
+            <section className="pt-4 px-4 sm:px-0">
             {moduleObj.lessons.map(lesson => (
                 <Card key={lesson.id} className="mb-4">
                     <CardHeader>
@@ -53,6 +58,7 @@ export default async function CourseLayout({
                     </CardContent>
                 </Card>
             ))}
+            </section>
         </main>
     );
 }
