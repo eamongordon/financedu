@@ -57,8 +57,8 @@ export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn
                     onOpenChange={setIsDrawerOpen}
                 >
                     <DrawerTrigger asChild>
-                        <div className="flex justify-center items-center w-full mt-2">
-                            <Button variant="outline" className="w-4/5">
+                        <div className="flex justify-center items-center w-full mt-4 px-4 sm:px-0">
+                            <Button variant="outline" className="w-full sm:w-4/5">
                                 <Menu className="mr-2" /> {lesson.title}
                             </Button>
                         </div>
