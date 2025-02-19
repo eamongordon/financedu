@@ -17,7 +17,7 @@ export function CourseHeader({ course }: { course: getCourseWithModulesAndLesson
         <>
             <Link
                 href={`/courses/${course.id}`}
-                className={cn(buttonVariants({ variant: "ghost" }), "w-full h-auto rounded-none py-4 border-l-4 border-l-transparent hidden sm:flex flex-row justify-start items-center gap-4 px-2 sm:px-6 border-b", isOnModulePage ? "border-l-transparent" : "sm:border-l-primary")}
+                className={cn(buttonVariants({ variant: "ghost" }), "w-full h-auto rounded-none py-4 border-l-4 border-l-transparent sm:flex flex-row justify-start items-center gap-4 px-2 sm:px-6 border-b", isOnModulePage ? "border-l-transparent hidden" : "sm:border-l-primary")}
             >
                 <div className="relative">
                     <div className="absolute rounded-lg inset-0 bg-gradient-to-br from-[#00B5EA] to-[#02CF46] dark:brightness-[0.6]"></div>
@@ -30,9 +30,9 @@ export function CourseHeader({ course }: { course: getCourseWithModulesAndLesson
             </Link>
             <Link
                 href={`/courses/${course.id}`}
-                className={cn(buttonVariants({ variant: "link" }), "inline-flex sm:hidden text-secondary justify-start px-3 py-0 text-base ")}
+                className={cn(buttonVariants({ variant: "link" }), "hidden text-secondary justify-start mx-3 px-0 py-0 text-base", isOnModulePage && "inline-flex sm:hidden")}
             >
-                <ChevronLeft />
+                <ChevronLeft/>
                 Back to Course: {course.title}
             </Link>
         </>
