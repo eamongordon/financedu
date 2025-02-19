@@ -33,7 +33,7 @@ export default function HeaderComp({
         <div className="flex-1 flex items-center justify-end">
           <div className="hidden md:flex space-x-4">
             <Link href="#home" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Home</Link>
-            <Link href="#features" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Features</Link>
+            <Link href="/courses" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Courses</Link>
             <Link href="#contact" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Contact</Link>
             <div className='ml-4 self-center'>
               {loggedIn ? (
@@ -70,7 +70,7 @@ export default function HeaderComp({
         <div className="p-6 space-y-6">
           <div className='flex flex-col gap-4'>
             <Link href="#home" className="text-foreground hover:text-primary block text-base font-semibold">Home</Link>
-            <Link href="#features" className="text-foreground hover:text-primary block text-base font-semibold">Features</Link>
+            <Link href="/courses" className="text-foreground hover:text-primary block text-base font-semibold">Courses</Link>
             <Link href="#contact" className="text-foreground hover:text-primary block text-base font-semibold">Contact</Link>
           </div>
           <Separator />
