@@ -1,9 +1,12 @@
 import { UserProgress } from "@/components/account/learner-progress";
+import { getCompletedActivities } from "@/lib/actions";
 
-export default function ProgressPage() {
+export default async function ProgressPage() {
+    const completedActivities = await getCompletedActivities();
+
     return (
         <section>
-            <UserProgress />
+            <UserProgress completedActivities={completedActivities} />
         </section>
-    )
+    );
 }

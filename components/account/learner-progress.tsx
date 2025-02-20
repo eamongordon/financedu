@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getCompletedActivities } from "@/lib/actions";
 import { CompletionIcon } from "../ui/completion-icon";
 import { FileText, CircleHelp } from "lucide-react";
 
@@ -25,29 +23,11 @@ interface CompletedActivity {
     };
 }
 
-export function UserProgress() {
-    const [completedActivities, setCompletedActivities] = useState<CompletedActivity[]>([]);
-    const [loading, setLoading] = useState(true);
+interface UserProgressProps {
+    completedActivities: CompletedActivity[];
+}
 
-    useEffect(() => {
-        async function fetchCompletedActivities() {
-            try {
-                const activities = await getCompletedActivities();
-                setCompletedActivities(activities);
-            } catch (error) {
-                console.error("Failed to fetch completed activities", error);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        fetchCompletedActivities();
-    }, []);
-
-    if (loading) {
-        return <p>Loading...</p>;
-    }
-
+export function UserProgress({ completedActivities }: UserProgressProps) {
     return (
         <nav className="flex flex-col divide-y border-t border-b w-full">
             {completedActivities.map(({ activity, lesson, module, course }) => (
