@@ -1,4 +1,4 @@
-import { UserProgress } from "@/components/account/user-progress";
+import { UserProgress } from "@/components/account/learner-progress";
 
 export default function ProgressPage() {
     return (
