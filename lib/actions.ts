@@ -613,3 +613,22 @@ export async function getUserCoursesWithProgressAndNextActivity() {
 
     return coursesWithNextActivity;
 }
+
+export async function getCompletedActivities() {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+    const completedActivities = await db.query.userCompletion.findMany({
+        where: eq(userCompletion.userId, userId),
+        with: {
+            activity: true,
+            lesson: true,
+            module: true,
+            course: true
+        }
+    });
+
+    return completedActivities;
+}
