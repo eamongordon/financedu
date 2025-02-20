@@ -1,4 +1,4 @@
-import { LearnerNav } from "@/components/account/learner-nav";
+import { LearnerNav } from "@/components/account/learner-tabs";
 
 export default async function LessonLayout({ children }: { children: React.ReactNode }) {
 
