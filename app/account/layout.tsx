@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const sidebarNavItems = [
   {
     title: "Dashboard",
-    href: "/account/dashboard",
+    href: "/account/learner",
   },
   {
     title: "Account",
