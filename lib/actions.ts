@@ -548,7 +548,12 @@ export async function getCourseWithModulesAndLessonsAndUserCompletion(courseId: 
     return course;
 }
 
-export async function getUserCoursesWithProgressAndNextActivity(userId: string) {
+export async function getUserCoursesWithProgressAndNextActivity() {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
     const coursesWithProgress = await db.query.courses.findMany({
         with: {
             modules: {
