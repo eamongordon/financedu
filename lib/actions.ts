@@ -606,8 +606,8 @@ export async function getUserCoursesWithProgressAndNextActivity() {
         }
 
         return {
-            ...course,
-            nextActivity
+            course: course,
+            nextActivity: nextActivity
         };
     });
 
