@@ -1,3 +1,5 @@
+"use client";
+
 function getGreeting() {
     const currentHour = new Date().getHours();
     if (currentHour < 12) {
