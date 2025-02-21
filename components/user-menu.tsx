@@ -45,7 +45,7 @@ export default function UserMenu({ imageSrc, name, email, isMobile }: UserMenuPr
             </AvatarFallback>
           </Avatar>
           <div className="flex md:hidden flex-col justify-start text-start gap-2">
-            <p className="text-sm leading-none text-muted-foreground">
+            <p className="text-sm leading-none text-muted-foreground font-semibold">
               Signed in as
             </p>
             {name && (
@@ -58,7 +58,7 @@ export default function UserMenu({ imageSrc, name, email, isMobile }: UserMenuPr
         <DropdownMenuItem className="flex items-center">
           <div className="flex flex-col space-y-1">
             {name && (
-              <p className="text-sm font-medium leading-none">{name || "Guest User"}</p>
+              <p className="text-sm font-semibold leading-none">{name || "Guest User"}</p>
             )}
             {email && (
               <p className={name ? `text-xs leading-none text-muted-foreground` : `text-sm font-medium leading-none`}>
@@ -69,13 +69,10 @@ export default function UserMenu({ imageSrc, name, email, isMobile }: UserMenuPr
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/settings">Sites</Link>
+          <Link href="/account/learner">Dashboard</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/account/settings">Settings</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          Billing
         </DropdownMenuItem>
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
