@@ -17,6 +17,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "../ui/button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Input } from "../ui/input";
+import { Calendar } from "../ui/calendar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuPortal } from "../ui/dropdown-menu";
+import { DateRange } from "react-day-picker";
 
 interface UserProgressProps {
     completedActivities: CompletedActivityItem[];
@@ -103,6 +106,12 @@ function DataTable<TData, TValue>({
     data: TData[];
 }) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+    const [customRange, setCustomRange] = useState<DateRange | undefined>({
+        from: new Date(0),
+        to: new Date(),
+    });
+    const [selectedRange, setSelectedRange] = useState<string>("all");
+    const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
     const table = useReactTable({
         data,
@@ -123,6 +132,7 @@ function DataTable<TData, TValue>({
     });
 
     const handleDateFilterChange = (value: string) => {
+        setSelectedRange(value);
         let startDate: Date;
         let endDate: Date;
 
@@ -143,6 +153,15 @@ function DataTable<TData, TValue>({
                 startDate.setDate(startDate.getDate() - 30);
                 endDate = new Date();
                 break;
+            case "custom":
+                if (customRange) {
+                    startDate = customRange.from!;
+                    endDate = customRange.to!;
+                } else {
+                    startDate = new Date(0);
+                    endDate = new Date();
+                }
+                break;
             case "all":
             default:
                 startDate = new Date(0); // Default to epoch if no filter
@@ -150,6 +169,14 @@ function DataTable<TData, TValue>({
         }
 
         table.getColumn("completedAt")?.setFilterValue([startDate, endDate]);
+    };
+
+    const handleCustomRangeSelect = (range: DateRange | undefined) => {
+        setCustomRange(range);
+        if (range?.from && range?.to) {
+            table.getColumn("completedAt")?.setFilterValue([range.from, range.to]);
+            setIsDropdownOpen(false);
+        }
     };
 
     return (
@@ -181,21 +208,36 @@ function DataTable<TData, TValue>({
                     </SelectContent>
                 </Select>
 
-                <Select
-                    onValueChange={handleDateFilterChange}
-                >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="All Time" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectItem value="all">All Time</SelectItem>
-                            <SelectItem value="today">Today</SelectItem>
-                            <SelectItem value="past7days">Last Week</SelectItem>
-                            <SelectItem value="past30days">Last Month</SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
+                <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="w-[180px]">Select Date Range</Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuRadioGroup value={selectedRange} onValueChange={handleDateFilterChange}>
+                            <DropdownMenuRadioItem value="all">All Time</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="today">Today</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="past7days">Last Week</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="past30days">Last Month</DropdownMenuRadioItem>
+                            <DropdownMenuSub>
+                                <DropdownMenuSubTrigger>
+                                    Custom Range
+                                </DropdownMenuSubTrigger>
+                                <DropdownMenuPortal>
+                                    <DropdownMenuSubContent>
+                                        <Calendar
+                                            selected={customRange}
+                                            mode="range"
+                                            onSelect={(range) => {
+                                                handleCustomRangeSelect(range);
+                                                handleDateFilterChange("custom");
+                                            }}
+                                        />
+                                    </DropdownMenuSubContent>
+                                </DropdownMenuPortal>
+                            </DropdownMenuSub>
+                        </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
             <div className="rounded-md border">
                 <Table>
