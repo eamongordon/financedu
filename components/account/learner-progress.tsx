@@ -1,7 +1,7 @@
 "use client";
 
-import { CompletionIcon } from "../ui/completion-icon";
-import { FileText, CircleHelp } from "lucide-react";
+import { columns } from "./columns"
+import { DataTable } from "./data-table"
 
 interface CompletedActivity {
     activity: {
@@ -21,27 +21,30 @@ interface CompletedActivity {
         id: string;
         title: string;
     };
+    completedAt: Date;
 }
+
 
 interface UserProgressProps {
     completedActivities: CompletedActivity[];
 }
 
 export function UserProgress({ completedActivities }: UserProgressProps) {
+    const data = completedActivities.map((completedActivityObj) => (
+        {
+            id: completedActivityObj.activity.id,
+            name: completedActivityObj.activity.title,
+            type: completedActivityObj.activity.type,
+            lessonTitle: completedActivityObj.lesson.title,
+            lessonId: completedActivityObj.lesson.id,
+            moduleId: completedActivityObj.module.id,
+            courseId: completedActivityObj.course.id,
+            completedAt: completedActivityObj.completedAt,
+        }
+    ));
     return (
         <nav className="flex flex-col divide-y border-t border-b w-full">
-            {completedActivities.map(({ activity, lesson, module, course }) => (
-                <div key={activity.id} className="flex items-center py-4 px-2 md:px-8">
-                    <CompletionIcon
-                        isComplete={true}
-                        icon={activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
-                    />
-                    <div className="flex flex-col ml-4">
-                        <span className="font-semibold">{activity.title}</span>
-                        <span className="text-sm text-muted-foreground">{lesson.title} / {module.title} / {course.title}</span>
-                    </div>
-                </div>
-            ))}
+            <DataTable columns={columns} data={data} />
         </nav>
     );
 }
