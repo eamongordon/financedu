@@ -1,5 +1,7 @@
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getUserCoursesWithProgressAndNextActivity } from "@/lib/actions"
+import { cn } from "@/lib/utils";
 import { FileText, CircleHelp } from "lucide-react";
 import Link from "next/link";
 
@@ -19,14 +21,17 @@ export default async function MainPage() {
                                 <h3 className="text-lg font-semibold">Up Next</h3>
                                 <Link
                                     href={`/courses/${currentCourseObj.course.id}/${currentCourseObj.nextActivity.module.id}/${currentCourseObj.nextActivity?.lesson.id}/${currentCourseObj.nextActivity.activity.id}`}
-                                    className="py-4 font-semibold [&_svg]:size-6 whitespace-normal justify-start flex flex-row items-center gap-4"
+                                    className={cn(
+                                        buttonVariants({ variant: "ghost" }),
+                                        "py-8 text-foreground [&_svg]:size-6 whitespace-normal justify-start flex flex-row items-center gap-4",
+                                    )}
                                 >
                                     <div className="border flex justify-center items-center size-10 shrink-0 rounded-md relative"
                                     >
                                         {currentCourseObj.nextActivity.activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
                                     </div>
                                     <div className="flex flex-col gap-2">
-                                        <p className="leading-none">{currentCourseObj.nextActivity.activity.title}</p>
+                                        <p className="leading-none text-base font-semibold">{currentCourseObj.nextActivity.activity.title}</p>
                                         <p className="leading-none text-sm text-secondary">{currentCourseObj.nextActivity.lesson.title}</p>
                                     </div>
                                 </Link>
