@@ -35,7 +35,7 @@ export default function UserMenu({ imageSrc, name, email, isMobile }: UserMenuPr
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative rounded-full justify-start p-0 hover:bg-inherit gap-5">
+        <Button variant="ghost" className="relative rounded-full justify-start p-0 hover:bg-inherit gap-5 h-auto">
           <Avatar className="size-10 md:size-8">
             {imageSrc ? (
               <AvatarImage src={imageSrc} alt={name || "User avatar"} />
