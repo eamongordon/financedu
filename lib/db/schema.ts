@@ -382,7 +382,7 @@ export const matchingOptionsRelations = relations(matchingOptions, ({ one, many 
   matchingSubquestions: many(matchingSubquestions),
 }))
 
-export const activityQuestionsRelations = relations(activityToQuestions, ({ one }) => ({
+export const activityToQuestionsRelations = relations(activityToQuestions, ({ one }) => ({
   activity: one(activities, {
     fields: [activityToQuestions.activityId],
     references: [activities.id],
@@ -397,7 +397,7 @@ export const standardsRelations = relations(standards, ({ many }) => ({
   activityToStandards: many(activityToStandards),
 }))
 
-export const activityStandardsRelations = relations(activityToStandards, ({ one }) => ({
+export const activityToStandardsRelations = relations(activityToStandards, ({ one }) => ({
   activity: one(activities, {
     fields: [activityToStandards.activityId],
     references: [activities.id],
