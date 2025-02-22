@@ -12,6 +12,7 @@ const sidebarNavItems = [
   {
     title: "Dashboard",
     href: "/account/learner",
+    matchingHrefs: ["/account/learner", "/account/learner/progress"],
   },
   {
     title: "Account",
