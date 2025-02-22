@@ -280,11 +280,43 @@ export const userCompletion = pgTable("userCompletion", {
   primaryKey({ columns: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId] })
 ]);
 
+export const parentChildInvitations = pgTable("parentChildInvitation", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  parentId: text("parentId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  childId: text("childId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).defaultNow(),
+})
+
+export const parentChild = pgTable("parentChild", {
+  parentId: text("parentId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  childId: text("childId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+}, (parentChild) => [
+  {
+    compositePK: primaryKey({
+      columns: [parentChild.parentId, parentChild.childId],
+    }),
+  },
+]);
+
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   sessions: many(sessions),
   authenticators: many(authenticators),
   userCompletion: many(userCompletion),
+  parentChild: many(parentChild),
+  parentChildInvitations: many(parentChildInvitations),
+  parentChildChildren: many(parentChild),
+  parentChildParents: many(parentChild),
 }))
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -430,3 +462,25 @@ export const userCompletionRelations = relations(userCompletion, ({ one }) => ({
     references: [activities.id],
   }),
 }))
+
+export const parentChildInvitationsRelations = relations(parentChildInvitations, ({ one }) => ({
+  parent: one(users, {
+    fields: [parentChildInvitations.parentId],
+    references: [users.id],
+  }),
+  child: one(users, {
+    fields: [parentChildInvitations.childId],
+    references: [users.id],
+  }),
+}));
+
+export const parentChildRelations = relations(parentChild, ({ one }) => ({
+  parent: one(users, {
+    fields: [parentChild.parentId],
+    references: [users.id],
+  }),
+  child: one(users, {
+    fields: [parentChild.childId],
+    references: [users.id],
+  }),
+}));
