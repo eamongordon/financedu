@@ -8,6 +8,8 @@ import { GraduationCap } from "lucide-react";
 import { DynamicIcon, dynamicIconImports } from "lucide-react/dynamic";
 import Link from "next/link";
 
+type CourseWithModulesAndLessonsAndUserCompletion = Awaited<ReturnType<typeof getCourseWithModulesAndLessonsAndUserCompletion>>;
+
 export default async function Page({
     params,
 }: {
@@ -64,7 +66,7 @@ export default async function Page({
                                         className={cn(
                                             buttonVariants({ variant: "link" }),
                                             "text-muted-foreground [&_svg]:size-4 whitespace-normal justify-start",
-                                            isLoggedIn && lesson.lessonToActivities.every(lessonToActivityObj => lessonToActivityObj.activity.userCompletion.length > 0) && "text-primary"
+                                            isLoggedIn && (lesson as CourseWithModulesAndLessonsAndUserCompletion["modules"][number]["lessons"][number]).lessonToActivities.every(lessonToActivityObj => lessonToActivityObj.activity.userCompletion.length > 0) && "text-primary"
                                         )}
                                     >
                                         {lesson.title}
