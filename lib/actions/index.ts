@@ -1,11 +1,11 @@
 "use server";
 
 import { eq, gt, lt, and } from "drizzle-orm";
-import { courses, users, modules, lessons, activities, lessonToActivities, userCompletion, parentChildInvitations, parentChild } from "./db/schema";
-import { db } from "./db";
+import { courses, users, modules, lessons, activities, lessonToActivities, userCompletion, parentChildInvitations, parentChild } from "../db/schema";
+import { db } from "../db";
 import { hash, compare } from "bcrypt";
-import { type Roles } from "./db/schema";
-import { auth } from "./auth";
+import { type Roles } from "../db/schema";
+import { auth } from "../auth";
 
 export async function createUser({ email, password, firstName, lastName, roles }: { email: string, password: string, firstName?: string, lastName?: string, roles: Roles }) {
     const passwordHash = await hash(password, 10);
