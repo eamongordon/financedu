@@ -53,9 +53,9 @@ export function InviteChild() {
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
-                        <DialogTitle>Edit profile</DialogTitle>
+                        <DialogTitle>Invite Child</DialogTitle>
                         <DialogDescription>
-                            Make changes to your profile here. Click save when you&apos;re done.
+                            Invite a child to your account by entering their email address. If they do not have an account, they will be prompted to create one.
                         </DialogDescription>
                     </DialogHeader>
                     <ProfileForm />
@@ -118,7 +118,7 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
                         <FormItem>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                                <Input placeholder="johndoe@example.com" {...field} />
+                                <Input placeholder="mysmartchild@example.com" {...field} />
                             </FormControl>
                             <FormDescription />
                             <FormMessage />
