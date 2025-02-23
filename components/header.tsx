@@ -8,7 +8,6 @@ export default async function Header() {
         image: session.user.image,
         email: session.user.email
     } : undefined;
-    console.log("session", userData);
     return (
         <HeaderContent
             userData={userData}

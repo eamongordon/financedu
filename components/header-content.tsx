@@ -20,7 +20,6 @@ export default function HeaderComp({
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const loggedIn = !!userData;
-  console.log("userData", userData);
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b">

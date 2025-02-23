@@ -190,7 +190,7 @@ export default function AuthForm() {
                           render={({ field }) => (
                             <FormItem>
                               <FormControl>
-                                <Input autoComplete="email" placeholder="Email Address" {...field} />
+                                <Input className="w-full" type="email" autoComplete="email" placeholder="Email Address" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
