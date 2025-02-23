@@ -1,9 +1,10 @@
 import { getParentChildren } from "@/lib/actions";
 import { Card } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { MoreVertical, User, Plus } from "lucide-react";
+import { MoreVertical, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { InviteChild } from "@/components/account/invite-child";
 
 const getInitials = (name: string) => {
     return name
@@ -24,10 +25,7 @@ export default async function Parent() {
                         Track your children&apos;s progress and manage their accounts.
                     </p>
                 </div>
-                <Button className="mt-6">
-                    <Plus />
-                    Add Child
-                </Button>
+                <InviteChild />
             </div>
             {children.length === 0 ? (
                 <div className="flex items-center justify-center mt-6">
