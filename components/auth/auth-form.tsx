@@ -27,11 +27,11 @@ import {
 } from "@/components/ui/form";
 
 const ResetPasswordFormSchema = z.object({
-  email: z.string().email()
+  email: z.string()//.email()
 });
 
 const LoginFormSchema = z.object({
-  email: z.string().email(),
+  email: z.string(),//.email(), todo: uncomment when email validation is fixed
   password: z.string()
 });
 
