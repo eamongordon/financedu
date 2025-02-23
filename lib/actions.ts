@@ -633,12 +633,19 @@ export async function getCompletedActivities() {
     return completedActivities;
 }
 
-export async function createInvite(childId: string) {
+export async function createParentChildInvite(childEmail: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
     const parentId = session.user.id;
+    const child = await db.query.users.findFirst({
+        where: eq(users.email, childEmail),
+    });
+    if (!child) {
+        return;
+    }
+    const childId = child.id;
     return await db.insert(parentChildInvitations).values({ parentId, childId });
 }
 

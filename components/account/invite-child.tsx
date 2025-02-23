@@ -37,6 +37,8 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
+import { createParentChildInvite } from "@/lib/actions";
+import { toast } from "sonner";
 
 export function InviteChild() {
     const [open, setOpen] = React.useState(false)
@@ -102,10 +104,9 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
         },
     });
 
-    function onSubmit(values: z.infer<typeof inviteChildFormSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values);
+    async function onSubmit(values: z.infer<typeof inviteChildFormSchema>) {
+        await createParentChildInvite(values.email);
+        toast.success("Child invited successfully");
     };
 
     return (
@@ -125,7 +126,7 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Submit</Button>
+                <Button type="submit" isLoading={inviteChildForm.formState.isLoading}>Submit</Button>
             </form>
         </Form>
     )
