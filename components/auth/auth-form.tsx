@@ -27,11 +27,11 @@ import {
 } from "@/components/ui/form";
 
 const ResetPasswordFormSchema = z.object({
-  email: z.string()//.email()
+  email: z.string().email()
 });
 
 const LoginFormSchema = z.object({
-  email: z.string(),//.email(), todo: uncomment when email validation is fixed
+  email: z.string().email(),
   password: z.string()
 });
 
@@ -67,7 +67,6 @@ export default function AuthForm() {
   const searchParams = useSearchParams();
   const redirectUri = searchParams.get('redirect');
   const [selected, setSelected] = useState<Key>(pathname);
-  const [forgotPassword, setForgotPassword] = useState(false);
   const [sentForgotPasswordEmail, setSentForgotPasswordEmail] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -96,10 +95,6 @@ export default function AuthForm() {
       role: "learner"
     },
   });
-
-  const handleForgotPasswordToggle = (back: boolean) => {
-    setForgotPassword(!back);
-  };
 
   async function onResetPasswordFormSubmit(data: z.infer<typeof ResetPasswordFormSchema>) {
     try {
@@ -178,92 +173,91 @@ export default function AuthForm() {
         <div aria-label="Shift between Login and Signup forms">
           {selected === "/login" && (
             <div key="/login" title="Log In">
-              {forgotPassword ? (
-                <>
-                  <FormHeader title="Reset Password" description="Send a login link to your account's email." />
-                  <SessionProvider>
-                    <Form {...resetPasswordForm}>
-                      <form onSubmit={resetPasswordForm.handleSubmit(onResetPasswordFormSubmit)} className="flex flex-col space-y-4 mt-8">
-                        <FormField
-                          control={resetPasswordForm.control}
-                          name="email"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Input className="w-full" type="email" autoComplete="email" placeholder="Email Address" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button isLoading={loading} type="submit">
-                          <p>{sentForgotPasswordEmail ? "Resend Email" : "Send Email"}</p>
-                        </Button>
-                      </form>
-                    </Form>
-                  </SessionProvider>
-                  <p className="text-center text-sm pt-8 pb-8 px-16">
-                    <button className="hover:opacity-80 transition-opacity tap-highlight-transparent font-semibold text-sm" onClick={() => handleForgotPasswordToggle(true)}>
-                      Back to Login
-                    </button>
-                  </p>
-                </>
-              ) : (
-                <>
-                  <FormHeader title="Welcome Back" />
-                  <SessionProvider>
-                    <Form {...loginForm}>
-                      <form onSubmit={loginForm.handleSubmit(onLoginFormSubmit)} className="flex flex-col space-y-4 mt-8">
-                        <FormField
-                          control={loginForm.control}
-                          name="email"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Input className="w-full" type="email" autoComplete="email" placeholder="Email Address" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={loginForm.control}
-                          name="password"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Input className="w-full" type="password" placeholder="Password" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <button type="button" className="hover:opacity-80 transition-opacity tap-highlight-transparent relative inline-flex items-center font-semibold text-sm" onClick={() => handleForgotPasswordToggle(false)}>
-                          Forgot Password?
-                        </button>
-                        <Button isLoading={loading} type="submit">
-                          <p>Sign In</p>
-                        </Button>
-                      </form>
-                    </Form>
-                  </SessionProvider>
-                  <p className="text-center text-sm pt-8 pb-8 px-16">
-                    Don&apos;t have an account?{" "}
-                    <Link href="/signup">
-                      <button className="hover:opacity-80 transition-opacity tap-highlight-transparent font-semibold text-sm" onClick={() => setSelected("/signup")}>
-                        Sign Up
+              <>
+                <FormHeader title="Welcome Back" />
+                <SessionProvider>
+                  <Form {...loginForm}>
+                    <form onSubmit={loginForm.handleSubmit(onLoginFormSubmit)} className="flex flex-col space-y-4 mt-8">
+                      <FormField
+                        control={loginForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input className="w-full" type="email" autoComplete="email" placeholder="Email Address" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={loginForm.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input className="w-full" type="password" placeholder="Password" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <button type="button" className="hover:opacity-80 transition-opacity tap-highlight-transparent relative inline-flex items-center font-semibold text-sm" onClick={() => setSelected("/forgot-password")}>
+                        Forgot Password?
                       </button>
-                    </Link>
-                    {" "}for free.
-                  </p>
-                  <hr className="px-2 bg-stone-300" />
-                  <div className="mt-8 mb-8">
-                    <Suspense fallback={<div className="my-2 h-10 w-full rounded-md border border-stone-200 bg-stone-100 dark:border-stone-700 dark:bg-stone-800" />}>
-                      <SocialLoginButton />
-                    </Suspense>
-                  </div>
-                </>
-              )}
+                      <Button isLoading={loading} type="submit">
+                        <p>Sign In</p>
+                      </Button>
+                    </form>
+                  </Form>
+                </SessionProvider>
+                <p className="text-center text-sm pt-8 pb-8 px-16">
+                  Don&apos;t have an account?{" "}
+                  <Link href="/signup">
+                    <button className="hover:opacity-80 transition-opacity tap-highlight-transparent font-semibold text-sm" onClick={() => setSelected("/signup")}>
+                      Sign Up
+                    </button>
+                  </Link>
+                  {" "}for free.
+                </p>
+                <hr className="px-2 bg-stone-300" />
+                <div className="mt-8 mb-8">
+                  <Suspense fallback={<div className="my-2 h-10 w-full rounded-md border border-stone-200 bg-stone-100 dark:border-stone-700 dark:bg-stone-800" />}>
+                    <SocialLoginButton />
+                  </Suspense>
+                </div>
+              </>
+            </div>
+          )}
+          {selected === "/forgot-password" && (
+            <div key="/forgot-password" title="Forgot Password">
+              <FormHeader title="Reset Password" description="Send a login link to your account's email." />
+              <SessionProvider>
+                <Form {...resetPasswordForm}>
+                  <form onSubmit={resetPasswordForm.handleSubmit(onResetPasswordFormSubmit)} className="flex flex-col space-y-4 mt-8">
+                    <FormField
+                      control={resetPasswordForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input className="w-full" type="email" autoComplete="email" placeholder="Email Address" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button isLoading={loading} type="submit">
+                      <p>{sentForgotPasswordEmail ? "Resend Email" : "Send Email"}</p>
+                    </Button>
+                  </form>
+                </Form>
+              </SessionProvider>
+              <p className="text-center text-sm pt-8 pb-8 px-16">
+                <button className="hover:opacity-80 transition-opacity tap-highlight-transparent font-semibold text-sm" onClick={() => setSelected("/login")}>
+                  Back to Login
+                </button>
+              </p>
             </div>
           )}
           {selected === "/signup" && (
