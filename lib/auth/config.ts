@@ -56,7 +56,7 @@ export default {
     session: { strategy: "jwt" },
     theme: {
         colorScheme: "auto", // "auto" | "dark" | "light"
-        brandColor: "hsl(115 73% 52.2%)", // Hsl
+        brandColor: "#3bde2c", // Hex color code
         logo: `https://www.prospectorminerals.com/_next/image?url=%2FPM-Favicon-New-Square.png&w=128&q=75`, // Todo: upload image and change Absolute URL to image
         buttonText: "#FFFFFF" // Hex color code
     },

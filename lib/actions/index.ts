@@ -6,6 +6,7 @@ import { db } from "../db";
 import { hash, compare } from "bcrypt";
 import { type Roles } from "../db/schema";
 import { auth } from "../auth";
+import { sendChildParentInviteEmail } from "./emails";
 
 export async function createUser({ email, password, firstName, lastName, roles }: { email: string, password: string, firstName?: string, lastName?: string, roles: Roles }) {
     const passwordHash = await hash(password, 10);
@@ -642,11 +643,49 @@ export async function createParentChildInvite(childEmail: string) {
     const child = await db.query.users.findFirst({
         where: eq(users.email, childEmail),
     });
-    if (!child) {
+    if (!child || !child.email) {
         return;
     }
     const childId = child.id;
-    return await db.insert(parentChildInvitations).values({ parentId, childId });
+
+    const hasFirstName = !!session.user.firstName;
+    const hasLastName = !!session.user.lastName;
+    let nameStr = '';
+    if (hasFirstName) {
+        nameStr += session.user.firstName;
+    }
+    if (hasLastName) {
+        nameStr += ' ' + session.user.lastName;
+    }
+    if (!hasFirstName && !hasLastName) {
+        nameStr = session.user.email!;
+    }
+
+    const invite = await db.insert(parentChildInvitations).values({ parentId, childId }).returning();
+
+    return await sendChildParentInviteEmail({
+        childEmail: child.email,
+        parentName: nameStr,
+        inviteId: invite[0].id,
+    });
+}
+
+export async function getParentChildInvite(inviteId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const childId = session.user.id;
+    const invite = await db.query.parentChildInvitations.findFirst({
+        where: and(eq(parentChildInvitations.id, inviteId), eq(parentChildInvitations.childId, childId)),
+        with: {
+            parent: true
+        }
+    });
+    if (!invite) {
+        throw new Error("Invite not found or you are not authorized to view this invite");
+    }
+    return invite;
 }
 
 export async function acceptParentChildInvite(inviteId: string) {
