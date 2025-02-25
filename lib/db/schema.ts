@@ -5,7 +5,8 @@ import {
   text,
   primaryKey,
   integer,
-  decimal
+  decimal,
+  unique
 } from "drizzle-orm/pg-core"
 import { sql } from 'drizzle-orm'
 import type { AdapterAccountType } from "next-auth/adapters"
@@ -291,7 +292,10 @@ export const parentChildInvitations = pgTable("parentChildInvitation", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).defaultNow(),
-})
+  lastInvitedAt: timestamp("invitedAt", { mode: "date", withTimezone: true }).defaultNow()
+}, (parentChildInvitation) => [
+  unique().on(parentChildInvitation.parentId, parentChildInvitation.childId)
+]);
 
 export const parentChild = pgTable("parentChild", {
   parentId: text("parentId")

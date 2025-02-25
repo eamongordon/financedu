@@ -661,7 +661,10 @@ export async function createParentChildInvite(childEmail: string) {
         nameStr = session.user.email!;
     }
 
-    const invite = await db.insert(parentChildInvitations).values({ parentId, childId }).returning();
+    const invite = await db.insert(parentChildInvitations).values({ parentId, childId }).onConflictDoUpdate({
+        target: [parentChildInvitations.parentId, parentChildInvitations.childId],
+        set: { lastInvitedAt: new Date() }
+    }).returning();
 
     return await sendChildParentInviteEmail({
         childEmail: child.email,
