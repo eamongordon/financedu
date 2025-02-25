@@ -1,7 +1,7 @@
 "use server";
 
-import { eq, gt, lt, and } from "drizzle-orm";
-import { courses, users, modules, lessons, activities, lessonToActivities, userCompletion, parentChildInvitations, parentChild } from "../db/schema";
+import { eq, gt, lt, and, isNotNull } from "drizzle-orm";
+import { courses, users, modules, lessons, activities, lessonToActivities, userCompletion, parentChild } from "../db/schema";
 import { db } from "../db";
 import { hash, compare } from "bcrypt";
 import { type Roles } from "../db/schema";
@@ -661,26 +661,26 @@ export async function createParentChildInvite(childEmail: string) {
         nameStr = session.user.email!;
     }
 
-    const invite = await db.insert(parentChildInvitations).values({ parentId, childId }).onConflictDoUpdate({
-        target: [parentChildInvitations.parentId, parentChildInvitations.childId],
+    await db.insert(parentChild).values({ parentId, childId }).onConflictDoUpdate({
+        target: [parentChild.parentId, parentChild.childId],
         set: { lastInvitedAt: new Date() }
-    }).returning();
+    });
 
     return await sendChildParentInviteEmail({
         childEmail: child.email,
         parentName: nameStr,
-        inviteId: invite[0].id,
+        parentId: parentId,
     });
 }
 
-export async function getParentChildInvite(inviteId: string) {
+export async function getParentChildInvite(parentId: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
     const childId = session.user.id;
-    const invite = await db.query.parentChildInvitations.findFirst({
-        where: and(eq(parentChildInvitations.id, inviteId), eq(parentChildInvitations.childId, childId)),
+    const invite = await db.query.parentChild.findFirst({
+        where: and(eq(parentChild.parentId, parentId), eq(parentChild.childId, childId)),
         with: {
             parent: true
         }
@@ -691,44 +691,29 @@ export async function getParentChildInvite(inviteId: string) {
     return invite;
 }
 
-export async function acceptParentChildInvite(inviteId: string) {
+export async function acceptParentChildInvite(parentId: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
     const childId = session.user.id;
-    const invite = await db.query.parentChildInvitations.findFirst({
-        where: eq(parentChildInvitations.id, inviteId),
-    });
-
-    if (!invite) {
-        throw new Error("Invite not found");
-    }
-
-    await db.insert(parentChild).values({
-        parentId: invite.parentId,
-        childId,
-    });
-
-    await db.delete(parentChildInvitations).where(eq(parentChildInvitations.id, inviteId));
+    await db.update(parentChild)
+        .set({ acceptedAt: new Date() })
+        .where(
+            and(eq(parentChild.parentId, parentId), eq(parentChild.childId, childId))
+        );
 }
 
-export async function rejectParentChildInvite(inviteId: string) {
+export async function rejectParentChildInvite(parentId: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
     const childId = session.user.id;
 
-    const invite = await db.query.parentChildInvitations.findFirst({
-        where: and(eq(parentChildInvitations.id, inviteId), eq(parentChildInvitations.childId, childId)),
-    });
-
-    if (!invite) {
-        throw new Error("Invite not found or you are not authorized to reject this invite");
-    }
-
-    await db.delete(parentChildInvitations).where(eq(parentChildInvitations.id, inviteId));
+    await db.delete(parentChild).where(
+        and(eq(parentChild.parentId, parentId), eq(parentChild.childId, childId))
+    );
 }
 
 export async function getParentChildren() {
@@ -738,7 +723,10 @@ export async function getParentChildren() {
     }
     const parentId = session.user.id;
     return await db.query.parentChild.findMany({
-        where: eq(parentChild.parentId, parentId),
+        where: and(
+            eq(parentChild.parentId, parentId),
+            isNotNull(parentChild.acceptedAt)
+        ),
         with: {
             child: true,
         },
@@ -752,7 +740,11 @@ export async function getChildCompletedActivities(childId: string) {
     }
     const parentId = session.user.id;
     const relationship = await db.query.parentChild.findFirst({
-        where: and(eq(parentChild.parentId, parentId), eq(parentChild.childId, childId)),
+        where: and(
+            eq(parentChild.parentId, parentId),
+            eq(parentChild.childId, childId),
+            isNotNull(parentChild.acceptedAt)
+        ),
     });
 
     if (!relationship) {

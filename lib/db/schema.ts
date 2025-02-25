@@ -5,8 +5,7 @@ import {
   text,
   primaryKey,
   integer,
-  decimal,
-  unique
+  decimal
 } from "drizzle-orm/pg-core"
 import { sql } from 'drizzle-orm'
 import type { AdapterAccountType } from "next-auth/adapters"
@@ -281,22 +280,6 @@ export const userCompletion = pgTable("userCompletion", {
   primaryKey({ columns: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId] })
 ]);
 
-export const parentChildInvitations = pgTable("parentChildInvitation", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  parentId: text("parentId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  childId: text("childId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).defaultNow(),
-  lastInvitedAt: timestamp("invitedAt", { mode: "date", withTimezone: true }).defaultNow()
-}, (parentChildInvitation) => [
-  unique().on(parentChildInvitation.parentId, parentChildInvitation.childId)
-]);
-
 export const parentChild = pgTable("parentChild", {
   parentId: text("parentId")
     .notNull()
@@ -304,12 +287,11 @@ export const parentChild = pgTable("parentChild", {
   childId: text("childId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  firstInvitedAt: timestamp("firstInvitedAt", { mode: "date", withTimezone: true }).defaultNow(),
+  lastInvitedAt: timestamp("lastInvitedAt", { mode: "date", withTimezone: true }).defaultNow(),
+  acceptedAt: timestamp("acceptedAt", { mode: "date", withTimezone: true }),
 }, (parentChild) => [
-  {
-    compositePK: primaryKey({
-      columns: [parentChild.parentId, parentChild.childId],
-    }),
-  },
+  primaryKey({ columns: [parentChild.parentId, parentChild.childId] })
 ]);
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -318,7 +300,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   authenticators: many(authenticators),
   userCompletion: many(userCompletion),
   parentChild: many(parentChild),
-  parentChildInvitations: many(parentChildInvitations),
+  parentChildInvitations: many(parentChild),
   parentChildChildren: many(parentChild),
   parentChildParents: many(parentChild),
 }))
@@ -466,17 +448,6 @@ export const userCompletionRelations = relations(userCompletion, ({ one }) => ({
     references: [activities.id],
   }),
 }))
-
-export const parentChildInvitationsRelations = relations(parentChildInvitations, ({ one }) => ({
-  parent: one(users, {
-    fields: [parentChildInvitations.parentId],
-    references: [users.id],
-  }),
-  child: one(users, {
-    fields: [parentChildInvitations.childId],
-    references: [users.id],
-  }),
-}));
 
 export const parentChildRelations = relations(parentChild, ({ one }) => ({
   parent: one(users, {
