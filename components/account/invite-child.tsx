@@ -126,7 +126,7 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
                         </FormItem>
                     )}
                 />
-                <Button type="submit" isLoading={inviteChildForm.formState.isLoading}>Submit</Button>
+                <Button type="submit" isLoading={inviteChildForm.formState.isSubmitting}>Submit</Button>
             </form>
         </Form>
     )
