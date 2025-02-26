@@ -431,8 +431,13 @@ export async function markActivityComplete(activityId: string, lessonId: string,
         completedAt: new Date(),
         correctAnswers,
         totalQuestions,
-    }).onConflictDoNothing({
-        target: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId]
+    }).onConflictDoUpdate({
+        target: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId],
+        set: {
+            correctAnswers,
+            totalQuestions,
+            completedAt: new Date()
+        }
     });
 }
 
