@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Advanced form example using react-hook-form and Zod.",
 }
 
-const sidebarNavItems = [
+const defaultNavItems = [
   {
     title: "Dashboard",
     href: "/account/learner",
@@ -30,12 +30,15 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
   const firstName = session?.user?.firstName;
   const lastName = session?.user?.lastName;
   const initials = `${firstName?.charAt(0) ?? ''}${lastName?.charAt(0) ?? ''}`;
-  if (session?.user?.roles?.includes("parent")) {
-    sidebarNavItems.push({
+
+  const navItems = [...defaultNavItems];
+  if (session?.user?.roles?.includes("parent") && !navItems.some(item => item.title === "My Children")) {
+    navItems.push({
       title: "My Children",
       href: "/account/parent",
     });
   }
+
   return (
     <>
       <div className="space-y-6 p-4 sm:p-10 pb-16">
@@ -51,7 +54,7 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
                 <span className="block leading-none">{firstName}</span>
               </div>
             </div>
-            <SidebarNav items={sidebarNavItems} />
+            <SidebarNav items={navItems} />
           </aside>
           <div className="flex-1">{children}</div>
         </div>
