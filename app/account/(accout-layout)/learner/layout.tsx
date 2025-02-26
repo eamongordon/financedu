@@ -1,6 +1,17 @@
 import LearnerHeader from "@/components/account/learner-header";
-import { LearnerNav } from "@/components/account/learner-tabs";
+import { TabsNav } from "@/components/account/tabs-nav";
 import { auth } from "@/lib/auth";
+
+const navItems = [
+    {
+        name: "Courses",
+        href: "/account/learner",
+    },
+    {
+        name: "Progress",
+        href: "/account/learner/progress",
+    }
+];
 
 export default async function LessonLayout({ children }: { children: React.ReactNode }) {
     const session = await auth();
@@ -11,7 +22,7 @@ export default async function LessonLayout({ children }: { children: React.React
     return (
         <main>
             <LearnerHeader name={name ?? undefined} />
-            <LearnerNav />
+            <TabsNav navItems={navItems} />
             {children}
         </main>
     );

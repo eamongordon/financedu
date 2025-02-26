@@ -4,18 +4,7 @@ import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { usePathname } from "next/navigation";
 
-const navItems = [
-    {
-        name: "Courses",
-        href: "/account/learner",
-    },
-    {
-        name: "Progress",
-        href: "/account/learner/progress",
-    }
-];
-
-export function LearnerNav() {
+export function TabsNav({ navItems }: { navItems: { name: string, href: string }[] }) {
     const pathname = usePathname();
     return (
         <Tabs value={pathname!} className="py-6">
