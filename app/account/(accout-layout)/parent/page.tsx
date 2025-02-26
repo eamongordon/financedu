@@ -27,7 +27,7 @@ export default async function Parent() {
                 </div>
                 <InviteChild />
             </div>
-            {children.length === 0 ? (
+            {(children.approved.length === 0 && children.pending.length === 0) ? (
                 <div className="flex items-center justify-center mt-6">
                     <p className="text-lg font-semibold mt-6">
                         You haven&apos;t added any children yet.
@@ -35,25 +35,51 @@ export default async function Parent() {
                 </div>
             ) : (
                 <Card className="mt-6 divide-y shadow-none">
-                    {children.map((child) => {
-                        const hasFirstName = !!child.child.firstName;
-                        const hasLastName = !!child.child.lastName;
-                        let nameStr = '';
-                        if (hasFirstName) {
-                            nameStr += child.child.firstName;
-                        }
-                        if (hasLastName) {
-                            nameStr += child.child.lastName;
-                        }
-                        if (!hasFirstName && !hasLastName) {
-                            nameStr = child.child.email!;
-                        }
+                    {children.pending.map((childParentObj) => {
                         return (
-                            <div key={child.childId} className="flex items-center justify-between py-4 p-6">
+                            <div key={childParentObj.childId} className="flex items-center justify-between py-4 p-6">
                                 <div className="flex flex-row items-center gap-4">
                                     <Avatar className="size-12">
-                                        {child.child.image ? (
-                                            <AvatarImage src={child.child.image} alt={nameStr} />
+                                        <AvatarFallback>
+                                            {getInitials(childParentObj.child.email!) || <User className="h-4 w-4" />}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <div className="flex flex-col justify-start text-start gap-2">
+                                        <p className="leading-none font-semibold">
+                                            {childParentObj.child.email}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-2">
+                                    <Button variant="outline">
+                                        Resend Invite
+                                    </Button>
+                                    <Button variant="destructive">
+                                        Cancel Invite
+                                    </Button>
+                                </div>
+                            </div>
+                        );
+                    })}
+                    {children.approved.map((childParentObj) => {
+                        const hasFirstName = !!childParentObj.child.firstName;
+                        const hasLastName = !!childParentObj.child.lastName;
+                        let nameStr = '';
+                        if (hasFirstName) {
+                            nameStr += childParentObj.child.firstName;
+                        }
+                        if (hasLastName) {
+                            nameStr += childParentObj.child.lastName;
+                        }
+                        if (!hasFirstName && !hasLastName) {
+                            nameStr = childParentObj.child.email!;
+                        }
+                        return (
+                            <div key={childParentObj.childId} className="flex items-center justify-between py-4 p-6">
+                                <div className="flex flex-row items-center gap-4">
+                                    <Avatar className="size-12">
+                                        {childParentObj.child.image ? (
+                                            <AvatarImage src={childParentObj.child.image} alt={nameStr} />
                                         ) : null}
                                         <AvatarFallback>
                                             {getInitials(nameStr) || <User className="h-4 w-4" />}
@@ -61,10 +87,10 @@ export default async function Parent() {
                                     </Avatar>
                                     <div className="flex flex-col justify-start text-start gap-2">
                                         <p className="leading-none font-semibold">
-                                            {nameStr || child.child.email}
+                                            {nameStr || childParentObj.child.email}
                                         </p>
                                         {nameStr && (
-                                            <p className="text-sm text-muted-foreground leading-none">{child.child.email}</p>
+                                            <p className="text-sm text-muted-foreground leading-none">{childParentObj.child.email}</p>
                                         )}
                                     </div>
                                 </div>

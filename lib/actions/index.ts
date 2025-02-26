@@ -722,15 +722,23 @@ export async function getParentChildren() {
         throw new Error("Not authenticated");
     }
     const parentId = session.user.id;
-    return await db.query.parentChild.findMany({
+    const allChildren = await db.query.parentChild.findMany({
         where: and(
             eq(parentChild.parentId, parentId),
-            isNotNull(parentChild.acceptedAt)
         ),
         with: {
             child: true,
         },
     });
+    return {
+        approved: allChildren.filter(child => !!child.acceptedAt),
+        pending: allChildren.filter(child => !child.acceptedAt).map(childParentObj => ({
+            ...childParentObj,
+            child: {
+                email: childParentObj.child.email, //only return email for unapproved children
+            }
+        })),
+    }
 }
 
 export async function getChildCompletedActivities(childId: string) {
