@@ -276,6 +276,8 @@ export const userCompletion = pgTable("userCompletion", {
     .notNull()
     .references(() => activities.id, { onDelete: "cascade" }),
   completedAt: timestamp("completedAt", { mode: "date", withTimezone: true }).defaultNow(),
+  correctAnswers: integer("correctAnswers"),
+  totalQuestions: integer("totalQuestions"),
 }, (userCompletion) => [
   primaryKey({ columns: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId] })
 ]);

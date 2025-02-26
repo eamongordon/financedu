@@ -415,7 +415,7 @@ export async function getPreviousLesson(lessonId: string) {
     }
 }
 
-export async function markActivityComplete(activityId: string, lessonId: string, moduleId: string, courseId: string) {
+export async function markActivityComplete(activityId: string, lessonId: string, moduleId: string, courseId: string, correctAnswers?: number, totalQuestions?: number) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
@@ -429,6 +429,8 @@ export async function markActivityComplete(activityId: string, lessonId: string,
         moduleId,
         courseId,
         completedAt: new Date(),
+        correctAnswers,
+        totalQuestions,
     }).onConflictDoNothing({
         target: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId]
     });

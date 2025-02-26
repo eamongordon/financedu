@@ -22,8 +22,8 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
     const [response, setResponse] = useState<Response>([]);
     const [validity, setValidity] = useState(false);
     const [showAnswer, setShowAnswer] = useState(false);
-    const [questionResponses, setQuestionResponses] = useState<boolean[]>([]); // New state to track correctness
-    const [isQuizFinished, setIsQuizFinished] = useState(false); // New state to track if the quiz is finished
+    const [questionResponses, setQuestionResponses] = useState<boolean[]>([]); // Track correctness
+    const [isQuizFinished, setIsQuizFinished] = useState(false); // Track if the quiz is finished
 
     const currentQuestion = activity.activityToQuestions[currentQuestionIndex].question;
 
@@ -80,7 +80,7 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
     const handleSubmit = () => {
         if (validity) {
             console.log("Submitted answers:", response);
-            const isCorrect = checkAnswer(response); // Function to check if the response is correct
+            const isCorrect = checkAnswer(response); // Check if the response is correct
             const updatedResponses = [...questionResponses];
             updatedResponses[currentQuestionIndex] = isCorrect;
             setQuestionResponses(updatedResponses); // Update questionResponses state
@@ -131,7 +131,9 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
 
     const handleQuizComplete = async () => {
         if (session && session.user && session.user.id) {
-            await markActivityComplete(activity.id, currentLessonId, currentModuleId, currentCourseId);
+            const correctAnswers = questionResponses.filter(isCorrect => isCorrect).length;
+            const totalQuestions = questionResponses.length;
+            await markActivityComplete(activity.id, currentLessonId, currentModuleId, currentCourseId, correctAnswers, totalQuestions);
             await router.refresh();
         }
     };
