@@ -673,7 +673,7 @@ export async function createParentChildInvite(childEmail: string) {
     });
 }
 
-export async function resendParentChildInvite({ childId, childEmail }: { childId: string, childEmail: string }) {
+export async function resendParentChildInvite(childId: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
@@ -693,12 +693,20 @@ export async function resendParentChildInvite({ childId, childEmail }: { childId
         nameStr = session.user.email!;
     }
 
-    await db.update(parentChild)
+    const parentChildRes = await db.update(parentChild)
         .set({ lastInvitedAt: new Date() })
-        .where(and(eq(parentChild.parentId, parentId), eq(parentChild.childId, childId)));
+        .where(and(eq(parentChild.parentId, parentId), eq(parentChild.childId, childId)))
+        .from(users)
+        .returning({
+            childEmail: users.email
+        })
+
+    if (!parentChildRes || !parentChildRes[0] || !parentChildRes[0].childEmail) {
+        throw new Error("Invite not found or you are not authorized to resend this invite");
+    }
 
     return await sendChildParentInviteEmail({
-        childEmail: childEmail,
+        childEmail: parentChildRes[0].childEmail,
         parentName: nameStr,
         parentId: parentId,
     });

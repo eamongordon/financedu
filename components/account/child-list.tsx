@@ -54,7 +54,7 @@ export function ChildList({ parentChildren }: { parentChildren: ParentChildren }
                         <div className="flex gap-2">
                             <Button
                                 variant="outline"
-                                onClick={() => resendParentChildInvite({ childId: childParentObj.childId, childEmail: childParentObj.child.email! })}
+                                onClick={() => resendParentChildInvite(childParentObj.childId)}
                             >
                                 Resend Invite
                             </Button>
