@@ -61,9 +61,9 @@ export default async function Parent() {
                                     </Avatar>
                                     <div className="flex flex-col justify-start text-start gap-2">
                                         <p className="leading-none font-semibold">
-                                            {nameStr}
+                                            {nameStr || child.child.email}
                                         </p>
-                                        {(!hasFirstName && !hasLastName) && (
+                                        {nameStr && (
                                             <p className="text-sm text-muted-foreground leading-none">{child.child.email}</p>
                                         )}
                                     </div>
