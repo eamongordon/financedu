@@ -69,11 +69,9 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
 
     const handleResponseChange = (response: Response) => {
         setResponse(response);
-        console.log("Response:", response);
     };
 
     const handleValidChange = (isValid: boolean) => {
-        console.log("isValid:", isValid);
         setValidity(isValid);
     };
 

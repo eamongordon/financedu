@@ -35,8 +35,6 @@ export function NumericQuestion({ question, onResponseChange, onValidChange, sho
   }, [form.formState.isValid, onValidChange]);
 
   function onChange(data: z.infer<typeof FormSchema>) {
-    console.log(data);
-    console.log(question);
     onResponseChange(data.response);
     onValidChange(form.formState.isValid);
   }

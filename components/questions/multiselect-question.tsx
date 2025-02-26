@@ -38,7 +38,6 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange,
     })
 
     function onChange(data: z.infer<typeof FormSchema>) {
-        console.log(data);
         onResponseChange(data.items);
     }
 
