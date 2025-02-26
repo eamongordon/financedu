@@ -1,6 +1,6 @@
 "use client";
 
-import { getParentChildren, deleteParentChildRelationship } from "@/lib/actions";
+import { getParentChildren, deleteParentChildRelationship, resendParentChildInvite } from "@/lib/actions";
 import { Card } from "../ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { MoreVertical, User } from "lucide-react";
@@ -52,7 +52,10 @@ export function ChildList({ parentChildren }: { parentChildren: ParentChildren }
                             </div>
                         </div>
                         <div className="flex gap-2">
-                            <Button variant="outline">
+                            <Button
+                                variant="outline"
+                                onClick={() => resendParentChildInvite({ childId: childParentObj.childId, childEmail: childParentObj.child.email! })}
+                            >
                                 Resend Invite
                             </Button>
                             <Button

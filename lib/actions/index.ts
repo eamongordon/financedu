@@ -673,6 +673,37 @@ export async function createParentChildInvite(childEmail: string) {
     });
 }
 
+export async function resendParentChildInvite({ childId, childEmail }: { childId: string, childEmail: string }) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const parentId = session.user.id;
+
+    const hasFirstName = !!session.user.firstName;
+    const hasLastName = !!session.user.lastName;
+    let nameStr = '';
+    if (hasFirstName) {
+        nameStr += session.user.firstName;
+    }
+    if (hasLastName) {
+        nameStr += ' ' + session.user.lastName;
+    }
+    if (!hasFirstName && !hasLastName) {
+        nameStr = session.user.email!;
+    }
+
+    await db.update(parentChild)
+        .set({ lastInvitedAt: new Date() })
+        .where(and(eq(parentChild.parentId, parentId), eq(parentChild.childId, childId)));
+
+    return await sendChildParentInviteEmail({
+        childEmail: childEmail,
+        parentName: nameStr,
+        parentId: parentId,
+    });
+}
+
 export async function getParentChildInvite(parentId: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
