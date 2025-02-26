@@ -780,6 +780,30 @@ export async function getParentChildren() {
     }
 }
 
+export async function getParentChildApproved(childId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const parentId = session.user.id;
+    const relationship = await db.query.parentChild.findFirst({
+        where: and(
+            eq(parentChild.parentId, parentId),
+            eq(parentChild.childId, childId),
+            isNotNull(parentChild.acceptedAt)
+        ),
+        with: {
+            child: true,
+        },
+    });
+
+    if (!relationship) {
+        throw new Error("No approved relationship found between parent and child");
+    }
+
+    return relationship;
+}
+
 export async function getChildCompletedActivities(childId: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {

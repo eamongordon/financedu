@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useState } from "react";
 import { InviteChild } from "./invite-child";
+import Link from "next/link";
 
 type ParentChildren = Awaited<ReturnType<typeof getParentChildren>>;
 
@@ -101,7 +102,7 @@ export function ChildList({ parentChildren }: { parentChildren: ParentChildren }
                     nameStr += childParentObj.child.firstName;
                 }
                 if (hasLastName) {
-                    nameStr += childParentObj.child.lastName;
+                    nameStr += " " + childParentObj.child.lastName;
                 }
                 if (!hasFirstName && !hasLastName) {
                     nameStr = childParentObj.child.email!;
@@ -133,7 +134,11 @@ export function ChildList({ parentChildren }: { parentChildren: ParentChildren }
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                                <DropdownMenuItem>View Progress</DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <Link href={`/account/parent/${childParentObj.childId}`}>
+                                        View Progress
+                                    </Link>
+                                </DropdownMenuItem>
                                 <DropdownMenuItem
                                     className="text-red-600"
                                     onSelect={() => handleRemove(childParentObj.childId)}
