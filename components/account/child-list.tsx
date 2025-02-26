@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useState } from "react";
 
 type ParentChildren = Awaited<ReturnType<typeof getParentChildren>>;
 
@@ -21,10 +22,28 @@ const getInitials = (name: string) => {
 
 export function ChildList({ parentChildren }: { parentChildren: ParentChildren }) {
     const router = useRouter();
+    const [loadingState, setLoadingState] = useState<{ [key: string]: { resend: boolean; cancel: boolean; remove: boolean } }>({});
 
     async function removeChild(childId: string, isPending: boolean) {
+        setLoadingState((prev) => ({ ...prev, [childId]: { ...prev[childId], cancel: true } }));
         await deleteParentChildRelationship(childId);
         toast.success(isPending ? 'Invite cancelled' : 'Child removed');
+        setLoadingState((prev) => ({ ...prev, [childId]: { ...prev[childId], cancel: false } }));
+        router.refresh();
+    }
+
+    async function handleResendInvite(childId: string) {
+        setLoadingState((prev) => ({ ...prev, [childId]: { ...prev[childId], resend: true } }));
+        await resendParentChildInvite(childId);
+        toast.success('Invite resent');
+        setLoadingState((prev) => ({ ...prev, [childId]: { ...prev[childId], resend: false } }));
+    }
+
+    async function handleRemove(childId: string) {
+        setLoadingState((prev) => ({ ...prev, [childId]: { ...prev[childId], remove: true } }));
+        await deleteParentChildRelationship(childId);
+        toast.success('Child removed');
+        setLoadingState((prev) => ({ ...prev, [childId]: { ...prev[childId], remove: false } }));
         router.refresh();
     }
 
@@ -54,13 +73,17 @@ export function ChildList({ parentChildren }: { parentChildren: ParentChildren }
                         <div className="flex gap-2">
                             <Button
                                 variant="outline"
-                                onClick={() => resendParentChildInvite(childParentObj.childId)}
+                                onClick={() => handleResendInvite(childParentObj.childId)}
+                                disabled={loadingState[childParentObj.childId]?.resend}
+                                isLoading={loadingState[childParentObj.childId]?.resend}
                             >
                                 Resend Invite
                             </Button>
                             <Button
                                 variant="destructive"
                                 onClick={() => removeChild(childParentObj.childId, true)}
+                                disabled={loadingState[childParentObj.childId]?.cancel}
+                                isLoading={loadingState[childParentObj.childId]?.cancel}
                             >
                                 Cancel Invite
                             </Button>
@@ -111,7 +134,8 @@ export function ChildList({ parentChildren }: { parentChildren: ParentChildren }
                                 <DropdownMenuItem>View Progress</DropdownMenuItem>
                                 <DropdownMenuItem
                                     className="text-red-600"
-                                    onSelect={() => removeChild(childParentObj.childId, false)}
+                                    onSelect={() => handleRemove(childParentObj.childId)}
+                                    disabled={loadingState[childParentObj.childId]?.remove}
                                 >
                                     Remove
                                 </DropdownMenuItem>
