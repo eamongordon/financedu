@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/form";
 import { createParentChildInvite } from "@/lib/actions";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function InviteChild() {
     const [open, setOpen] = React.useState(false)
@@ -60,7 +61,7 @@ export function InviteChild() {
                             Invite a child to your account by entering their email address. If they do not have an account, they will be prompted to create one.
                         </DialogDescription>
                     </DialogHeader>
-                    <ProfileForm />
+                    <ProfileForm setOpen={setOpen} />
                 </DialogContent>
             </Dialog>
         )
@@ -81,7 +82,7 @@ export function InviteChild() {
                         Invite a child to your account by entering their email address. If they do not have an account, they will be prompted to create one.
                     </DrawerDescription>
                 </DrawerHeader>
-                <ProfileForm className="px-4" />
+                <ProfileForm className="px-4" setOpen={setOpen} />
                 <DrawerFooter className="pt-2">
                     <DrawerClose asChild>
                         <Button variant="outline">Cancel</Button>
@@ -96,7 +97,7 @@ const inviteChildFormSchema = z.object({
     email: z.string().email()
 });
 
-function ProfileForm({ className }: React.ComponentProps<"form">) {
+function ProfileForm({ className, setOpen }: React.ComponentProps<"form"> & { setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
     const inviteChildForm = useForm<z.infer<typeof inviteChildFormSchema>>({
         resolver: zodResolver(inviteChildFormSchema),
         defaultValues: {
@@ -104,9 +105,13 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
         },
     });
 
+    const router = useRouter();
+
     async function onSubmit(values: z.infer<typeof inviteChildFormSchema>) {
         await createParentChildInvite(values.email);
         toast.success("Child invited successfully");
+        setOpen(false);
+        router.refresh();
     };
 
     return (
