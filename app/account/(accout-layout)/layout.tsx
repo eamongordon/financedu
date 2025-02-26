@@ -31,13 +31,13 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
   const lastName = session?.user?.lastName;
   const initials = `${firstName?.charAt(0) ?? ''}${lastName?.charAt(0) ?? ''}`;
 
-  const navItems = [...defaultNavItems];
-  if (session?.user?.roles?.includes("parent") && !navItems.some(item => item.title === "My Children")) {
-    navItems.push({
+  const navItems = [
+    ...defaultNavItems,
+    ...(session?.user?.roles?.includes("parent") ? [{
       title: "My Children",
       href: "/account/parent",
-    });
-  }
+    }] : [])
+  ];
 
   return (
     <>
