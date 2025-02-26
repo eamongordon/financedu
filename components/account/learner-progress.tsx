@@ -154,14 +154,14 @@ function DataTable<TData, TValue>({
 
     return (
         <div>
-            <div className="flex items-center py-4 gap-4">
+            <div className="flex flex-wrap items-center py-4 gap-4">
                 <Input
                     placeholder="Filter by Activity..."
                     value={(table.getColumn("activityTitle")?.getFilterValue() as string) ?? ""}
                     onChange={(event) =>
                         table.getColumn("activityTitle")?.setFilterValue(event.target.value)
                     }
-                    className="max-w-sm"
+                    className="w-full sm:w-1/2"
                 />
 
                 <Select
@@ -169,7 +169,7 @@ function DataTable<TData, TValue>({
                         table.getColumn("activityType")?.setFilterValue(value === "all" ? "" : value)
                     }
                 >
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-full sm:flex-1">
                         <SelectValue placeholder="Select Type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -184,7 +184,7 @@ function DataTable<TData, TValue>({
                 <Select
                     onValueChange={handleDateFilterChange}
                 >
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-full sm:flex-1">
                         <SelectValue placeholder="All Time" />
                     </SelectTrigger>
                     <SelectContent>
