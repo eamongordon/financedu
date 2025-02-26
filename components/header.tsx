@@ -6,7 +6,8 @@ export default async function Header() {
     const userData = session?.user ? {
         name: session.user.firstName + " " + session.user.lastName,
         image: session.user.image,
-        email: session.user.email
+        email: session.user.email,
+        roles: session.user.roles
     } : undefined;
     return (
         <HeaderContent

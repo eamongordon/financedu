@@ -30,7 +30,12 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
   const firstName = session?.user?.firstName;
   const lastName = session?.user?.lastName;
   const initials = `${firstName?.charAt(0) ?? ''}${lastName?.charAt(0) ?? ''}`;
-
+  if (session?.user?.roles?.includes("parent")) {
+    sidebarNavItems.push({
+      title: "My Children",
+      href: "/account/parent",
+    });
+  }
   return (
     <>
       <div className="space-y-6 p-4 sm:p-10 pb-16">

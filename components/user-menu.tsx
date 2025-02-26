@@ -15,15 +15,17 @@ import { Check, Laptop2, Moon, Sun, User } from "lucide-react"
 import Link from "next/link"
 import { signOut } from "next-auth/react"
 import { useTheme } from "next-themes"
+import { type Roles } from "@/lib/db/schema"
 
 interface UserMenuProps {
   imageSrc?: string
   name?: string
   email?: string
   isMobile?: boolean
+  roles?: Roles
 }
 
-export default function UserMenu({ imageSrc, name, email, isMobile }: UserMenuProps) {
+export default function UserMenu({ imageSrc, name, email, isMobile, roles }: UserMenuProps) {
   const initials = name
     ? name
       .split(' ')
@@ -74,6 +76,11 @@ export default function UserMenu({ imageSrc, name, email, isMobile }: UserMenuPr
         <DropdownMenuItem asChild>
           <Link href="/account/settings">Settings</Link>
         </DropdownMenuItem>
+        {roles?.includes("parent") && (
+          <DropdownMenuItem asChild>
+            <Link href="/account/parent">My Children</Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
             <span>Theme: {theme === "light" ? "Light" : theme === "dark" ? "Dark" : "System"}</span>

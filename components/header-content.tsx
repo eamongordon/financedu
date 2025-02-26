@@ -8,6 +8,7 @@ import UserMenu from './user-menu';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { Separator } from './ui/separator';
+import { type Roles } from '@/lib/db/schema';
 
 export default function HeaderComp({
   userData
@@ -16,6 +17,7 @@ export default function HeaderComp({
     name?: string | null,
     image?: string | null,
     email?: string | null
+    roles?: Roles
   }
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,7 +38,7 @@ export default function HeaderComp({
             <Link href="#contact" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Contact</Link>
             <div className='ml-4 self-center'>
               {loggedIn ? (
-                <UserMenu name={userData.name!} email={userData.email!} />
+                <UserMenu name={userData.name!} email={userData.email!} roles={userData.roles} />
               ) : (
                 <div className='flex flex-row gap-2'>
                   <Link href="/login" className={cn(buttonVariants({ variant: "secondary" }), "w-28 text-base")}>Log In</Link>
@@ -75,7 +77,7 @@ export default function HeaderComp({
           <Separator />
           <div className='flex flex-col gap-2'>
             {loggedIn ? (
-                <UserMenu isMobile name={userData.name!} email={userData.email!} />
+                <UserMenu isMobile name={userData.name!} email={userData.email!} roles={userData.roles} />
             ) : (
               <div className='flex flex-row gap-2'>
                 <Link href="/login" className={cn(buttonVariants({ variant: "secondary" }), "w-full")}>Log In</Link>
