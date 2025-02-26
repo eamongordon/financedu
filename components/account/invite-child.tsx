@@ -41,7 +41,7 @@ import { createParentChildInvite } from "@/lib/actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-export function InviteChild() {
+export function InviteChild({ isNoChildren }: { isNoChildren?: boolean }) {
     const [open, setOpen] = React.useState(false)
     const isDesktop = useMediaQuery("(min-width: 768px)")
 
@@ -49,9 +49,9 @@ export function InviteChild() {
         return (
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button className="mt-6">
+                    <Button className="mt-6" {...isNoChildren ? { variant: "outline" } : {}}>
                         <Plus />
-                        Add Child
+                        Invite Child
                     </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">

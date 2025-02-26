@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useState } from "react";
+import { InviteChild } from "./invite-child";
 
 type ParentChildren = Awaited<ReturnType<typeof getParentChildren>>;
 
@@ -48,10 +49,11 @@ export function ChildList({ parentChildren }: { parentChildren: ParentChildren }
     }
 
     return (parentChildren.approved.length === 0 && parentChildren.pending.length === 0) ? (
-        <div className="flex items-center justify-center mt-6">
+        <div className="flex flex-col items-center justify-center mt-6">
             <p className="text-lg font-semibold mt-6">
                 You haven&apos;t added any children yet.
             </p>
+            <InviteChild isNoChildren />
         </div>
     ) : (
         <Card className="mt-6 divide-y shadow-none">
