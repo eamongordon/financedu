@@ -41,15 +41,14 @@ export function RadioQuestion({ question, onResponseChange, onValidChange, showA
         onValidChange(form.formState.isValid);
     }, [form.formState.isValid, onValidChange]);
 
-    function onChange(data: z.infer<typeof FormSchema>) {
-        console.log(data);
+    function onBlur(data: z.infer<typeof FormSchema>) {
         onResponseChange(data.type);
         onValidChange(form.formState.isValid);
     }
 
     return (
         <Form {...form}>
-            <form onChange={form.handleSubmit(onChange)} className="w-4/5 space-y-6">
+            <form onBlur={form.handleSubmit(onBlur)} className="w-4/5 space-y-6">
                 <FormField
                     control={form.control}
                     name="type"
