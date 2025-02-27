@@ -850,3 +850,40 @@ export async function deleteParentChildRelationship(childId: string) {
         and(eq(parentChild.parentId, parentId), eq(parentChild.childId, childId))
     );
 }
+
+export async function getUserCompletion() {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    const courses = await db.query.courses.findMany({
+        with: {
+            modules: {
+                with: {
+                    lessons: {
+                        with: {
+                            lessonToActivities: {
+                                with: {
+                                    activity: {
+                                        with: {
+                                            userCompletion: {
+                                                where: eq(userCompletion.userId, userId)
+                                            }
+                                        }
+                                    }
+                                },
+                                orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+                            }
+                        },
+                        orderBy: (lessons, { asc }) => [asc(lessons.order)]
+                    }
+                },
+                orderBy: (modules, { asc }) => [asc(modules.order)]
+            }
+        }
+    });
+
+    return courses;
+}

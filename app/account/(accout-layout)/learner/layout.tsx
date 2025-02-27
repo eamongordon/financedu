@@ -10,6 +10,10 @@ const navItems = [
     {
         name: "Progress",
         href: "/account/learner/progress",
+    },
+    {
+        name: "Completion",
+        href: "/account/learner/completion",
     }
 ];
 
