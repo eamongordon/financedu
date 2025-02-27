@@ -2,23 +2,37 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { FileText, CircleHelp } from "lucide-react";
+import { FileText, CircleHelp, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { CompletionIcon } from "../ui/completion-icon";
+import { Progress } from "../ui/progress";
 import { type getUserCompletion } from "@/lib/actions";
 
 type UserCompletion = Awaited<ReturnType<typeof getUserCompletion>>;
+
+function formatDate(date: Date) {
+    return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+    });
+}
 
 function calculateCompletionAndAccuracy(items: UserCompletion[number]["modules"][number]["lessons"][number]["lessonToActivities"]) {
     const totalItems = items.length;
     const completedItems = items.filter(item => item.activity.userCompletion.length > 0).length;
     const completedActivities = items.filter(item => item.activity.userCompletion.length > 0 && item.activity.userCompletion[0]?.correctAnswers !== null && item.activity.userCompletion[0]?.totalQuestions !== null);
     const totalAccuracy = completedActivities.reduce((acc, item) => acc + ((item.activity.userCompletion[0]?.correctAnswers || 0) / (item.activity.userCompletion[0]?.totalQuestions || 1)), 0);
-    const averageAccuracy = completedActivities.length > 0 ? (totalAccuracy / completedActivities.length) * 100 : undefined
+    const averageAccuracy = completedActivities.length > 0 ? (totalAccuracy / completedActivities.length) * 100 : undefined;
     const completion = totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
-    return { completion: Math.round(completion), averageAccuracy: averageAccuracy ? `${Math.round(averageAccuracy)}%` : "---" };
+    const lastCompletedActivity = items.reduce<Date | null>((latest, item) => {
+        const completedAt = item.activity.userCompletion[0]?.completedAt;
+        return completedAt && (!latest || new Date(completedAt) > new Date(latest)) ? completedAt : latest;
+    }, null);
+    const completionDate = completedItems === totalItems && lastCompletedActivity ? formatDate(new Date(lastCompletedActivity)) : "In Progress";
+    return { completion: Math.round(completion), averageAccuracy: averageAccuracy ? `${Math.round(averageAccuracy)}%` : "---", completionDate };
 }
 
 export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
@@ -42,7 +56,7 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
             {!selectedCourse && (
                 <>
                     {courses.map((course) => {
-                        const { completion, averageAccuracy } = calculateCompletionAndAccuracy(course.modules.flatMap(module => module.lessons.flatMap(lesson => lesson.lessonToActivities)));
+                        const { completion, averageAccuracy, completionDate } = calculateCompletionAndAccuracy(course.modules.flatMap(module => module.lessons.flatMap(lesson => lesson.lessonToActivities)));
                         return (
                             <Card key={course.id} className="mb-4" onClick={() => handleCourseClick(course.id)}>
                                 <CardHeader>
@@ -50,8 +64,22 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
                                     <p>{course.description}</p>
                                 </CardHeader>
                                 <CardContent>
-                                    <p>Completion: {completion}%</p>
-                                    <p>Average Accuracy: {averageAccuracy}</p>
+                                    <div className="flex flex-row gap-8 lg:gap-12">
+                                        <div className="space-y-2 grow">
+                                            <p className="font-semibold">Completion: {completion}%</p>
+                                            <Progress value={completion} className="bg-secondary/40" />
+                                        </div>
+                                        <div className="flex shrink-0 gap-8 lg:gap-12">
+                                            <div>
+                                                <p className="font-semibold">Avg. Accuracy</p>
+                                                <p className="text-muted-foreground font-semibold">{averageAccuracy}</p>
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold">Date Completed:</p>
+                                                <p className="text-muted-foreground font-semibold">{completionDate}</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </CardContent>
                             </Card>
                         );
@@ -60,9 +88,16 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
             )}
             {selectedCourse && !selectedModule && selectedCourseData && (
                 <>
-                    <button onClick={() => setSelectedCourse(null)}>Back to Courses</button>
+                    <Button
+                        onClick={() => setSelectedCourse(null)}
+                        className="my-2 text-secondary justify-start px-0 text-base"
+                        variant="link"
+                    >
+                        <ChevronLeft />
+                        Back to Course
+                    </Button>
                     {selectedCourseData.modules.map((module) => {
-                        const { completion, averageAccuracy } = calculateCompletionAndAccuracy(module.lessons.flatMap(lesson => lesson.lessonToActivities));
+                        const { completion, averageAccuracy, completionDate } = calculateCompletionAndAccuracy(module.lessons.flatMap(lesson => lesson.lessonToActivities));
                         return (
                             <Card key={module.id} className="mb-4" onClick={() => handleModuleClick(module.id)}>
                                 <CardHeader>
@@ -70,8 +105,22 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
                                     <p>{module.description}</p>
                                 </CardHeader>
                                 <CardContent>
-                                    <p>Completion: {completion}%</p>
-                                    <p>Average Accuracy: {averageAccuracy}</p>
+                                    <div className="flex flex-row gap-8 lg:gap-12">
+                                        <div className="space-y-2 grow">
+                                            <p className="font-semibold">Completion: {completion}%</p>
+                                            <Progress value={completion} className="bg-secondary/40" />
+                                        </div>
+                                        <div className="flex shrink-0 gap-8 lg:gap-12">
+                                            <div>
+                                                <p className="font-semibold">Avg. Accuracy</p>
+                                                <p className="text-muted-foreground font-semibold">{averageAccuracy}</p>
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold">Date Completed:</p>
+                                                <p className="text-muted-foreground font-semibold">{completionDate}</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </CardContent>
                             </Card>
                         );
@@ -80,9 +129,16 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
             )}
             {selectedModule && selectedModuleData && (
                 <>
-                    <button onClick={() => setSelectedModule(null)}>Back to Modules</button>
+                    <Button
+                        onClick={() => setSelectedCourse(null)}
+                        className="my-2 text-secondary justify-start px-0 text-base"
+                        variant="link"
+                    >
+                        <ChevronLeft />
+                        Back to Modules
+                    </Button>
                     {selectedModuleData.lessons.map((lesson) => {
-                        const { completion, averageAccuracy } = calculateCompletionAndAccuracy(lesson.lessonToActivities);
+                        const { completion, averageAccuracy, completionDate } = calculateCompletionAndAccuracy(lesson.lessonToActivities);
                         return (
                             <Card key={lesson.id} className="mb-4">
                                 <CardHeader>
@@ -90,9 +146,23 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
                                     <p>{lesson.description}</p>
                                 </CardHeader>
                                 <CardContent>
-                                    <p>Completion: {completion}%</p>
-                                    <p>Average Accuracy: {averageAccuracy}</p>
-                                    <div className="grid grid-cols-1 lg:grid-cols-2">
+                                    <div className="flex flex-row gap-8 lg:gap-12 border-b pb-8">
+                                        <div className="space-y-2 grow">
+                                            <p className="font-semibold">Completion: {completion}%</p>
+                                            <Progress value={completion} className="bg-secondary/40" />
+                                        </div>
+                                        <div className="flex shrink-0 gap-8 lg:gap-12">
+                                            <div>
+                                                <p className="font-semibold">Avg. Accuracy</p>
+                                                <p className="text-muted-foreground font-semibold">{averageAccuracy}</p>
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold">Date Completed:</p>
+                                                <p className="text-muted-foreground font-semibold">{completionDate}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="pt-4 grid grid-cols-1 lg:grid-cols-2">
                                         {lesson.lessonToActivities.map((lessonToActivitiesObj) => (
                                             <Link
                                                 key={lessonToActivitiesObj.activity.id}
