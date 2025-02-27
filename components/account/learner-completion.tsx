@@ -58,7 +58,7 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
                     {courses.map((course) => {
                         const { completion, averageAccuracy, completionDate } = calculateCompletionAndAccuracy(course.modules.flatMap(module => module.lessons.flatMap(lesson => lesson.lessonToActivities)));
                         return (
-                            <Card key={course.id} className="mb-4" onClick={() => handleCourseClick(course.id)}>
+                            <Card key={course.id} className="mb-4 cursor-pointer" onClick={() => handleCourseClick(course.id)}>
                                 <CardHeader>
                                     <h2 className="text-xl font-semibold">{course.title}</h2>
                                     <p>{course.description}</p>
@@ -99,7 +99,7 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
                     {selectedCourseData.modules.map((module) => {
                         const { completion, averageAccuracy, completionDate } = calculateCompletionAndAccuracy(module.lessons.flatMap(lesson => lesson.lessonToActivities));
                         return (
-                            <Card key={module.id} className="mb-4" onClick={() => handleModuleClick(module.id)}>
+                            <Card key={module.id} className="mb-4 cursor-pointer" onClick={() => handleModuleClick(module.id)}>
                                 <CardHeader>
                                     <h2 className="text-xl font-semibold">{module.title}</h2>
                                     <p>{module.description}</p>
