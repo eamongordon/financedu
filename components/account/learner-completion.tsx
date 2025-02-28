@@ -60,7 +60,13 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
                         return (
                             <Card key={course.id} className="mb-4 cursor-pointer" onClick={() => handleCourseClick(course.id)}>
                                 <CardHeader>
-                                    <h2 className="text-xl font-semibold">{course.title}</h2>
+                                    <Link
+                                        href={`/courses/${course.id}`}
+                                        target="_blank"
+                                        className={cn(buttonVariants({ variant: "link" }), "text-card-foreground block p-0")}
+                                    >
+                                        <h2 className="text-xl font-semibold">{course.title}</h2>
+                                    </Link>
                                     <p>{course.description}</p>
                                 </CardHeader>
                                 <CardContent>
@@ -101,7 +107,13 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
                         return (
                             <Card key={module.id} className="mb-4 cursor-pointer" onClick={() => handleModuleClick(module.id)}>
                                 <CardHeader>
-                                    <h2 className="text-xl font-semibold">{module.title}</h2>
+                                    <Link
+                                        href={`/courses/${selectedCourse}/${module.id}`}
+                                        target="_blank"
+                                        className={cn(cn(buttonVariants({ variant: "link" }), "text-card-foreground block p-0"))}
+                                    >
+                                        <h2 className="text-xl font-semibold">{module.title}</h2>
+                                    </Link>
                                     <p>{module.description}</p>
                                 </CardHeader>
                                 <CardContent>
@@ -142,7 +154,13 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
                         return (
                             <Card key={lesson.id} className="mb-4">
                                 <CardHeader>
-                                    <h2 className="text-xl font-semibold">{lesson.title}</h2>
+                                    <Link
+                                        href={`/courses/${selectedCourse}/${selectedModule}/${lesson.id}/${lesson.lessonToActivities[0].activity.id}`}
+                                        target="_blank"
+                                        className={cn(buttonVariants({ variant: "link" }), "text-card-foreground block p-0")}
+                                    >
+                                        <h2 className="text-xl font-semibold">{lesson.title}</h2>
+                                    </Link>
                                     <p>{lesson.description}</p>
                                 </CardHeader>
                                 <CardContent>
