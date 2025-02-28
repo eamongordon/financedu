@@ -28,6 +28,10 @@ export default async function LessonLayout({
         {
             name: "Progress",
             href: `/account/parent/${childId}`,
+        }, 
+        {
+            name: "Completion",
+            href: `/account/parent/${childId}/completion`,
         }
     ];
 
