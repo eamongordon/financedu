@@ -11,16 +11,9 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { InviteChild } from "./invite-child";
 import Link from "next/link";
+import { getDisplayName, getInitials } from "@/lib/utils";
 
 type ParentChildren = Awaited<ReturnType<typeof getParentChildren>>;
-
-const getInitials = (name: string) => {
-    return name
-        .split(' ')
-        .map(n => n[0])
-        .join('')
-        .toUpperCase()
-};
 
 export function ChildList({ parentChildren }: { parentChildren: ParentChildren }) {
     const router = useRouter();
@@ -97,18 +90,7 @@ export function ChildList({ parentChildren }: { parentChildren: ParentChildren }
                 );
             })}
             {parentChildren.approved.map((childParentObj) => {
-                const hasFirstName = !!childParentObj.child.firstName;
-                const hasLastName = !!childParentObj.child.lastName;
-                let nameStr = '';
-                if (hasFirstName) {
-                    nameStr += childParentObj.child.firstName;
-                }
-                if (hasLastName) {
-                    nameStr += " " + childParentObj.child.lastName;
-                }
-                if (!hasFirstName && !hasLastName) {
-                    nameStr = childParentObj.child.email!;
-                }
+                const nameStr = getDisplayName(childParentObj.child.firstName, childParentObj.child.lastName, childParentObj.child.email!);
                 return (
                     <Link key={childParentObj.childId} href={`/account/parent/${childParentObj.childId}`} className="flex items-center justify-between py-4 p-6">
                         <div className="flex flex-row items-center gap-4">

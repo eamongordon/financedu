@@ -1,6 +1,7 @@
 import { TabsNav } from "@/components/account/tabs-nav";
 import { getParentChildApproved } from "@/lib/actions";
 import { auth } from "@/lib/auth";
+import { getDisplayName } from "@/lib/utils";
 
 function formatDate(date: Date) {
     const options: Intl.DateTimeFormatOptions = {
@@ -36,18 +37,7 @@ export default async function LessonLayout({
     ];
 
     const childParentObj = await getParentChildApproved(childId);
-    let nameStr = '';
-    const hasFirstName = !!childParentObj.child.firstName;
-    const hasLastName = !!childParentObj.child.lastName;
-    if (hasFirstName) {
-        nameStr += childParentObj.child.firstName;
-    }
-    if (hasLastName) {
-        nameStr += " " + childParentObj.child.lastName;
-    }
-    if (!hasFirstName && !hasLastName) {
-        nameStr = childParentObj.child.email!;
-    }
+    const nameStr = getDisplayName(childParentObj.child.firstName, childParentObj.child.lastName, childParentObj.child.email!);
 
     return (
         <main>

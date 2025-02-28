@@ -4,13 +4,14 @@ import { useState } from "react";
 import { Button, buttonVariants } from "./ui/button";
 import { type getParentChildInvite, acceptParentChildInvite, rejectParentChildInvite } from "@/lib/actions";
 import Link from "next/link";
+import { getDisplayName } from "@/lib/utils";
 
 type ParentChildInvite = Awaited<ReturnType<typeof getParentChildInvite>>;
 type Status = "pending" | "accepted" | "rejected";
 
 export function ParentInvite({ invite }: { invite: ParentChildInvite }) {
     const { firstName, lastName, email } = invite.parent;
-    const nameStr = [firstName, lastName].filter(Boolean).join(' ') || email!;
+    const nameStr = getDisplayName(firstName, lastName, email!);
     const [status, setStatus] = useState<Status>("pending");
     const [isAllowedLoading, setIsAllowedLoading] = useState(false);
     const [isRejectedLoading, setIsRejectedLoading] = useState(false);

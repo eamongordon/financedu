@@ -2,6 +2,7 @@ import { Metadata } from "next"
 import { SidebarNav } from "@/components/account/sidebar-nav"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar" // Import Avatar component
 import { auth } from "@/lib/auth"
+import { getDisplayName, getInitials } from "@/lib/utils"
 
 export const metadata: Metadata = {
   title: "Forms",
@@ -26,10 +27,12 @@ interface SettingsLayoutProps {
 
 export default async function SettingsLayout({ children }: SettingsLayoutProps) {
   const session = await auth();
+  if (!session?.user) {
+    throw new Error("Not authenticated");
+  }
   const avatar = session?.user?.image;
-  const firstName = session?.user?.firstName;
-  const lastName = session?.user?.lastName;
-  const initials = `${firstName?.charAt(0) ?? ''}${lastName?.charAt(0) ?? ''}`;
+  const nameStr = getDisplayName(session?.user.firstName, session?.user.lastName, session.user.email!);
+  const initials = getInitials(nameStr);
 
   const navItems = [
     ...defaultNavItems,
@@ -46,12 +49,12 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
           <aside className="-mx-4 md:w-1/4 lg:w-1/5">
             <div className="px-2 flex items-center space-x-4 mb-6">
               <Avatar className="lg:size-1/4 aspect-square">
-                <AvatarImage src={avatar ?? undefined} alt={firstName ?? undefined}/>
+                <AvatarImage src={avatar ?? undefined} alt={nameStr}/>
                 <AvatarFallback>{initials}</AvatarFallback>
               </Avatar>
               <div className="flex flex-col justify-center gap-1">
                 <span className="block leading-none font-semibold">Welcome,</span>
-                <span className="block leading-none">{firstName}</span>
+                <span className="block leading-none">{nameStr}</span>
               </div>
             </div>
             <SidebarNav items={navItems} />

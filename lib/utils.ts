@@ -19,3 +19,25 @@ export function getNextActivityLink(courseId: string, moduleId: string, lessonId
 
   return { href, label };
 }
+
+export function getDisplayName(firstName?: string | null, lastName?: string | null, email?: string) {
+  let nameStr = '';
+  if (firstName) {
+    nameStr += firstName;
+  }
+  if (lastName) {
+    nameStr += ' ' + lastName;
+  }
+  if (!firstName && !lastName && email) {
+    nameStr = email;
+  }
+  return nameStr;
+}
+
+export function getInitials(name: string) {
+  return name
+    .split(' ')
+    .map(n => n[0])
+    .join('')
+    .toUpperCase();
+}

@@ -16,6 +16,7 @@ import Link from "next/link"
 import { signOut } from "next-auth/react"
 import { useTheme } from "next-themes"
 import { type Roles } from "@/lib/db/schema"
+import { getInitials } from "@/lib/utils"
 
 interface UserMenuProps {
   imageSrc?: string
@@ -26,13 +27,7 @@ interface UserMenuProps {
 }
 
 export default function UserMenu({ imageSrc, name, email, isMobile, roles }: UserMenuProps) {
-  const initials = name
-    ? name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-    : ''
+  const initials = name ? getInitials(name) : undefined;
   const { theme, setTheme } = useTheme();
   return (
     <DropdownMenu>
