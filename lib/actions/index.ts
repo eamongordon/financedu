@@ -887,3 +887,53 @@ export async function getUserCompletion() {
 
     return courses;
 }
+
+export async function getChildCompletion(childId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const parentId = session.user.id;
+    
+    //TODO: combine into one query
+    const relationship = await db.query.parentChild.findFirst({
+        where: and(
+            eq(parentChild.parentId, parentId),
+            eq(parentChild.childId, childId),
+            isNotNull(parentChild.acceptedAt)
+        ),
+    });
+
+    if (!relationship) {
+        throw new Error("No relationship found between parent and child");
+    }
+
+    const courses = await db.query.courses.findMany({
+        with: {
+            modules: {
+                with: {
+                    lessons: {
+                        with: {
+                            lessonToActivities: {
+                                with: {
+                                    activity: {
+                                        with: {
+                                            userCompletion: {
+                                                where: eq(userCompletion.userId, childId)
+                                            }
+                                        }
+                                    }
+                                },
+                                orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+                            }
+                        },
+                        orderBy: (lessons, { asc }) => [asc(lessons.order)]
+                    }
+                },
+                orderBy: (modules, { asc }) => [asc(modules.order)]
+            }
+        }
+    });
+
+    return courses;
+}
