@@ -1,7 +1,7 @@
 "use server";
 
-import { eq, gt, lt, and, isNotNull, exists } from "drizzle-orm";
-import { courses, users, modules, lessons, activities, lessonToActivities, userCompletion, parentChild } from "../db/schema";
+import { eq, gt, lt, and, isNotNull, exists, or } from "drizzle-orm";
+import { courses, users, modules, lessons, activities, lessonToActivities, userCompletion, parentChild, classes, classTeachers, classStudents } from "../db/schema";
 import { db } from "../db";
 import { hash, compare } from "bcrypt";
 import { type Roles } from "../db/schema";
@@ -899,10 +899,10 @@ export async function getChildCompletion(childId: string) {
         where: exists(
             db.select().from(parentChild).where(
                 and(
-                eq(parentChild.parentId, parentId),
-                eq(parentChild.childId, childId),
-                isNotNull(parentChild.acceptedAt)
-            ))
+                    eq(parentChild.parentId, parentId),
+                    eq(parentChild.childId, childId),
+                    isNotNull(parentChild.acceptedAt)
+                ))
         ),
         with: {
             modules: {
@@ -931,4 +931,197 @@ export async function getChildCompletion(childId: string) {
     });
 
     return courses;
+}
+
+export async function createClass({ name, description }: { name: string, description: string }) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    const newClass = await db.insert(classes).values({ name, description }).returning();
+    await db.insert(classTeachers).values({ classId: newClass[0].id, teacherId: userId });
+
+    return newClass[0];
+}
+
+export async function updateClass(classId: string, updates: { name?: string, description?: string }) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    const updatedClass = await db.update(classes)
+        .set(updates)
+        .where(and(
+            eq(classes.id, classId),
+            exists(
+                db.select().from(classTeachers).where(and(
+                    eq(classTeachers.classId, classId),
+                    eq(classTeachers.teacherId, userId)
+                ))
+            )
+        ))
+        .returning();
+
+    if (!updatedClass.length) {
+        throw new Error("Permission denied or class not found");
+    }
+
+    return updatedClass[0];
+}
+
+export async function getClassStudent(classId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const studentId = session.user.id;
+
+    const classDetails = await db.query.classes.findFirst({
+        where: and(
+            eq(classes.id, classId),
+            exists(
+                db.select().from(classStudents).where(and(
+                    eq(classStudents.classId, classId),
+                    eq(classStudents.studentId, studentId)
+                ))
+            )
+        ),
+        with: {
+            assignments: {
+                with: {
+                    activity: true
+                }
+            },
+            classTeachers: true
+        }
+    });
+
+    if (!classDetails) {
+        throw new Error("Class not found");
+    }
+
+    return classDetails;
+}
+
+export async function getClassTeacher(classId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    const classDetails = await db.query.classes.findFirst({
+        where: eq(classes.id, classId),
+        with: {
+            assignments: {
+                with: {
+                    activity: true
+                }
+            },
+            classTeachers: true,
+            classStudents: true,
+        }
+    });
+
+    if (!classDetails) {
+        throw new Error("Class not found");
+    }
+
+    const isTeacherInClass = classDetails.classTeachers.some(ct => ct.teacherId === userId);
+
+    if (!isTeacherInClass) {
+        throw new Error("Permission denied");
+    }
+
+    return classDetails;
+}
+
+export async function getTeacherClasses() {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    const teacherClasses = await db.query.classes.findMany({
+        where: exists(
+            db.select().from(classTeachers).where(eq(classTeachers.teacherId, userId))
+        )
+    });
+
+    return teacherClasses;
+}
+
+export async function getStudentClasses() {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    const studentClasses = await db.query.classes.findMany({
+        where: exists(
+            db.select().from(classStudents).where(eq(classStudents.studentId, userId))
+        ),
+        with: {
+            classTeachers: {
+                with: {
+                    teacher: true
+                },
+            }
+        }
+    });
+
+    return studentClasses;
+}
+
+export async function joinClass(joinCode: string) {
+  const session = await auth();
+  if (!session || !session.user || !session.user.id) {
+    throw new Error("Not authenticated");
+  }
+  const userId = session.user.id;
+
+  const classDetails = await db.query.classes.findFirst({
+    where: or(
+      eq(classes.teacherJoinCode, joinCode),
+      eq(classes.studentJoinCode, joinCode)
+    ),
+  });
+
+  if (!classDetails) {
+    throw new Error("Invalid join code");
+  }
+
+  if (classDetails.teacherJoinCode === joinCode) {
+    // Join as a teacher
+    await db.insert(classTeachers).values({ classId: classDetails.id, teacherId: userId });
+    return { role: "teacher", class: classDetails };
+  } else if (classDetails.studentJoinCode === joinCode) {
+    // Join as a student
+    await db.insert(classStudents).values({ classId: classDetails.id, studentId: userId });
+    return { role: "student", class: classDetails };
+  }
+
+  throw new Error("Invalid join code");
+}
+
+export async function leaveClass(classId: string) {
+  const session = await auth();
+  if (!session || !session.user || !session.user.id) {
+    throw new Error("Not authenticated");
+  }
+  const userId = session.user.id;
+
+  await db.delete(classTeachers).where(
+    and(eq(classTeachers.classId, classId), eq(classTeachers.teacherId, userId))
+  );
+
+  await db.delete(classStudents).where(
+    and(eq(classStudents.classId, classId), eq(classStudents.studentId, userId))
+  );
 }
