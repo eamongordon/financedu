@@ -296,12 +296,22 @@ export const parentChild = pgTable("parentChild", {
   primaryKey({ columns: [parentChild.parentId, parentChild.childId] })
 ]);
 
+function generateJoinCode() {
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
+}
+
 export const classes = pgTable("class", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
   description: text("description"),
+  teacherJoinCode: text("teacherJoinCode")
+    .notNull()
+    .$defaultFn(() => generateJoinCode()),
+  studentJoinCode: text("studentJoinCode")
+    .notNull()
+    .$defaultFn(() => generateJoinCode()),
   createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "date", withTimezone: true }).defaultNow().$onUpdateFn(() => new Date()),
 })
