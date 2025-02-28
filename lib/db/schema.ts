@@ -296,6 +296,52 @@ export const parentChild = pgTable("parentChild", {
   primaryKey({ columns: [parentChild.parentId, parentChild.childId] })
 ]);
 
+export const classes = pgTable("class", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
+  description: text("description"),
+  createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date", withTimezone: true }).defaultNow().$onUpdateFn(() => new Date()),
+})
+
+export const classTeachers = pgTable("classTeacher", {
+  classId: text("classId")
+    .notNull()
+    .references(() => classes.id, { onDelete: "cascade" }),
+  teacherId: text("teacherId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+}, (classTeacher) => [
+  primaryKey({ columns: [classTeacher.classId, classTeacher.teacherId] })
+])
+
+export const classStudents = pgTable("classStudent", {
+  classId: text("classId")
+    .notNull()
+    .references(() => classes.id, { onDelete: "cascade" }),
+  studentId: text("studentId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+}, (classStudent) => [
+  primaryKey({ columns: [classStudent.classId, classStudent.studentId] })
+])
+
+export const assignments = pgTable("assignment", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  classId: text("classId")
+    .notNull()
+    .references(() => classes.id, { onDelete: "cascade" }),
+  activityId: text("activityId")
+    .notNull()
+    .references(() => activities.id, { onDelete: "cascade" }),
+  startDate: timestamp("startDate", { mode: "date", withTimezone: true }).notNull(),
+  dueDate: timestamp("dueDate", { mode: "date", withTimezone: true }).notNull(),
+})
+
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   sessions: many(sessions),
@@ -356,6 +402,7 @@ export const activitiesRelations = relations(activities, ({ many }) => ({
   activityToQuestions: many(activityToQuestions),
   activityToStandards: many(activityToStandards),
   userCompletion: many(userCompletion),
+  assignments: many(assignments),
 }))
 
 export const lessonToActivitiesRelations = relations(lessonToActivities, ({ one }) => ({
@@ -461,3 +508,42 @@ export const parentChildRelations = relations(parentChild, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+export const classesRelations = relations(classes, ({ many }) => ({
+  classTeachers: many(classTeachers),
+  classStudents: many(classStudents),
+  assignments: many(assignments),
+}))
+
+export const classTeachersRelations = relations(classTeachers, ({ one }) => ({
+  class: one(classes, {
+    fields: [classTeachers.classId],
+    references: [classes.id],
+  }),
+  teacher: one(users, {
+    fields: [classTeachers.teacherId],
+    references: [users.id],
+  }),
+}))
+
+export const classStudentsRelations = relations(classStudents, ({ one }) => ({
+  class: one(classes, {
+    fields: [classStudents.classId],
+    references: [classes.id],
+  }),
+  student: one(users, {
+    fields: [classStudents.studentId],
+    references: [users.id],
+  }),
+}))
+
+export const assignmentsRelations = relations(assignments, ({ one }) => ({
+  class: one(classes, {
+    fields: [assignments.classId],
+    references: [classes.id],
+  }),
+  activity: one(activities, {
+    fields: [assignments.activityId],
+    references: [activities.id],
+  }),
+}))
