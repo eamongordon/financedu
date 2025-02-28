@@ -1,6 +1,6 @@
 "use server";
 
-import { eq, gt, lt, and, isNotNull } from "drizzle-orm";
+import { eq, gt, lt, and, isNotNull, exists } from "drizzle-orm";
 import { courses, users, modules, lessons, activities, lessonToActivities, userCompletion, parentChild } from "../db/schema";
 import { db } from "../db";
 import { hash, compare } from "bcrypt";
@@ -894,21 +894,16 @@ export async function getChildCompletion(childId: string) {
         throw new Error("Not authenticated");
     }
     const parentId = session.user.id;
-    
-    //TODO: combine into one query
-    const relationship = await db.query.parentChild.findFirst({
-        where: and(
-            eq(parentChild.parentId, parentId),
-            eq(parentChild.childId, childId),
-            isNotNull(parentChild.acceptedAt)
-        ),
-    });
-
-    if (!relationship) {
-        throw new Error("No relationship found between parent and child");
-    }
 
     const courses = await db.query.courses.findMany({
+        where: exists(
+            db.select().from(parentChild).where(
+                and(
+                eq(parentChild.parentId, parentId),
+                eq(parentChild.childId, childId),
+                isNotNull(parentChild.acceptedAt)
+            ))
+        ),
         with: {
             modules: {
                 with: {
