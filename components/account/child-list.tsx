@@ -42,6 +42,8 @@ export function ChildList({ parentChildren }: { parentChildren: ParentChildren }
     }
 
     async function handleRemove(childId: string) {
+        const confirmed = window.confirm("Are you sure you want to remove this child?");
+        if (!confirmed) return;
         setLoadingState((prev) => ({ ...prev, [childId]: { ...prev[childId], remove: true } }));
         await deleteParentChildRelationship(childId);
         toast.success('Child removed');
@@ -108,7 +110,7 @@ export function ChildList({ parentChildren }: { parentChildren: ParentChildren }
                     nameStr = childParentObj.child.email!;
                 }
                 return (
-                    <div key={childParentObj.childId} className="flex items-center justify-between py-4 p-6">
+                    <Link key={childParentObj.childId} href={`/account/parent/${childParentObj.childId}`} className="flex items-center justify-between py-4 p-6">
                         <div className="flex flex-row items-center gap-4">
                             <Avatar className="size-12">
                                 {childParentObj.child.image ? (
@@ -148,7 +150,7 @@ export function ChildList({ parentChildren }: { parentChildren: ParentChildren }
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
-                    </div>
+                    </Link>
                 );
             })}
         </Card>
