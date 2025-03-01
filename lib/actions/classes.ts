@@ -87,14 +87,16 @@ export async function getClassTeacher(classId: string) {
     const userId = session.user.id;
 
     const classDetails = await db.query.classes.findFirst({
-        where: eq(classes.id, classId),
+        where: and(
+            eq(classes.id, classId),
+            exists(
+                db.select().from(classTeachers).where(and(
+                    eq(classTeachers.classId, classes.id),
+                    eq(classTeachers.teacherId, userId)
+                ))
+            )
+        ),
         with: {
-            assignments: {
-                with: {
-                    activity: true
-                }
-            },
-            classTeachers: true,
             classStudents: true,
         }
     });
@@ -103,10 +105,69 @@ export async function getClassTeacher(classId: string) {
         throw new Error("Class not found");
     }
 
-    const isTeacherInClass = classDetails.classTeachers.some(ct => ct.teacherId === userId);
+    return classDetails;
+}
 
-    if (!isTeacherInClass) {
-        throw new Error("Permission denied");
+export async function getClassTeacherWithAssignments(classId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    const classDetails = await db.query.classes.findFirst({
+        where: and(
+            eq(classes.id, classId),
+            exists(
+                db.select().from(classTeachers).where(and(
+                    eq(classTeachers.classId, classes.id),
+                    eq(classTeachers.teacherId, userId)
+                ))
+            )
+        ),
+        with: {
+            assignments: {
+                with: {
+                    activity: true
+                }
+            }
+        }
+    });
+
+    if (!classDetails) {
+        throw new Error("Class not found");
+    }
+
+    return classDetails;
+}
+
+export async function getClassTeacherWithRoster(classId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    const classDetails = await db.query.classes.findFirst({
+        where: eq(classes.id, classId),
+        with: {
+            classStudents: {
+                with: {
+                    student: true
+                }
+            },
+            classTeachers: {
+                with: {
+                    teacher: true
+                }
+            }
+        }
+    });
+
+    const isTeacherInClass = classDetails?.classTeachers.some(ct => ct.teacherId === userId);
+
+    if (!classDetails || !isTeacherInClass) {
+        throw new Error("Class not found or permission denied");
     }
 
     return classDetails;

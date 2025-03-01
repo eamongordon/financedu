@@ -1,5 +1,5 @@
 import { AssignmentsTeacherList } from "@/components/account/assignments-teacher-list";
-import { getClassTeacher } from "@/lib/actions";
+import { getClassTeacherWithAssignments } from "@/lib/actions";
 
 export default async function Page({
     params,
@@ -7,7 +7,7 @@ export default async function Page({
     params: Promise<{ classId: string }>
 }) {
     const classId = (await params).classId;
-    const classItem = await getClassTeacher(classId);
+    const classItem = await getClassTeacherWithAssignments(classId);
 
     const assignmentsTableData = classItem.assignments.map((assignmentObj) => ({
         assignmentId: assignmentObj.id,
