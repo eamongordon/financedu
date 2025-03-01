@@ -17,6 +17,9 @@ import { Input } from "../ui/input";
 import { CompletionIcon } from "../ui/completion-icon";
 import { CircleHelp, FileText, MoreHorizontal } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { deleteAssignment } from "@/lib/actions/classes";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface UserProgressProps {
     assignments: AssignmentItem[];
@@ -45,76 +48,6 @@ export type AssignmentItem = {
     dueDate: Date;
     startDate: Date;
 };
-
-const assignmentColumns: ColumnDef<AssignmentItem>[] = [
-    {
-        accessorKey: "activityTitle",
-        header: "Activity",
-        cell: ({ row }) => {
-            const title = row.getValue("activityTitle");
-            const type = row.original.activityType;
-            return (
-                <Link
-                    href={`/courses/${row.original.courseId}/${row.original.moduleId}/${row.original.lessonId}/${row.original.activityId}`}
-                    className="flex flex-row items-center gap-4"
-                >
-                    <CompletionIcon
-                        isComplete={false}
-                        icon={type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
-                    />
-                    <div className="flex flex-col gap-2">
-                        <p className="leading-none font-semibold">{title as string}</p>
-                        <p className="leading-none">{type as string}</p>
-                    </div>
-                </Link>
-            );
-        },
-    },
-    {
-        accessorKey: "dueDate",
-        header: "Due Date",
-        cell: ({ row }) => {
-            const formatted = formatDate(row.getValue("dueDate"));
-            return (
-                <p className="text-secondary">{formatted}</p>
-            );
-        },
-    },
-    {
-        accessorKey: "startDate",
-        header: "Start Date",
-        cell: ({ row }) => {
-            const formatted = formatDate(row.getValue("startDate"));
-            return (
-                <p className="text-secondary">{formatted}</p>
-            );
-        },
-    },
-    {
-        id: "actions",
-        enableHiding: false,
-        cell: () => {
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                            className="text-destructive"
-                        >Delete
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )
-        },
-    }
-];
 
 function DataTable<TData, TValue>({
     columns,
@@ -216,6 +149,88 @@ function DataTable<TData, TValue>({
 }
 
 export function AssignmentsTeacherList({ assignments }: UserProgressProps) {
+    const router = useRouter();
+
+    const assignmentColumns: ColumnDef<AssignmentItem>[] = [
+        {
+            accessorKey: "activityTitle",
+            header: "Activity",
+            cell: ({ row }) => {
+                const title = row.getValue("activityTitle");
+                const type = row.original.activityType;
+                return (
+                    <Link
+                        href={`/courses/${row.original.courseId}/${row.original.moduleId}/${row.original.lessonId}/${row.original.activityId}`}
+                        className="flex flex-row items-center gap-4"
+                    >
+                        <CompletionIcon
+                            isComplete={false}
+                            icon={type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
+                        />
+                        <div className="flex flex-col gap-2">
+                            <p className="leading-none font-semibold">{title as string}</p>
+                            <p className="leading-none">{type as string}</p>
+                        </div>
+                    </Link>
+                );
+            },
+        },
+        {
+            accessorKey: "dueDate",
+            header: "Due Date",
+            cell: ({ row }) => {
+                const formatted = formatDate(row.getValue("dueDate"));
+                return (
+                    <p className="text-secondary">{formatted}</p>
+                );
+            },
+        },
+        {
+            accessorKey: "startDate",
+            header: "Start Date",
+            cell: ({ row }) => {
+                const formatted = formatDate(row.getValue("startDate"));
+                return (
+                    <p className="text-secondary">{formatted}</p>
+                );
+            },
+        },
+        {
+            id: "actions",
+            enableHiding: false,
+            cell: ({ row }) => {
+                const handleDelete = async () => {
+                    const confirmed = window.confirm("Are you sure you want to delete this assignment?");
+                    if (!confirmed) return;
+                    await deleteAssignment(row.original.assignmentId);
+                    toast.success("Assignment deleted");
+                    router.refresh();
+                };
+
+                return (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                                <span className="sr-only">Open menu</span>
+                                <MoreHorizontal />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                                className="text-destructive"
+                                onClick={handleDelete}
+                            >
+                                Delete
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                );
+            },
+        }
+    ];
+
     return (
         <DataTable columns={assignmentColumns} data={assignments} />
     );

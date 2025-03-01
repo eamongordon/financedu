@@ -1,7 +1,7 @@
 "use server";
 
 import { eq, and, exists, or } from "drizzle-orm";
-import { classes, classStudents, classTeachers } from "../db/schema";
+import { assignments, classes, classStudents, classTeachers } from "../db/schema";
 import { db } from "../db";
 import { auth } from "../auth";
 
@@ -200,4 +200,37 @@ export async function leaveClass(classId: string) {
     await db.delete(classStudents).where(
         and(eq(classStudents.classId, classId), eq(classStudents.studentId, userId))
     );
+}
+
+export async function deleteAssignment(assignmentId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    const assignment = await db.query.assignments.findFirst({
+        where: and(
+            eq(assignments.id, assignmentId),
+            exists(
+                db.select().from(classTeachers).where(and(
+                    eq(classTeachers.classId, assignments.classId),
+                    eq(classTeachers.teacherId, userId)
+                ))
+            )
+        ),
+        with: {
+            class: {
+                with: {
+                    classTeachers: true
+                }
+            }
+        }
+    });
+
+    if (!assignment) {
+        throw new Error("Assignment not found or permission denied");
+    }
+
+    await db.delete(assignments).where(eq(assignments.id, assignmentId));
 }
