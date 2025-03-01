@@ -70,12 +70,12 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
                                     <p>{course.description}</p>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="flex flex-row gap-8 lg:gap-12">
+                                    <div className="flex flex-row gap-4 sm:gap-8 lg:gap-12">
                                         <div className="space-y-2 grow">
                                             <p className="font-semibold">Completion: {completion}%</p>
                                             <Progress value={completion} className="bg-secondary/40" />
                                         </div>
-                                        <div className="flex shrink-0 gap-8 lg:gap-12">
+                                        <div className="flex sm:shrink-0 gap-4 sm:gap-8 lg:gap-12">
                                             <div>
                                                 <p className="font-semibold">Avg. Accuracy</p>
                                                 <p className="text-muted-foreground font-semibold">{averageAccuracy}</p>
