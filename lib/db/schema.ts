@@ -356,10 +356,8 @@ export const usersRelations = relations(users, ({ many }) => ({
   sessions: many(sessions),
   authenticators: many(authenticators),
   userCompletion: many(userCompletion),
-  parentChild: many(parentChild),
-  parentChildInvitations: many(parentChild),
-  parentChildChildren: many(parentChild),
-  parentChildParents: many(parentChild),
+  parentChildChild: many(parentChild, { relationName: 'child' }),
+  parentChildParent: many(parentChild, { relationName: 'parent' }),
 }))
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -511,10 +509,12 @@ export const parentChildRelations = relations(parentChild, ({ one }) => ({
   parent: one(users, {
     fields: [parentChild.parentId],
     references: [users.id],
+    relationName: 'parent',
   }),
   child: one(users, {
     fields: [parentChild.childId],
     references: [users.id],
+    relationName: 'child',
   }),
 }));
 
