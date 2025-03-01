@@ -98,7 +98,8 @@ export async function getParentChildInvite(parentId: string) {
                     id: true,
                     firstName: true,
                     lastName: true,
-                    email: true
+                    email: true,
+                    image: true
                 }
             }
         }
@@ -150,7 +151,8 @@ export async function getParentChildren() {
                     id: true,
                     firstName: true,
                     lastName: true,
-                    email: true
+                    email: true,
+                    image: true
                 }
             },
         },
@@ -184,7 +186,8 @@ export async function getParentChildApproved(childId: string) {
                     id: true,
                     firstName: true,
                     lastName: true,
-                    email: true
+                    email: true,
+                    image: true
                 }
             },
         },

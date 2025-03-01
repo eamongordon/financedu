@@ -158,7 +158,8 @@ export async function getClassTeacherWithRoster(classId: string) {
                             id: true,
                             firstName: true,
                             lastName: true,
-                            email: true
+                            email: true,
+                            image: true
                         }
                     }
                 }
@@ -359,7 +360,8 @@ export async function getClassTeacherWithCompletion(classId: string) {
                             id: true,
                             firstName: true,
                             lastName: true,
-                            email: true
+                            email: true,
+                            image: true
                         }
                     }
                 }
