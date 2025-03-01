@@ -344,6 +344,15 @@ export const assignments = pgTable("assignment", {
   classId: text("classId")
     .notNull()
     .references(() => classes.id, { onDelete: "cascade" }),
+  courseId: text("courseId")
+    .notNull()
+    .references(() => courses.id, { onDelete: "cascade" }),
+  moduleId: text("moduleId")
+    .notNull()
+    .references(() => modules.id, { onDelete: "cascade" }),
+  lessonId: text("lessonId")
+    .notNull()
+    .references(() => lessons.id, { onDelete: "cascade" }),
   activityId: text("activityId")
     .notNull()
     .references(() => activities.id, { onDelete: "cascade" }),
