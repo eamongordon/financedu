@@ -356,8 +356,8 @@ export const assignments = pgTable("assignment", {
   activityId: text("activityId")
     .notNull()
     .references(() => activities.id, { onDelete: "cascade" }),
-  startDate: timestamp("startDate", { mode: "date", withTimezone: true }).notNull(),
-  dueDate: timestamp("dueDate", { mode: "date", withTimezone: true }).notNull(),
+  startAt: timestamp("startAt", { mode: "date", withTimezone: true }).notNull(),
+  dueAt: timestamp("dueAt", { mode: "date", withTimezone: true }).notNull(),
 })
 
 export const usersRelations = relations(users, ({ many }) => ({
