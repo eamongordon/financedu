@@ -153,7 +153,14 @@ export async function getClassTeacherWithRoster(classId: string) {
         with: {
             classStudents: {
                 with: {
-                    student: true
+                    student: {
+                        columns: {
+                            id: true,
+                            firstName: true,
+                            lastName: true,
+                            email: true
+                        }
+                    }
                 }
             },
             classTeachers: {
@@ -347,6 +354,12 @@ export async function getClassTeacherWithCompletion(classId: string) {
                                     activity: true
                                 }
                             }
+                        },
+                        columns: {
+                            id: true,
+                            firstName: true,
+                            lastName: true,
+                            email: true
                         }
                     }
                 }

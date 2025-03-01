@@ -93,7 +93,14 @@ export async function getParentChildInvite(parentId: string) {
     const invite = await db.query.parentChild.findFirst({
         where: and(eq(parentChild.parentId, parentId), eq(parentChild.childId, childId)),
         with: {
-            parent: true
+            parent: {
+                columns: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    email: true
+                }
+            }
         }
     });
     if (!invite) {
@@ -138,7 +145,14 @@ export async function getParentChildren() {
             eq(parentChild.parentId, parentId),
         ),
         with: {
-            child: true,
+            child: {
+                columns: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    email: true
+                }
+            },
         },
     });
     return {
@@ -165,7 +179,14 @@ export async function getParentChildApproved(childId: string) {
             isNotNull(parentChild.acceptedAt)
         ),
         with: {
-            child: true,
+            child: {
+                columns: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    email: true
+                }
+            },
         },
     });
 
