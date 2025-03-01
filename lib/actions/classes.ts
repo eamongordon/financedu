@@ -284,3 +284,24 @@ export async function deleteAssignment(assignmentId: string) {
         throw new Error("Assignment not found or permission denied");
     }
 }
+
+export async function removeStudentFromClass(studentId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    const result = await db.delete(classStudents).where(
+        and(
+            eq(classStudents.studentId, studentId),
+            exists(
+                db.select().from(classTeachers).where(eq(classTeachers.teacherId, userId))
+            )
+        )
+    ).returning();
+
+    if (!result.length) {
+        throw new Error("Student not found or permission denied");
+    }
+}
