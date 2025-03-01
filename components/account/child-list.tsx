@@ -124,7 +124,7 @@ export function ChildList({ parentChildren }: { parentChildren: ParentChildren }
                                     </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    className="text-red-600"
+                                    className="text-destructive"
                                     onSelect={() => handleRemove(childParentObj.childId)}
                                     disabled={loadingState[childParentObj.childId]?.remove}
                                 >
