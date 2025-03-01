@@ -305,3 +305,58 @@ export async function removeStudentFromClass(studentId: string) {
         throw new Error("Student not found or permission denied");
     }
 }
+
+export async function getClassTeacherWithCompletion(classId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    //todo: fetch assignments and activities once?
+    const classActivitiesCompletion = await db.query.classes.findFirst({
+        where: and(
+            eq(classes.id, classId),
+            exists(
+                db.select().from(classTeachers).where(and(
+                    eq(classTeachers.classId, classId),
+                    eq(classTeachers.teacherId, userId)
+                ))
+            )
+        ),
+        with: {
+            assignments: {
+                with: {
+                    activity: true
+                }
+            },
+            classStudents: {
+                with: {
+                    student: {
+                        with: {
+                            userCompletion: {
+                                where: (userCompletion, { exists, and, eq }) => exists(
+                                    db.select()
+                                        .from(assignments)
+                                        .where(and(
+                                            eq(assignments.classId, classId),
+                                            eq(assignments.activityId, userCompletion.activityId)
+                                        ))
+                                ),
+                                with: {
+                                    activity: true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    if (!classActivitiesCompletion) {
+        throw new Error("Class not found or permission denied");
+    }
+
+    return classActivitiesCompletion;
+}
