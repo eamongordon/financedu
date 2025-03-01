@@ -122,7 +122,11 @@ export async function getTeacherClasses() {
     const teacherClasses = await db.query.classes.findMany({
         where: exists(
             db.select().from(classTeachers).where(eq(classTeachers.teacherId, userId))
-        )
+        ),
+        //todo: use count utility when issue fixed
+        with: {
+            classStudents: true
+        }
     });
 
     return teacherClasses;
@@ -152,48 +156,48 @@ export async function getStudentClasses() {
 }
 
 export async function joinClass(joinCode: string) {
-  const session = await auth();
-  if (!session || !session.user || !session.user.id) {
-    throw new Error("Not authenticated");
-  }
-  const userId = session.user.id;
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
 
-  const classDetails = await db.query.classes.findFirst({
-    where: or(
-      eq(classes.teacherJoinCode, joinCode),
-      eq(classes.studentJoinCode, joinCode)
-    ),
-  });
+    const classDetails = await db.query.classes.findFirst({
+        where: or(
+            eq(classes.teacherJoinCode, joinCode),
+            eq(classes.studentJoinCode, joinCode)
+        ),
+    });
 
-  if (!classDetails) {
+    if (!classDetails) {
+        throw new Error("Invalid join code");
+    }
+
+    if (classDetails.teacherJoinCode === joinCode) {
+        // Join as a teacher
+        await db.insert(classTeachers).values({ classId: classDetails.id, teacherId: userId });
+        return { role: "teacher", class: classDetails };
+    } else if (classDetails.studentJoinCode === joinCode) {
+        // Join as a student
+        await db.insert(classStudents).values({ classId: classDetails.id, studentId: userId });
+        return { role: "student", class: classDetails };
+    }
+
     throw new Error("Invalid join code");
-  }
-
-  if (classDetails.teacherJoinCode === joinCode) {
-    // Join as a teacher
-    await db.insert(classTeachers).values({ classId: classDetails.id, teacherId: userId });
-    return { role: "teacher", class: classDetails };
-  } else if (classDetails.studentJoinCode === joinCode) {
-    // Join as a student
-    await db.insert(classStudents).values({ classId: classDetails.id, studentId: userId });
-    return { role: "student", class: classDetails };
-  }
-
-  throw new Error("Invalid join code");
 }
 
 export async function leaveClass(classId: string) {
-  const session = await auth();
-  if (!session || !session.user || !session.user.id) {
-    throw new Error("Not authenticated");
-  }
-  const userId = session.user.id;
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
 
-  await db.delete(classTeachers).where(
-    and(eq(classTeachers.classId, classId), eq(classTeachers.teacherId, userId))
-  );
+    await db.delete(classTeachers).where(
+        and(eq(classTeachers.classId, classId), eq(classTeachers.teacherId, userId))
+    );
 
-  await db.delete(classStudents).where(
-    and(eq(classStudents.classId, classId), eq(classStudents.studentId, userId))
-  );
+    await db.delete(classStudents).where(
+        and(eq(classStudents.classId, classId), eq(classStudents.studentId, userId))
+    );
 }
