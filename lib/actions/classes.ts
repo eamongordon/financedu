@@ -91,7 +91,7 @@ export async function getClassTeacher(classId: string) {
             eq(classes.id, classId),
             exists(
                 db.select().from(classTeachers).where(and(
-                    eq(classTeachers.classId, classes.id),
+                    eq(classTeachers.classId, classId),
                     eq(classTeachers.teacherId, userId)
                 ))
             )
@@ -120,7 +120,7 @@ export async function getClassTeacherWithAssignments(classId: string) {
             eq(classes.id, classId),
             exists(
                 db.select().from(classTeachers).where(and(
-                    eq(classTeachers.classId, classes.id),
+                    eq(classTeachers.classId, classId),
                     eq(classTeachers.teacherId, userId)
                 ))
             )
@@ -270,28 +270,17 @@ export async function deleteAssignment(assignmentId: string) {
     }
     const userId = session.user.id;
 
-    const assignment = await db.query.assignments.findFirst({
-        where: and(
-            eq(assignments.id, assignmentId),
-            exists(
-                db.select().from(classTeachers).where(and(
-                    eq(classTeachers.classId, assignments.classId),
-                    eq(classTeachers.teacherId, userId)
-                ))
-            )
-        ),
-        with: {
-            class: {
-                with: {
-                    classTeachers: true
-                }
-            }
-        }
-    });
+    const result = await db.delete(assignments).where(and(
+        eq(assignments.id, assignmentId),
+        exists(
+            db.select().from(classTeachers).where(and(
+                eq(classTeachers.classId, assignments.classId),
+                eq(classTeachers.teacherId, userId)
+            ))
+        )
+    )).returning();
 
-    if (!assignment) {
+    if (!result.length) {
         throw new Error("Assignment not found or permission denied");
     }
-
-    await db.delete(assignments).where(eq(assignments.id, assignmentId));
 }
