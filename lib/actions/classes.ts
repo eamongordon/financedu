@@ -5,14 +5,14 @@ import { classes, classStudents, classTeachers } from "../db/schema";
 import { db } from "../db";
 import { auth } from "../auth";
 
-export async function createClass({ name, description }: { name: string, description: string }) {
+export async function createClass(name: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
     const userId = session.user.id;
 
-    const newClass = await db.insert(classes).values({ name, description }).returning();
+    const newClass = await db.insert(classes).values({ name }).returning();
     await db.insert(classTeachers).values({ classId: newClass[0].id, teacherId: userId });
 
     return newClass[0];

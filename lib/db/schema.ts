@@ -305,7 +305,6 @@ export const classes = pgTable("class", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
-  description: text("description"),
   teacherJoinCode: text("teacherJoinCode")
     .notNull()
     .$defaultFn(() => generateJoinCode()),
