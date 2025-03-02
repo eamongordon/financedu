@@ -78,7 +78,7 @@ function DataTable<TData, TValue>({
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id}>
+                                        <TableHead key={header.id} className={header.column.id === "studentName" ? "sticky left-0 bg-background rounded-tl-md" : ""}>
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -99,7 +99,7 @@ function DataTable<TData, TValue>({
                                     data-state={row.getIsSelected() && "selected"}
                                 >
                                     {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
+                                        <TableCell key={cell.id} className={cell.column.id === "studentName" ? "sticky left-0 bg-background rounded-bl-md" : ""}>
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                         </TableCell>
                                     ))}
