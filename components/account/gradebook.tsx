@@ -14,6 +14,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Check, CircleHelp, FileText } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface GradebookProps {
     students: StudentItem[],
@@ -144,6 +145,15 @@ export function Gradebook({ students, assignments }: GradebookProps) {
             assignments: StudentAssignmentsItem[];
         }
     }
+
+    const getAccuracyColor = (accuracy?: number) => {
+        if (accuracy === undefined) return "";
+        if (accuracy === 100) return "bg-primary/30 border-primary/30";
+        if (accuracy >= 75) return "bg-yellow-300/30 dark:bg-yellow-300/30 border-yellow-500/30 dark:border-yellow-500/30"; // Use yellow for high accuracy
+        if (accuracy >= 50) return "bg-orange-300/30 dark:bg-orange-300/30 border-orange-500/30 dark:border-orange-500/30"; // Use orange for medium accuracy
+        return "bg-destructive/30 border-destructive/30"; // Use red for low accuracy
+    };
+
     const columns = [
         {
             accessorKey: "studentName",
@@ -165,7 +175,7 @@ export function Gradebook({ students, assignments }: GradebookProps) {
                     const display = isArticle ? (isComplete ? <Check /> : null) : (isComplete ? studentCompletion.accuracy : null);
                     return (
                         <div className="flex items-center justify-center">
-                            <Button variant="outline" className="size-[38px]">
+                            <Button variant="outline" className={cn("size-[38px]", isArticle && isComplete ? "bg-primary/30 border-primary/30" : getAccuracyColor(studentCompletion?.accuracy))}>
                                 {display}
                             </Button>
                         </div>
