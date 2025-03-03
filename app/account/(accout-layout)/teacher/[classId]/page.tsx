@@ -1,5 +1,6 @@
 import { AssignmentsTeacherList } from "@/components/account/assignments-teacher-list";
-import { getClassTeacherWithAssignments } from "@/lib/actions";
+import { CreateAssignments } from "@/components/account/create-assigments";
+import { getClassTeacherWithAssignments, getCoursesWithModulesAndLessonsAndActivities } from "@/lib/actions";
 
 export default async function Page({
     params,
@@ -8,6 +9,7 @@ export default async function Page({
 }) {
     const classId = (await params).classId;
     const classItem = await getClassTeacherWithAssignments(classId);
+    const courses = await getCoursesWithModulesAndLessonsAndActivities();
 
     const assignmentsTableData = classItem.assignments.map((assignmentObj) => ({
         assignmentId: assignmentObj.id,
@@ -25,6 +27,7 @@ export default async function Page({
         <section>
             <div>
                 <h2 className="text-xl font-semibold">Assignments</h2>
+                <CreateAssignments courses={courses} />
             </div>
             <AssignmentsTeacherList assignments={assignmentsTableData} />
         </section>

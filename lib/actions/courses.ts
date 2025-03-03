@@ -21,6 +21,37 @@ export async function getCourse(courseId: string) {
     return course;
 }
 
+export async function getCoursesWithModulesAndLessonsAndActivities() {
+    const courses = await db.query.courses.findMany({
+        with: {
+            modules: {
+                with: {
+                    lessons: {
+                        with: {
+                            lessonToActivities: {
+                                with: {
+                                    activity: {
+                                        columns: {
+                                            id: true,
+                                            title: true,
+                                            type: true
+                                        }
+                                    }
+                                },
+                                orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+                            }
+                        },
+                        orderBy: (lessons, { asc }) => [asc(lessons.order)]
+                    }
+                },
+                orderBy: (modules, { asc }) => [asc(modules.order)],
+            },
+        },
+    });
+
+    return courses;
+}
+
 export async function getCourseWithModulesAndLessons(courseId: string) {
     const course = await db.query.courses.findFirst({
         where: eq(courses.id, courseId),
