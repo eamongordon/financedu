@@ -15,7 +15,7 @@ interface SettingsTabsProps {
 export default function SettingsTabs({ profileDefaultValues, rolesDefaultValues, loginDefaultValues }: SettingsTabsProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const tab = searchParams.get('tab');
+    const tab = searchParams!.get('tab');
 
     return (
         <Tabs value={tab || 'profile'}>

@@ -65,8 +65,8 @@ export default function AuthForm() {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectUri = searchParams.get('redirect');
-  const [selected, setSelected] = useState<Key>(pathname);
+  const redirectUri = searchParams!.get('redirect');
+  const [selected, setSelected] = useState<Key>(pathname!);
   const [sentForgotPasswordEmail, setSentForgotPasswordEmail] = useState(false);
   const [loading, setLoading] = useState(false);
 
