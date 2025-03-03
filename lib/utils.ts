@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getNextActivityLink(courseId: string, moduleId: string, lessonId: string, nextActivity: NextActivity) {
-  const href = nextActivity.module ? `/courses/${courseId}/${nextActivity.module.id}/${nextActivity.lesson.id}/${nextActivity.lesson.lessonToActivities[0].activity.id}` :
+  const href = nextActivity.module ? `/courses/${courseId}/${nextActivity.module.id}/${nextActivity.lesson.id}/${nextActivity.lesson.activities[0].id}` :
       nextActivity.lesson ? `/courses/${courseId}/${moduleId}/${nextActivity.lesson.id}` :
           nextActivity.activity ? `/courses/${courseId}/${moduleId}/${lessonId}/${nextActivity.activity.id}` :
               `/courses/${nextActivity.course.id}`;

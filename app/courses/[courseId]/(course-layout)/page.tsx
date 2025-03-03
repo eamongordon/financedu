@@ -39,16 +39,16 @@ export default async function Page({
             <section className="py-6 sm:py-8 px-4 sm:px-0">
                 {course.modules.map(module => (
                     <Card key={module.id}
-                        className={cn("mb-4", isLoggedIn && module.lessons.every(lesson => lesson.lessonToActivities.every(lessonToActivityObj => lessonToActivityObj.activity.userCompletion.length > 0)) && "border-primary")}
+                        className={cn("mb-4", isLoggedIn && (module as CourseWithModulesAndLessonsAndUserCompletion["modules"][number]).lessons.every(lesson => lesson.activities.every(activity => activity.userCompletion.length > 0)) && "border-primary")}
                     >
                         <CardHeader className="flex flex-row items-center gap-2 space-y-0">
                             <CompletionIcon
-                                isComplete={isLoggedIn ? module.lessons.every(lesson => lesson.lessonToActivities.every(lessonToActivityObj => lessonToActivityObj.activity.userCompletion.length > 0)) : false}
+                                isComplete={isLoggedIn ? (module as CourseWithModulesAndLessonsAndUserCompletion["modules"][number]).lessons.every(lesson => lesson.activities.every(activity => activity.userCompletion.length > 0)) : false}
                                 icon={module.icon ? <DynamicIcon name={module.icon as keyof typeof dynamicIconImports} strokeWidth={1.5} /> : <GraduationCap strokeWidth={1.5} />}
                             />
                             <Link
                                 href={`/courses/${course.id}/${module.id}`}
-                                className={cn(buttonVariants({ variant: "link" }), isLoggedIn && module.lessons.every(lesson => lesson.lessonToActivities.every(lessonToActivityObj => lessonToActivityObj.activity.userCompletion.length > 0)) ? "text-primary" : "text-card-foreground")}
+                                className={cn(buttonVariants({ variant: "link" }), isLoggedIn && (module as CourseWithModulesAndLessonsAndUserCompletion["modules"][number]).lessons.every(lesson => lesson.activities.every(activity => activity.userCompletion.length > 0)) ? "text-primary" : "text-card-foreground")}
                             >
                                 <CardTitle
                                     className="text-xl font-semibold leading-none"
@@ -62,11 +62,11 @@ export default async function Page({
                                 {module.lessons.map((lesson) => (
                                     <Link
                                         key={lesson.id}
-                                        href={`/courses/${course.id}/${module.id}/${lesson.id}/${lesson.lessonToActivities.length > 0 ? lesson.lessonToActivities[0].activityId : ""}`}
+                                        href={`/courses/${course.id}/${module.id}/${lesson.id}/${lesson.activities.length > 0 ? lesson.activities[0].id : ""}`}
                                         className={cn(
                                             buttonVariants({ variant: "link" }),
                                             "text-muted-foreground [&_svg]:size-4 whitespace-normal justify-start",
-                                            isLoggedIn && (lesson as CourseWithModulesAndLessonsAndUserCompletion["modules"][number]["lessons"][number]).lessonToActivities.every(lessonToActivityObj => lessonToActivityObj.activity.userCompletion.length > 0) && "text-primary"
+                                            isLoggedIn && (lesson as CourseWithModulesAndLessonsAndUserCompletion["modules"][number]["lessons"][number]).activities.every(activity => activity.userCompletion.length > 0) && "text-primary"
                                         )}
                                     >
                                         {lesson.title}

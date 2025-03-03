@@ -146,31 +146,19 @@ export const lessons = pgTable("lesson", {
   order: integer("order").notNull(),
 })
 
-export const lessonToActivities = pgTable("lessonToActivity", {
-  lessonId: text("lessonId")
-    .notNull()
-    .references(() => lessons.id, { onDelete: "cascade" }),
-  activityId: text("activityId")
-    .notNull()
-    .references(() => activities.id, { onDelete: "cascade" }),
-  order: integer("order").notNull(),
-}, (lessonToActivity) => [
-  {
-    compositePK: primaryKey({
-      columns: [lessonToActivity.lessonId, lessonToActivity.activityId],
-    }),
-  },
-])
-
 export const activities = pgTable("activity", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   title: text("title").notNull(),
+  lessonId: text("lessonId")
+    .notNull()
+    .references(() => lessons.id, { onDelete: "cascade" }),
   type: text("type", { enum: ["Quiz", "Article"] }).notNull(),
   description: text("description"),
   content: text("content"),
   topics: text("topics").array(),
+  order: integer("order").notNull()
 })
 
 export const activityToQuestions = pgTable("activityToQuestion", {
@@ -409,27 +397,19 @@ export const lessonsRelations = relations(lessons, ({ one, many }) => ({
     fields: [lessons.moduleId],
     references: [modules.id],
   }),
-  lessonToActivities: many(lessonToActivities),
+  activities: many(activities),
   userCompletion: many(userCompletion),
 }))
 
-export const activitiesRelations = relations(activities, ({ many }) => ({
-  lessonToActivities: many(lessonToActivities),
+export const activitiesRelations = relations(activities, ({ one, many }) => ({
+  lesson: one(lessons, {
+    fields: [activities.lessonId],
+    references: [lessons.id],
+  }),
   activityToQuestions: many(activityToQuestions),
   activityToStandards: many(activityToStandards),
   userCompletion: many(userCompletion),
   assignments: many(assignments),
-}))
-
-export const lessonToActivitiesRelations = relations(lessonToActivities, ({ one }) => ({
-  lesson: one(lessons, {
-    fields: [lessonToActivities.lessonId],
-    references: [lessons.id],
-  }),
-  activity: one(activities, {
-    fields: [lessonToActivities.activityId],
-    references: [activities.id],
-  }),
 }))
 
 export const questionsRelations = relations(questions, ({ many }) => ({

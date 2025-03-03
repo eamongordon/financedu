@@ -36,20 +36,20 @@ export default async function LessonPage({
                 </div>
             </section>
             <div className="grid grid-cols-1 lg:grid-cols-2">
-                {lesson.lessonToActivities.map((lessonToActivitiesObj) => (
+                {lesson.activities.map((activity) => (
                     <Link
-                        key={lessonToActivitiesObj.activity.id}
-                        href={`/courses/${courseId}/${moduleId}/${lessonId}/${lessonToActivitiesObj.activity.id}`}
+                        key={activity.id}
+                        href={`/courses/${courseId}/${moduleId}/${lessonId}/${activity.id}`}
                         className={cn(
                             buttonVariants({ variant: "link" }),
                             "py-8 text-base text-foreground [&_svg]:size-4 whitespace-normal justify-start gap-6",
                         )}
                     >
                         <CompletionIcon
-                            isComplete={isLoggedIn ? (lessonToActivitiesObj as LessonWithActivitiesAndUserProgress["lessonToActivities"][number]).activity.userCompletion.length > 0 : false}
-                            icon={lessonToActivitiesObj.activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
+                            isComplete={isLoggedIn ? (activity as LessonWithActivitiesAndUserProgress["activities"][number]).userCompletion.length > 0 : false}
+                            icon={activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
                         />
-                        {lessonToActivitiesObj.activity.title}
+                        {activity.title}
                     </Link>
                 ))}
             </div>

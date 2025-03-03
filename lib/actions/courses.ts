@@ -1,7 +1,7 @@
 "use server";
 
 import { eq, gt, and, lt } from "drizzle-orm";
-import { courses, modules, lessons, lessonToActivities, activities, userCompletion } from "../db/schema";
+import { courses, modules, lessons, activities, userCompletion } from "../db/schema";
 import { db } from "../db";
 import { auth } from "../auth";
 
@@ -28,18 +28,14 @@ export async function getCoursesWithModulesAndLessonsAndActivities() {
                 with: {
                     lessons: {
                         with: {
-                            lessonToActivities: {
-                                with: {
-                                    activity: {
-                                        columns: {
-                                            id: true,
-                                            title: true,
-                                            type: true
-                                        }
-                                    }
+                            activities: {
+                                columns: {
+                                    id: true,
+                                    title: true,
+                                    type: true
                                 },
-                                orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
-                            }
+                                orderBy: (activities, { asc }) => [asc(activities.order)]
+                            },
                         },
                         orderBy: (lessons, { asc }) => [asc(lessons.order)]
                     }
@@ -60,8 +56,13 @@ export async function getCourseWithModulesAndLessons(courseId: string) {
                 with: {
                     lessons: {
                         with: {
-                            lessonToActivities: {
-                                orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+                            activities: {
+                                columns: {
+                                    id: true,
+                                    title: true,
+                                    type: true
+                                },
+                                orderBy: (activities, { asc }) => [asc(activities.order)]
                             }
                         },
                         orderBy: (lessons, { asc }) => [asc(lessons.order)]
@@ -85,11 +86,13 @@ export async function getModuleWithLessonsAndActivities(moduleId: string) {
         with: {
             lessons: {
                 with: {
-                    lessonToActivities: {
-                        with: {
-                            activity: true
+                    activities: {
+                        columns: {
+                            id: true,
+                            title: true,
+                            type: true
                         },
-                        orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+                        orderBy: (activities, { asc }) => [asc(activities.order)]
                     }
                 },
                 orderBy: (lessons, { asc }) => [asc(lessons.order)]
@@ -108,11 +111,8 @@ export async function getLessonWithActivities(lessonId: string) {
     const lesson = await db.query.lessons.findFirst({
         where: eq(lessons.id, lessonId),
         with: {
-            lessonToActivities: {
-                with: {
-                    activity: true
-                },
-                orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+            activities: {
+                orderBy: (activities, { asc }) => [asc(activities.order)]
             },
             module: {
                 with: {
@@ -162,16 +162,13 @@ export async function getActivity(activityId: string) {
 export async function getNextActivity(activityId: string) {
     const currentActivity = await db.query.activities.findFirst({
         where: eq(activities.id, activityId),
-        with: {
-            lessonToActivities: true
-        }
     });
 
-    if (!currentActivity || !currentActivity.lessonToActivities.length) {
-        throw new Error("Activity not found or not associated with any lesson");
+    if (!currentActivity) {
+        throw new Error("Activity not found");
     }
 
-    const currentLessonId = currentActivity.lessonToActivities[0].lessonId;
+    const currentLessonId = currentActivity.lessonId;
     const currentLesson = await db.query.lessons.findFirst({
         where: eq(lessons.id, currentLessonId),
         with: {
@@ -188,21 +185,18 @@ export async function getNextActivity(activityId: string) {
     }
 
     const currentModuleId = currentLesson.moduleId;
-    const currentOrder = currentActivity.lessonToActivities[0].order;
+    const currentOrder = currentActivity.order;
 
     // Check for next activity in the current lesson
-    const nextActivity = await db.query.lessonToActivities.findFirst({
-        where: and(eq(lessonToActivities.lessonId, currentLessonId), gt(lessonToActivities.order, currentOrder)),
-        orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)],
-        with: {
-            activity: true
-        }
+    const nextActivity = await db.query.activities.findFirst({
+        where: and(eq(activities.lessonId, currentLessonId), gt(activities.order, currentOrder)),
+        orderBy: (activities, { asc }) => [asc(activities.order)]
     });
 
     if (nextActivity) {
         return {
             hasNext: true,
-            activity: nextActivity.activity
+            activity: nextActivity
         };
     }
 
@@ -211,20 +205,17 @@ export async function getNextActivity(activityId: string) {
         where: and(eq(lessons.moduleId, currentModuleId), gt(lessons.order, currentLesson.order)),
         orderBy: (lessons, { asc }) => [asc(lessons.order)],
         with: {
-            lessonToActivities: {
-                orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)],
-                limit: 1,
-                with: {
-                    activity: true
-                }
+            activities: {
+                orderBy: (activities, { asc }) => [asc(activities.order)],
+                limit: 1
             }
         }
     });
 
-    if (nextLesson && nextLesson.lessonToActivities.length) {
+    if (nextLesson && nextLesson.activities.length) {
         return {
             hasNext: true,
-            activity: nextLesson.lessonToActivities[0].activity,
+            activity: nextLesson.activities[0],
             lesson: nextLesson
         };
     }
@@ -238,23 +229,20 @@ export async function getNextActivity(activityId: string) {
                 orderBy: (lessons, { asc }) => [asc(lessons.order)],
                 limit: 1,
                 with: {
-                    lessonToActivities: {
-                        orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)],
-                        limit: 1,
-                        with: {
-                            activity: true
-                        }
+                    activities: {
+                        orderBy: (activities, { asc }) => [asc(activities.order)],
+                        limit: 1
                     }
                 }
             }
         }
     });
 
-    if (nextModule && nextModule.lessons.length && nextModule.lessons[0].lessonToActivities.length) {
+    if (nextModule && nextModule.lessons.length && nextModule.lessons[0].activities.length) {
         // Return the first activity of the first lesson of the next module
         return {
             hasNext: true,
-            activity: nextModule.lessons[0].lessonToActivities[0].activity,
+            activity: nextModule.lessons[0].activities[0],
             lesson: nextModule.lessons[0],
             module: nextModule
         };
@@ -291,7 +279,7 @@ export async function getNextLesson(lessonId: string) {
         where: and(eq(lessons.moduleId, currentModuleId), gt(lessons.order, currentOrder)),
         orderBy: (lessons, { asc }) => [asc(lessons.order)],
         with: {
-            lessonToActivities: true
+            activities: true
         }
     });
 
@@ -311,7 +299,7 @@ export async function getNextLesson(lessonId: string) {
                 orderBy: (lessons, { asc }) => [asc(lessons.order)],
                 limit: 1,
                 with: {
-                    lessonToActivities: true
+                    activities: true
                 }
             }
         }
@@ -354,7 +342,7 @@ export async function getPreviousLesson(lessonId: string) {
         where: and(eq(lessons.moduleId, currentLesson.moduleId), lt(lessons.order, currentLesson.order)),
         orderBy: (lessons, { desc }) => [desc(lessons.order)],
         with: {
-            lessonToActivities: true
+            activities: true
         }
     });
 
@@ -374,7 +362,7 @@ export async function getPreviousLesson(lessonId: string) {
                 orderBy: (lessons, { desc }) => [desc(lessons.order)],
                 limit: 1,
                 with: {
-                    lessonToActivities: true
+                    activities: true
                 }
             }
         }
@@ -431,15 +419,11 @@ export async function getLessonWithActivitiesAndUserProgress(lessonId: string) {
     const lesson = await db.query.lessons.findFirst({
         where: eq(lessons.id, lessonId),
         with: {
-            lessonToActivities: {
+            activities: {
                 with: {
-                    activity: {
-                        with: {
-                            userCompletion: true
-                        }
-                    }
+                    userCompletion: true
                 },
-                orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+                orderBy: (activities, { asc }) => [asc(activities.order)]
             },
             module: {
                 with: {
@@ -459,7 +443,6 @@ export async function getLessonWithActivitiesAndUserProgress(lessonId: string) {
     return lesson;
 }
 
-
 export async function getModuleWithLessonsAndActivitiesAndUserCompletion(moduleId: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
@@ -471,17 +454,13 @@ export async function getModuleWithLessonsAndActivitiesAndUserCompletion(moduleI
         with: {
             lessons: {
                 with: {
-                    lessonToActivities: {
+                    activities: {
                         with: {
-                            activity: {
-                                with: {
-                                    userCompletion: {
-                                        where: eq(userCompletion.userId, userId)
-                                    }
-                                }
+                            userCompletion: {
+                                where: eq(userCompletion.userId, userId)
                             }
                         },
-                        orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+                        orderBy: (activities, { asc }) => [asc(activities.order)]
                     }
                 },
                 orderBy: (lessons, { asc }) => [asc(lessons.order)]
@@ -509,17 +488,13 @@ export async function getCourseWithModulesAndLessonsAndUserCompletion(courseId: 
                 with: {
                     lessons: {
                         with: {
-                            lessonToActivities: {
+                            activities: {
                                 with: {
-                                    activity: {
-                                        with: {
-                                            userCompletion: {
-                                                where: eq(userCompletion.userId, userId)
-                                            }
-                                        }
+                                    userCompletion: {
+                                        where: eq(userCompletion.userId, userId)
                                     }
                                 },
-                                orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+                                orderBy: (activities, { asc }) => [asc(activities.order)]
                             }
                         },
                         orderBy: (lessons, { asc }) => [asc(lessons.order)]
@@ -549,17 +524,13 @@ export async function getUserCoursesWithProgressAndNextActivity() {
                 with: {
                     lessons: {
                         with: {
-                            lessonToActivities: {
+                            activities: {
                                 with: {
-                                    activity: {
-                                        with: {
-                                            userCompletion: {
-                                                where: (userCompletion) => eq(userCompletion.userId, userId)
-                                            }
-                                        }
+                                    userCompletion: {
+                                        where: (userCompletion) => eq(userCompletion.userId, userId)
                                     }
                                 },
-                                orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+                                orderBy: (activities, { asc }) => [asc(activities.order)]
                             }
                         },
                         orderBy: (lessons, { asc }) => [asc(lessons.order)]
@@ -578,8 +549,7 @@ export async function getUserCoursesWithProgressAndNextActivity() {
             if (nextActivity) break;
             for (const lesson of moduleObj.lessons) {
                 if (nextActivity) break;
-                for (const lessonToActivity of lesson.lessonToActivities) {
-                    const activity = lessonToActivity.activity;
+                for (const activity of lesson.activities) {
                     const userCompletion = activity.userCompletion.find(uc => uc.userId === userId);
                     if (!userCompletion) {
                         nextActivity = {
@@ -635,17 +605,13 @@ export async function getUserCompletion() {
                 with: {
                     lessons: {
                         with: {
-                            lessonToActivities: {
+                            activities: {
                                 with: {
-                                    activity: {
-                                        with: {
-                                            userCompletion: {
-                                                where: eq(userCompletion.userId, userId)
-                                            }
-                                        }
+                                    userCompletion: {
+                                        where: eq(userCompletion.userId, userId)
                                     }
                                 },
-                                orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+                                orderBy: (activities, { asc }) => [asc(activities.order)]
                             }
                         },
                         orderBy: (lessons, { asc }) => [asc(lessons.order)]

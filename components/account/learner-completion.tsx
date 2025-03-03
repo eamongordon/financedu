@@ -20,15 +20,15 @@ function formatDate(date: Date) {
     });
 }
 
-function calculateCompletionAndAccuracy(items: UserCompletion[number]["modules"][number]["lessons"][number]["lessonToActivities"]) {
+function calculateCompletionAndAccuracy(items: UserCompletion[number]["modules"][number]["lessons"][number]["activities"]) {
     const totalItems = items.length;
-    const completedItems = items.filter(item => item.activity.userCompletion.length > 0).length;
-    const completedActivities = items.filter(item => item.activity.userCompletion.length > 0 && item.activity.userCompletion[0]?.correctAnswers !== null && item.activity.userCompletion[0]?.totalQuestions !== null);
-    const totalAccuracy = completedActivities.reduce((acc, item) => acc + ((item.activity.userCompletion[0]?.correctAnswers || 0) / (item.activity.userCompletion[0]?.totalQuestions || 1)), 0);
+    const completedItems = items.filter(item => item.userCompletion.length > 0).length;
+    const completedActivities = items.filter(item => item.userCompletion.length > 0 && item.userCompletion[0]?.correctAnswers !== null && item.userCompletion[0]?.totalQuestions !== null);
+    const totalAccuracy = completedActivities.reduce((acc, item) => acc + ((item.userCompletion[0]?.correctAnswers || 0) / (item.userCompletion[0]?.totalQuestions || 1)), 0);
     const averageAccuracy = completedActivities.length > 0 ? (totalAccuracy / completedActivities.length) * 100 : undefined;
     const completion = totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
     const lastCompletedActivity = items.reduce<Date | null>((latest, item) => {
-        const completedAt = item.activity.userCompletion[0]?.completedAt;
+        const completedAt = item.userCompletion[0]?.completedAt;
         return completedAt && (!latest || new Date(completedAt) > new Date(latest)) ? completedAt : latest;
     }, null);
     const completionDate = completedItems === totalItems && lastCompletedActivity ? formatDate(new Date(lastCompletedActivity)) : "In Progress";
@@ -56,7 +56,7 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
             {!selectedCourse && (
                 <>
                     {courses.map((course) => {
-                        const { completion, averageAccuracy, completionDate } = calculateCompletionAndAccuracy(course.modules.flatMap(module => module.lessons.flatMap(lesson => lesson.lessonToActivities)));
+                        const { completion, averageAccuracy, completionDate } = calculateCompletionAndAccuracy(course.modules.flatMap(module => module.lessons.flatMap(lesson => lesson.activities)));
                         return (
                             <Card key={course.id} className="mb-4 cursor-pointer" onClick={() => handleCourseClick(course.id)}>
                                 <CardHeader>
@@ -103,7 +103,7 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
                         Back to Course
                     </Button>
                     {selectedCourseData.modules.map((module) => {
-                        const { completion, averageAccuracy, completionDate } = calculateCompletionAndAccuracy(module.lessons.flatMap(lesson => lesson.lessonToActivities));
+                        const { completion, averageAccuracy, completionDate } = calculateCompletionAndAccuracy(module.lessons.flatMap(lesson => lesson.activities));
                         return (
                             <Card key={module.id} className="mb-4 cursor-pointer" onClick={() => handleModuleClick(module.id)}>
                                 <CardHeader>
@@ -150,12 +150,12 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
                         Back to Modules
                     </Button>
                     {selectedModuleData.lessons.map((lesson) => {
-                        const { completion, averageAccuracy, completionDate } = calculateCompletionAndAccuracy(lesson.lessonToActivities);
+                        const { completion, averageAccuracy, completionDate } = calculateCompletionAndAccuracy(lesson.activities);
                         return (
                             <Card key={lesson.id} className="mb-4">
                                 <CardHeader>
                                     <Link
-                                        href={`/courses/${selectedCourse}/${selectedModule}/${lesson.id}/${lesson.lessonToActivities[0].activity.id}`}
+                                        href={`/courses/${selectedCourse}/${selectedModule}/${lesson.id}/${lesson.activities[0].id}`}
                                         target="_blank"
                                         className={cn(buttonVariants({ variant: "link" }), "text-card-foreground block p-0")}
                                     >
@@ -181,20 +181,20 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
                                         </div>
                                     </div>
                                     <div className="pt-4 grid grid-cols-1 lg:grid-cols-2">
-                                        {lesson.lessonToActivities.map((lessonToActivitiesObj) => (
+                                        {lesson.activities.map((activity) => (
                                             <Link
-                                                key={lessonToActivitiesObj.activity.id}
-                                                href={`/courses/${selectedCourse}/${selectedModule}/${lesson.id}/${lessonToActivitiesObj.activity.id}`}
+                                                key={activity.id}
+                                                href={`/courses/${selectedCourse}/${selectedModule}/${lesson.id}/${activity.id}`}
                                                 className={cn(
                                                     buttonVariants({ variant: "link" }),
                                                     "py-8 text-base text-foreground [&_svg]:size-4 whitespace-normal justify-start gap-6",
                                                 )}
                                             >
                                                 <CompletionIcon
-                                                    isComplete={lessonToActivitiesObj.activity.userCompletion.length > 0}
-                                                    icon={lessonToActivitiesObj.activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
+                                                    isComplete={activity.userCompletion.length > 0}
+                                                    icon={activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
                                                 />
-                                                {lessonToActivitiesObj.activity.title}
+                                                {activity.title}
                                             </Link>
                                         ))}
                                     </div>

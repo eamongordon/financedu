@@ -261,17 +261,13 @@ export async function getChildCompletion(childId: string) {
                 with: {
                     lessons: {
                         with: {
-                            lessonToActivities: {
+                            activities: {
                                 with: {
-                                    activity: {
-                                        with: {
-                                            userCompletion: {
-                                                where: eq(userCompletion.userId, childId)
-                                            }
-                                        }
+                                    userCompletion: {
+                                        where: eq(userCompletion.userId, childId)
                                     }
                                 },
-                                orderBy: (lessonToActivities, { asc }) => [asc(lessonToActivities.order)]
+                                orderBy: (activities, { asc }) => [asc(activities.order)]
                             }
                         },
                         orderBy: (lessons, { asc }) => [asc(lessons.order)]

@@ -25,9 +25,7 @@ import {
 import { Plus } from "lucide-react"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 import { Checkbox } from "@/components/ui/checkbox"
-import { createAssignments, type getCoursesWithModulesAndLessonsAndActivities } from "@/lib/actions";
-import { useParams, useRouter } from "next/navigation";
-//import { createAssignments } from "@/lib/actions/assignments";
+import { type getCoursesWithModulesAndLessonsAndActivities } from "@/lib/actions";
 
 type CoursesWithModulesAndLessonsAndActivities = Awaited<ReturnType<typeof getCoursesWithModulesAndLessonsAndActivities>>
 
@@ -83,113 +81,29 @@ export function CreateAssignments({ isNoChildren, courses }: { isNoChildren?: bo
     )
 }
 
-type SelectedActivity = {
-    courseId: string;
-    moduleId: string;
-    lessonId: string;
-    activityId: string;
-};
-
 function ContentSelector({ className, setOpen, courses }: { className?: string, setOpen: React.Dispatch<React.SetStateAction<boolean>>, courses: CoursesWithModulesAndLessonsAndActivities }) {
-    const [selectedActivities, setSelectedActivities] = React.useState<SelectedActivity[]>([])
-    const router = useRouter();
-    const params = useParams<{ classId: string }>();
-    const classId = params!.classId;
-    const handleCheckboxChange = (isChecked: boolean, type: string, id: string, courseId?: string, moduleId?: string, lessonId?: string) => {
-        let scopedActivities: SelectedActivity[] = [];
+    const [selectedActivities, setSelectedActivities] = React.useState<string[]>([])
+
+    const handleCheckboxChange = (isChecked: boolean, type: string, id: string) => {
+        let scopedActivities = [];
         if (type === 'course') {
-            const course = courses.find(course => course.id === id);
-            if (course) {
-                scopedActivities = course.modules.flatMap(mod => mod.lessons.flatMap(lesson => lesson.lessonToActivities.map(lessonToActivity => ({
-                    courseId: id,
-                    moduleId: mod.id,
-                    lessonId: lesson.id,
-                    activityId: lessonToActivity.activity.id
-                }))));
-            }
+            scopedActivities = courses.find(course => course.id === id)?.modules.flatMap(module => module.lessons.flatMap(lesson => lesson.activities.map(activity => activity.id)) || []) || []
         } else if (type === 'module') {
-            const course = courses.find(course => course.id === courseId);
-            const mod = course?.modules.find(mod => mod.id === id);
-            if (mod) {
-                scopedActivities = mod.lessons.flatMap(lesson => lesson.lessonToActivities.map(lessonToActivity => ({
-                    courseId: courseId!,
-                    moduleId: id,
-                    lessonId: lesson.id,
-                    activityId: lessonToActivity.activity.id
-                })));
-            }
+            scopedActivities = courses.flatMap(course => course.modules.find(module => module.id === id)?.lessons.flatMap(lesson => lesson.activities.map(activity => activity.id)) || []) || []
         } else if (type === 'lesson') {
-            const course = courses.find(course => course.id === courseId);
-            const mod = course?.modules.find(mod => mod.id === moduleId);
-            const lesson = mod?.lessons.find(lesson => lesson.id === id);
-            if (lesson) {
-                scopedActivities = lesson.lessonToActivities.map(lessonToActivity => ({
-                    courseId: courseId!,
-                    moduleId: moduleId!,
-                    lessonId: id,
-                    activityId: lessonToActivity.activity.id
-                }));
-            }
+            scopedActivities = courses.flatMap(course => course.modules.flatMap(module => module.lessons.find(lesson => lesson.id === id)?.activities.map(activity => activity.id) || [])) || []
         } else {
-            const course = courses.find(course => course.id === courseId);
-            const mod = course?.modules.find(mod => mod.id === moduleId);
-            const lesson = mod?.lessons.find(lesson => lesson.id === lessonId);
-            const lessonToActivity = lesson?.lessonToActivities.find(lessonToActivity => lessonToActivity.activity.id === id);
-            if (lessonToActivity) {
-                scopedActivities = [{
-                    courseId: courseId!,
-                    moduleId: moduleId!,
-                    lessonId: lessonId!,
-                    activityId: id
-                }];
-            }
+            scopedActivities = [id]
         }
         if (isChecked) {
-            setSelectedActivities([...selectedActivities, ...scopedActivities])
+            setSelectedActivities([...selectedActivities].concat(scopedActivities))
         } else {
-            setSelectedActivities(selectedActivities.filter(activity => !scopedActivities.some(scopedActivity => scopedActivity.activityId === activity.activityId)))
+            setSelectedActivities(selectedActivities.filter(activityId => !scopedActivities.includes(activityId)))
         }
     }
 
-    const isCourseChecked = (courseId: string) => {
-        return courses.find(course => course.id === courseId)?.modules.every(mod => mod.lessons.every(lesson => lesson.lessonToActivities.every(lessonToActivity => selectedActivities.some(activity =>
-            activity.activityId === lessonToActivity.activity.id &&
-            activity.lessonId === lesson.id &&
-            activity.moduleId === mod.id &&
-            activity.courseId === courseId
-        )))) || false;
-    }
-
-    const isModuleChecked = (courseId: string, moduleId: string) => {
-        return courses.find(course => course.id === courseId)?.modules.find(mod => mod.id === moduleId)?.lessons.every(lesson => lesson.lessonToActivities.every(lessonToActivity => selectedActivities.some(activity =>
-            activity.activityId === lessonToActivity.activity.id &&
-            activity.lessonId === lesson.id &&
-            activity.moduleId === moduleId &&
-            activity.courseId === courseId
-        ))) || false;
-    }
-
-    const isLessonChecked = (courseId: string, moduleId: string, lessonId: string) => {
-        return courses.find(course => course.id === courseId)?.modules.find(mod => mod.id === moduleId)?.lessons.find(lesson => lesson.id === lessonId)?.lessonToActivities.every(lessonToActivity => selectedActivities.some(activity =>
-            activity.activityId === lessonToActivity.activity.id &&
-            activity.lessonId === lessonId &&
-            activity.moduleId === moduleId &&
-            activity.courseId === courseId
-        )) || false;
-    }
-
-    const handleSubmit = async () => {
-        const activities = selectedActivities.map(activity => ({
-            courseId: activity.courseId,
-            moduleId: activity.moduleId,
-            lessonId: activity.lessonId,
-            activityId: activity.activityId
-        }));
-        await createAssignments({
-            classId,
-            activities
-        });
-        router.refresh();
+    const handleSubmit = () => {
+        console.log(selectedActivities);
         setOpen(false);
     };
 
@@ -199,45 +113,40 @@ function ContentSelector({ className, setOpen, courses }: { className?: string, 
                 {courses.map(course => (
                     <AccordionItem key={course.id} value={course.id}>
                         <Checkbox
-                            checked={isCourseChecked(course.id)}
+                            checked={course.modules.every(module => module.lessons.every(lesson => lesson.activities.every(activity => selectedActivities.includes(activity.id))))}
                             onCheckedChange={(isChecked) => handleCheckboxChange(!!isChecked, 'course', course.id)}
                         />
                         <AccordionTrigger>
                             {course.title}
                         </AccordionTrigger>
                         <AccordionContent>
-                            {course.modules.map(mod => (
-                                <AccordionItem key={mod.id} value={mod.id}>
+                            {course.modules.map(module => (
+                                <AccordionItem key={module.id} value={module.id}>
                                     <Checkbox
-                                        checked={isModuleChecked(course.id, mod.id)}
-                                        onCheckedChange={(isChecked) => handleCheckboxChange(!!isChecked, 'module', mod.id, course.id)}
+                                        checked={module.lessons.every(lesson => lesson.activities.every(activity => selectedActivities.includes(activity.id)))}
+                                        onCheckedChange={(isChecked) => handleCheckboxChange(!!isChecked, 'module', module.id)}
                                     />
                                     <AccordionTrigger>
-                                        {mod.title}
+                                        {module.title}
                                     </AccordionTrigger>
                                     <AccordionContent>
-                                        {mod.lessons.map(lesson => (
+                                        {module.lessons.map(lesson => (
                                             <AccordionItem key={lesson.id} value={lesson.id}>
                                                 <Checkbox
-                                                    checked={isLessonChecked(course.id, mod.id, lesson.id)}
-                                                    onCheckedChange={(isChecked) => handleCheckboxChange(!!isChecked, 'lesson', lesson.id, course.id, mod.id)}
+                                                    checked={lesson.activities.every(activity => selectedActivities.includes(activity.id))}
+                                                    onCheckedChange={(isChecked) => handleCheckboxChange(!!isChecked, 'lesson', lesson.id)}
                                                 />
                                                 <AccordionTrigger>
                                                     {lesson.title}
                                                 </AccordionTrigger>
                                                 <AccordionContent>
-                                                    {lesson.lessonToActivities.map(lessonToActivity => (
-                                                        <div key={lessonToActivity.activity.id}>
+                                                    {lesson.activities.map(activity => (
+                                                        <div key={activity.id}>
                                                             <Checkbox
-                                                                checked={selectedActivities.some(activity =>
-                                                                    activity.activityId === lessonToActivity.activity.id &&
-                                                                    activity.lessonId === lesson.id &&
-                                                                    activity.moduleId === mod.id &&
-                                                                    activity.courseId === course.id
-                                                                )}
-                                                                onCheckedChange={(isChecked) => handleCheckboxChange(!!isChecked, 'activity', lessonToActivity.activity.id, course.id, mod.id, lesson.id)}
+                                                                checked={selectedActivities.includes(activity.id)}
+                                                                onCheckedChange={(isChecked) => handleCheckboxChange(!!isChecked, 'activity', activity.id)}
                                                             />
-                                                            {lessonToActivity.activity.title}
+                                                            {activity.title}
                                                         </div>
                                                     ))}
                                                 </AccordionContent>
@@ -250,8 +159,8 @@ function ContentSelector({ className, setOpen, courses }: { className?: string, 
                     </AccordionItem>
                 ))}
             </Accordion>
-            <Button disabled={selectedActivities.length === 0} onClick={handleSubmit}>
-                {selectedActivities.length > 0 ? `Assign ${selectedActivities.length}` : "Assign"}
+            <Button disabled={selectedActivities.length === 0} onClick={() => handleSubmit()}>
+                ({selectedActivities.length > 0 ? "Assign " + selectedActivities.length : "Assign"})
             </Button>
         </div>
     )

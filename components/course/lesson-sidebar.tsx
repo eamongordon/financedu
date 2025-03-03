@@ -87,7 +87,7 @@ export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn
                                 courseId={courseId}
                             />
                             <ActivityNav
-                                lessonToActivities={lesson.lessonToActivities}
+                                activities={lesson.activities}
                                 courseId={courseId}
                                 moduleId={moduleId}
                                 lessonId={lessonId}
@@ -123,7 +123,7 @@ export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn
                     courseId={courseId}
                 />
                 <ActivityNav
-                    lessonToActivities={lesson.lessonToActivities}
+                    activities={lesson.activities}
                     courseId={courseId}
                     moduleId={moduleId}
                     lessonId={lessonId}
@@ -150,7 +150,7 @@ function NavigationButtons({ lesson, previousLesson, nextLesson, moduleId, cours
         <div className="w-full flex flex-row justify-between items-center px-2 md:px-8 py-3">
             {previousLesson.lesson ? (
                 <Link
-                    href={`/courses/${courseId}/${moduleId}/${previousLesson.lesson.id}/${previousLesson.lesson.lessonToActivities[0].activityId}`}
+                    href={`/courses/${courseId}/${moduleId}/${previousLesson.lesson.id}/${previousLesson.lesson.activities[0].id}`}
                     className={cn(buttonVariants({ variant: "ghost" }), "[&_svg]:size-6 p-0")}
                 >
                     <ChevronLeft className="text-muted-foreground" />
@@ -163,7 +163,7 @@ function NavigationButtons({ lesson, previousLesson, nextLesson, moduleId, cours
             <h1 className="mx-2 text-lg font-bold text-center">{lesson.title}</h1>
             {nextLesson.lesson ? (
                 <Link
-                    href={`/courses/${courseId}/${moduleId}/${nextLesson.lesson.id}/${nextLesson.lesson.lessonToActivities[0].activityId}`}
+                    href={`/courses/${courseId}/${moduleId}/${nextLesson.lesson.id}/${nextLesson.lesson.activities[0].id}`}
                     className={cn(buttonVariants({ variant: "ghost" }), "[&_svg]:size-6 p-0")}
                 >
                     <ChevronRight className="text-muted-foreground" />
@@ -178,7 +178,7 @@ function NavigationButtons({ lesson, previousLesson, nextLesson, moduleId, cours
 }
 
 interface ActivityLinkProps {
-    lessonToActivities: (LessonWithActivities | LessonWithActivitiesAndUserProgress)["lessonToActivities"];
+    activities: (LessonWithActivities | LessonWithActivitiesAndUserProgress)["activities"];
     courseId: string;
     moduleId: string;
     lessonId: string;
@@ -187,29 +187,29 @@ interface ActivityLinkProps {
     setIsDrawerOpen: (isOpen: boolean) => void;
 }
 
-function ActivityNav({ lessonToActivities, courseId, moduleId, lessonId, activityId, isLoggedIn, setIsDrawerOpen }: ActivityLinkProps) {
+function ActivityNav({ activities, courseId, moduleId, lessonId, activityId, isLoggedIn, setIsDrawerOpen }: ActivityLinkProps) {
     return (
         <nav className="flex flex-col divide-y border-t border-b w-full">
-            {lessonToActivities.map((lessonToActivitiesObj) => (
+            {activities.map((activity) => (
                 <Link
-                    key={lessonToActivitiesObj.activityId}
-                    href={`/courses/${courseId}/${moduleId}/${lessonId}/${lessonToActivitiesObj.activityId}`}
+                    key={activity.id}
+                    href={`/courses/${courseId}/${moduleId}/${lessonId}/${activity.id}`}
                     className={cn(
                         buttonVariants({ variant: "ghost" }),
                         "border-l-4 border-l-transparent py-8 rounded-none text-base whitespace-normal gap-6",
-                        activityId === lessonToActivitiesObj.activityId
+                        activityId === activity.id
                             ? "border-l-primary bg-accent hover:bg-muted"
                             : "",
                         "justify-start"
                     )}
-                    onClick={() => activityId === lessonToActivitiesObj.activityId && setIsDrawerOpen(false)}
+                    onClick={() => activityId === activity.id && setIsDrawerOpen(false)}
                 >
                     <CompletionIcon
-                        isComplete={isLoggedIn ? ((activityId === lessonToActivitiesObj.activityId && lessonToActivitiesObj.activity.type === "Article") || (lessonToActivitiesObj as LessonWithActivitiesAndUserProgress["lessonToActivities"][number]).activity.userCompletion.some(userProgress => userProgress.activityId === lessonToActivitiesObj.activity.id)) : false}
-                        icon={lessonToActivitiesObj.activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
-                        isCurrent={activityId === lessonToActivitiesObj.activityId}
+                        isComplete={isLoggedIn ? ((activityId === activity.id && activity.type === "Article") || (activity as LessonWithActivitiesAndUserProgress["activities"][number]).userCompletion.some(userProgress => userProgress.activityId === activity.id)) : false}
+                        icon={activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
+                        isCurrent={activityId === activity.id}
                     />
-                    {lessonToActivitiesObj.activity.title}
+                    {activity.title}
                 </Link>
             ))}
         </nav>
