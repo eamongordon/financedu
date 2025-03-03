@@ -128,7 +128,29 @@ export async function getClassTeacherWithAssignments(classId: string) {
         with: {
             assignments: {
                 with: {
-                    activity: true
+                    activity: {
+                        with: {
+                            lesson: {
+                                with: {
+                                    module: {
+                                        columns: {
+                                            id: true,
+                                            courseId: true
+                                        }
+                                    }
+                                },
+                                columns: {
+                                    id: true,
+                                    title: true
+                                }
+                            }
+                        },
+                        columns: {
+                            id: true,
+                            title: true,
+                            type: true
+                        }
+                    }
                 }
             }
         }

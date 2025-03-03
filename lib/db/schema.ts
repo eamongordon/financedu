@@ -251,15 +251,6 @@ export const userCompletion = pgTable("userCompletion", {
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  courseId: text("courseId")
-    .notNull()
-    .references(() => courses.id, { onDelete: "cascade" }),
-  moduleId: text("moduleId")
-    .notNull()
-    .references(() => modules.id, { onDelete: "cascade" }),
-  lessonId: text("lessonId")
-    .notNull()
-    .references(() => lessons.id, { onDelete: "cascade" }),
   activityId: text("activityId")
     .notNull()
     .references(() => activities.id, { onDelete: "cascade" }),
@@ -267,7 +258,7 @@ export const userCompletion = pgTable("userCompletion", {
   correctAnswers: integer("correctAnswers"),
   totalQuestions: integer("totalQuestions"),
 }, (userCompletion) => [
-  primaryKey({ columns: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId] })
+  primaryKey({ columns: [userCompletion.userId, userCompletion.activityId] })
 ]);
 
 export const parentChild = pgTable("parentChild", {
@@ -332,15 +323,6 @@ export const assignments = pgTable("assignment", {
   classId: text("classId")
     .notNull()
     .references(() => classes.id, { onDelete: "cascade" }),
-  courseId: text("courseId")
-    .notNull()
-    .references(() => courses.id, { onDelete: "cascade" }),
-  moduleId: text("moduleId")
-    .notNull()
-    .references(() => modules.id, { onDelete: "cascade" }),
-  lessonId: text("lessonId")
-    .notNull()
-    .references(() => lessons.id, { onDelete: "cascade" }),
   activityId: text("activityId")
     .notNull()
     .references(() => activities.id, { onDelete: "cascade" }),
@@ -475,18 +457,6 @@ export const userCompletionRelations = relations(userCompletion, ({ one }) => ({
   user: one(users, {
     fields: [userCompletion.userId],
     references: [users.id],
-  }),
-  course: one(courses, {
-    fields: [userCompletion.courseId],
-    references: [courses.id],
-  }),
-  module: one(modules, {
-    fields: [userCompletion.moduleId],
-    references: [modules.id],
-  }),
-  lesson: one(lessons, {
-    fields: [userCompletion.lessonId],
-    references: [lessons.id],
   }),
   activity: one(activities, {
     fields: [userCompletion.activityId],

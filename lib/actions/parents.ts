@@ -221,10 +221,29 @@ export async function getChildCompletedActivities(childId: string) {
     return await db.query.userCompletion.findMany({
         where: eq(userCompletion.userId, childId),
         with: {
-            activity: true,
-            lesson: true,
-            module: true,
-            course: true,
+            activity: {
+                with: {
+                    lesson: {
+                        with: {
+                            module: {
+                                columns: {
+                                    id: true,
+                                    courseId: true
+                                }
+                            },
+                        },
+                        columns: {
+                            id: true,
+                            title: true
+                        }
+                    }
+                },
+                columns: {
+                    id: true,
+                    title: true,
+                    type: true
+                }
+            },
         },
     });
 }

@@ -131,7 +131,7 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
         if (session && session.user && session.user.id) {
             const correctAnswers = questionResponses.filter(isCorrect => isCorrect).length;
             const totalQuestions = questionResponses.length;
-            await markActivityComplete(activity.id, currentLessonId, currentModuleId, currentCourseId, correctAnswers, totalQuestions);
+            await markActivityComplete(activity.id, correctAnswers, totalQuestions);
             await router.refresh();
         }
     };

@@ -7,10 +7,10 @@ export default async function ProgressPage() {
         activityId: completedActivityObj.activity.id,
         activityTitle: completedActivityObj.activity.title,
         activityType: completedActivityObj.activity.type,
-        lessonTitle: completedActivityObj.lesson.title,
-        lessonId: completedActivityObj.lesson.id,
-        moduleId: completedActivityObj.module.id,
-        courseId: completedActivityObj.course.id,
+        lessonTitle: completedActivityObj.activity.lesson.title,
+        lessonId: completedActivityObj.activity.lesson.id,
+        moduleId: completedActivityObj.activity.lesson.module.id,
+        courseId: completedActivityObj.activity.lesson.module.courseId,
         completedAt: completedActivityObj.completedAt! // Todo: Should be non-null
     }));
     return (

@@ -20,7 +20,7 @@ export default async function LessonPage({
     const session = await auth();
 
     if (session && session.user && session.user.id && activity.type === "Article") {
-        await markActivityComplete(activityId, lessonId, moduleId, courseId);
+        await markActivityComplete(activityId);
     }
 
     return (

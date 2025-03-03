@@ -384,7 +384,7 @@ export async function getPreviousLesson(lessonId: string) {
     }
 }
 
-export async function markActivityComplete(activityId: string, lessonId: string, moduleId: string, courseId: string, correctAnswers?: number, totalQuestions?: number) {
+export async function markActivityComplete(activityId: string, correctAnswers?: number, totalQuestions?: number) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
@@ -394,14 +394,11 @@ export async function markActivityComplete(activityId: string, lessonId: string,
     await db.insert(userCompletion).values({
         userId,
         activityId,
-        lessonId,
-        moduleId,
-        courseId,
         completedAt: new Date(),
         correctAnswers,
         totalQuestions,
     }).onConflictDoUpdate({
-        target: [userCompletion.userId, userCompletion.courseId, userCompletion.moduleId, userCompletion.lessonId, userCompletion.activityId],
+        target: [userCompletion.userId, userCompletion.activityId],
         set: {
             correctAnswers,
             totalQuestions,
@@ -582,10 +579,29 @@ export async function getCompletedActivities() {
     const completedActivities = await db.query.userCompletion.findMany({
         where: eq(userCompletion.userId, userId),
         with: {
-            activity: true,
-            lesson: true,
-            module: true,
-            course: true
+            activity: {
+                with: {
+                    lesson: {
+                        with: {
+                            module: {
+                                columns: {
+                                    id: true,
+                                    courseId: true
+                                }
+                            }
+                        },
+                        columns: {
+                            id: true,
+                            title: true
+                        }
+                    }
+                },
+                columns: {
+                    id: true,
+                    title: true,
+                    type: true
+                }
+            },
         }
     });
 
