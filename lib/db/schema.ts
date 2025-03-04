@@ -362,7 +362,6 @@ export const authenticatorsRelations = relations(authenticators, ({ one }) => ({
 
 export const coursesRelations = relations(courses, ({ many }) => ({
   modules: many(modules),
-  userCompletion: many(userCompletion),
 }))
 
 export const modulesRelations = relations(modules, ({ one, many }) => ({
@@ -371,7 +370,6 @@ export const modulesRelations = relations(modules, ({ one, many }) => ({
     references: [courses.id],
   }),
   lessons: many(lessons),
-  userCompletion: many(userCompletion),
 }))
 
 export const lessonsRelations = relations(lessons, ({ one, many }) => ({
@@ -380,7 +378,6 @@ export const lessonsRelations = relations(lessons, ({ one, many }) => ({
     references: [modules.id],
   }),
   activities: many(activities),
-  userCompletion: many(userCompletion),
 }))
 
 export const activitiesRelations = relations(activities, ({ one, many }) => ({
