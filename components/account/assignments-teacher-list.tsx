@@ -20,9 +20,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { deleteAssignment } from "@/lib/actions/classes";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { type CreateAssignments } from "@/components/account/create-assigments"; // Adjust the import path as necessary
 
 interface UserProgressProps {
     assignments: AssignmentItem[];
+    createAssignmentsElem: React.ReactElement<typeof CreateAssignments>;
 }
 
 function formatDate(date: Date) {
@@ -52,9 +54,11 @@ export type AssignmentItem = {
 function DataTable<TData, TValue>({
     columns,
     data,
+    createAssignmentsElem,
 }: {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    createAssignmentsElem?: React.ReactElement<typeof CreateAssignments>;
 }) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -79,8 +83,11 @@ function DataTable<TData, TValue>({
                     onChange={(event) =>
                         table.getColumn("activityTitle")?.setFilterValue(event.target.value)
                     }
-                    className="w-full sm:w-1/2"
+                    className="w-full sm:flex-1"
                 />
+                <div className="w-full sm:w-auto">
+                    {createAssignmentsElem}
+                </div>
             </div>
             <div className="rounded-md border">
                 <Table>
@@ -148,7 +155,7 @@ function DataTable<TData, TValue>({
     )
 }
 
-export function AssignmentsTeacherList({ assignments }: UserProgressProps) {
+export function AssignmentsTeacherList({ assignments, createAssignmentsElem }: UserProgressProps) {
     const router = useRouter();
 
     const assignmentColumns: ColumnDef<AssignmentItem>[] = [
@@ -232,6 +239,6 @@ export function AssignmentsTeacherList({ assignments }: UserProgressProps) {
     ];
 
     return (
-        <DataTable columns={assignmentColumns} data={assignments} />
+        <DataTable columns={assignmentColumns} data={assignments} createAssignmentsElem={createAssignmentsElem} />
     );
 }

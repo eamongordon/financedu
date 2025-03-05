@@ -25,11 +25,7 @@ export default async function Page({
 
     return (
         <section>
-            <div>
-                <h2 className="text-xl font-semibold">Assignments</h2>
-                <CreateAssignments courses={courses} />
-            </div>
-            <AssignmentsTeacherList assignments={assignmentsTableData} />
+            <AssignmentsTeacherList assignments={assignmentsTableData} createAssignmentsElem={<CreateAssignments courses={courses}/>} />
         </section>
     );
 }

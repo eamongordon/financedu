@@ -70,7 +70,7 @@ export function CreateAssignments({ isNoChildren, courses }: { isNoChildren?: bo
         return (
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button className="mt-6" {...isNoChildren ? { variant: "outline" } : {}}>
+                    <Button className="w-full" {...isNoChildren ? { variant: "outline" } : {}}>
                         <Plus />
                         Create Assignments
                     </Button>
@@ -102,7 +102,7 @@ export function CreateAssignments({ isNoChildren, courses }: { isNoChildren?: bo
     return (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
-                <Button className="mt-6">
+                <Button className="w-full">
                     <Plus />
                     Create Assignments
                 </Button>
