@@ -11,10 +11,10 @@ export function LeaveClassButton({ isTeacher }: { isTeacher: boolean }) {
     const classId = params!.classId;
     const router = useRouter();
     async function handleSubmit() {
-        await leaveClass(classId);
         const confirmed = window.confirm("Are you sure you want to leave this class?");
         if (!confirmed) return;
-        toast.success("Succesfully left the class!");
+        await leaveClass(classId);
+        toast.success("Successfully left the class!");
         if (isTeacher) {
             router.push("/account/teacher");
         } else {
