@@ -29,31 +29,41 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { type getCoursesWithModulesAndLessonsAndActivities } from "@/lib/actions";
 import { cn } from "@/lib/utils";
 
+import { zodResolver } from "@hookform/resolvers/zod"
+import { format } from "date-fns"
+import { CalendarIcon } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+
+import { Calendar } from "@/components/ui/calendar"
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import { TimePicker12Demo } from "@/components/time-picker/time-picker-12h-demo";
+import { useParams, useRouter } from "next/navigation";
+import { createAssignments } from "@/lib/actions";
+import { toast } from "sonner";
+
 type CoursesWithModulesAndLessonsAndActivities = Awaited<ReturnType<typeof getCoursesWithModulesAndLessonsAndActivities>>
 
 export function CreateAssignments({ isNoChildren, courses }: { isNoChildren?: boolean, courses: CoursesWithModulesAndLessonsAndActivities }) {
     const [open, setOpen] = React.useState(false)
     const [selectedActivities, setSelectedActivities] = React.useState<string[]>([])
-    const [dueDate, setDueDate] = React.useState<string>("");
     const [showDueDateSetter, setShowDueDateSetter] = React.useState(false);
     const isDesktop = useMediaQuery("(min-width: 768px)")
 
     const handleActivitySubmit = () => {
         setShowDueDateSetter(true);
-    };
-
-    const handleDueDateSubmit = () => {
-        const dueDates = selectedActivities.reduce((acc, activityId) => {
-            acc[activityId] = dueDate;
-            return acc;
-        }, {} as Record<string, string>);
-        console.log(dueDates);
-        setOpen(false);
-        setShowDueDateSetter(false);
-    };
-
-    const handleDueDateCancel = () => {
-        setShowDueDateSetter(false);
     };
 
     if (isDesktop) {
@@ -69,25 +79,17 @@ export function CreateAssignments({ isNoChildren, courses }: { isNoChildren?: bo
                     <DialogHeader className="sticky top-0 bg-background">
                         <DialogTitle>Assign Content</DialogTitle>
                         <DialogDescription>
-                            {showDueDateSetter ? "Set Due Date" : "Select Activities"}
+                            {showDueDateSetter ? "Set Availability" : "Select Activities"}
                         </DialogDescription>
                     </DialogHeader>
                     {showDueDateSetter ? (
-                        <>
-                            <DueDateSetter dueDate={dueDate} setDueDate={setDueDate} />
-                            <DialogFooter>
-                                <Button disabled={!dueDate} onClick={() => handleDueDateSubmit()}>
-                                    Assign
-                                </Button>
-                                <Button variant="outline" onClick={handleDueDateCancel}>Cancel</Button>
-                            </DialogFooter>
-                        </>
+                        <DueDateSetter selectedActivities={selectedActivities} setOpen={setOpen} />
                     ) : (
                         <>
                             <ContentSelector courses={courses} selectedActivities={selectedActivities} setSelectedActivities={setSelectedActivities} />
                             <DialogFooter>
                                 <Button disabled={selectedActivities.length === 0} onClick={() => handleActivitySubmit()}>
-                                    ({selectedActivities.length > 0 ? "Next" : "Next"})
+                                    {selectedActivities.length > 0 ? `Next (${selectedActivities.length} Selected)` : "Next"}
                                 </Button>
                             </DialogFooter>
                         </>
@@ -107,23 +109,13 @@ export function CreateAssignments({ isNoChildren, courses }: { isNoChildren?: bo
             </DrawerTrigger>
             <DrawerContent className="max-h-[calc(100dvh-64px)]">
                 <DrawerHeader className="text-left">
-                    <DrawerTitle>Assign Content</DrawerTitle>
+                    <DrawerTitle>Create Assignments</DrawerTitle>
                     <DrawerDescription>
-                        {showDueDateSetter ? "Set Due Date" : "Select Activities"}
+                        {showDueDateSetter ? "Set Availability" : "Select Activities"}
                     </DrawerDescription>
                 </DrawerHeader>
                 {showDueDateSetter ? (
-                    <>
-                        <DueDateSetter dueDate={dueDate} setDueDate={setDueDate} />
-                        <DrawerFooter className="pt-2">
-                            <Button disabled={!dueDate} onClick={() => handleDueDateSubmit()}>
-                                Assign
-                            </Button>
-                            <DrawerClose asChild>
-                                <Button variant="outline" onClick={handleDueDateCancel}>Cancel</Button>
-                            </DrawerClose>
-                        </DrawerFooter>
-                    </>
+                    <DueDateSetter selectedActivities={selectedActivities} isDrawer setOpen={setOpen} />
                 ) : (
                     <>
                         <ContentSelector className="px-4" courses={courses} selectedActivities={selectedActivities} setSelectedActivities={setSelectedActivities} />
@@ -223,16 +215,155 @@ function ContentSelector({ className, courses, selectedActivities, setSelectedAc
     )
 }
 
-function DueDateSetter({ dueDate, setDueDate }: { dueDate: string, setDueDate: React.Dispatch<React.SetStateAction<string>> }) {
+const FormSchema = z.object({
+    startDate: z.date({
+        required_error: "A start date is required.",
+    }).refine(date => date >= new Date(), {
+        message: "Start date cannot be in the past.",
+    }),
+    endDate: z.date({
+        required_error: "A due date is required.",
+    })
+}).refine((data) => {
+    return data.startDate < data.endDate;
+}, {
+    message: "Due Date must be after Start Date.",
+    path: ["startDate"]
+});
+
+function DueDateSetter({ isDrawer, selectedActivities, setOpen }: { isDrawer?: boolean, selectedActivities: string[], setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
+    const form = useForm<z.infer<typeof FormSchema>>({
+        resolver: zodResolver(FormSchema),
+        defaultValues: {
+            startDate: new Date(),
+            endDate: new Date(new Date(new Date().setDate(new Date().getDate() + 1)).setHours(23, 59, 59, 999)),
+        }
+    })
+
+    const params = useParams<{ classId: string }>();
+    const classId = params!.classId;
+    const router = useRouter();
+
+    async function onSubmit(data: z.infer<typeof FormSchema>) {
+        console.log(data);
+        console.log(selectedActivities);
+        const activities = selectedActivities.map(activityId => activityId)
+        await createAssignments(activities, classId);
+        toast.success("Assignments created successfully.");
+        setOpen(false);
+        router.refresh();
+    }
+
     return (
-        <div className="flex flex-col p-4">
-            <label className="mb-2">Set Due Date</label>
-            <input
-                type="date"
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-                className="border p-1 w-full"
-            />
-        </div>
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <FormField
+                    control={form.control}
+                    name="startDate"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                            <FormLabel>Start Date</FormLabel>
+                            <div className="flex flex-row items-center gap-4">
+                                <Popover modal>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-[240px] pl-3 text-left font-normal",
+                                                    !field.value && "text-muted-foreground"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, "PPP")
+                                                ) : (
+                                                    <span>Pick a date</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            disabled={(date) =>
+                                                date < new Date()
+                                            }
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <TimePicker12Demo
+                                    setDate={field.onChange}
+                                    date={field.value}
+                                />
+                            </div>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="endDate"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                            <FormLabel>Due Date</FormLabel>
+                            <div className="flex flex-row items-center gap-4">
+                                <Popover modal>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-[240px] pl-3 text-left font-normal",
+                                                    !field.value && "text-muted-foreground"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, "PPP")
+                                                ) : (
+                                                    <span>Pick a date</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            disabled={(date) =>
+                                                date < form.getValues("startDate")
+                                            }
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                    <TimePicker12Demo
+                                        setDate={field.onChange}
+                                        date={field.value}
+                                    />
+                                </Popover>
+                            </div>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                {isDrawer ? (
+                    <DrawerFooter className="pt-2">
+                        <Button type="submit">Assign</Button>
+                        <DrawerClose asChild>
+                            <Button variant="outline">Cancel</Button>
+                        </DrawerClose>
+                    </DrawerFooter>
+                ) : (
+                    <DialogFooter>
+                        <Button type="submit">Assign</Button>
+                    </DialogFooter>
+                )}
+            </form>
+        </Form>
     );
 }

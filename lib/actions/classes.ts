@@ -398,28 +398,15 @@ export async function getClassTeacherWithCompletion(classId: string) {
     return classActivitiesCompletion;
 }
 
-type CreateAssignmentsProps = {
-    activities: {
-        courseId: string;
-        moduleId: string;
-        lessonId: string;
-        activityId: string;
-    }[];
-    classId: string;
-}
-
-export async function createAssignments({ activities, classId }: CreateAssignmentsProps) {
+export async function createAssignments(activities: string[], classId: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
     const userId = session.user.id;
 
-    const newAssignments = activities.map(activity => ({
-        courseId: activity.courseId,
-        moduleId: activity.moduleId,
-        lessonId: activity.lessonId,
-        activityId: activity.activityId,
+    const newAssignments = activities.map(activityId => ({
+        activityId,
         classId: classId,
         teacherId: userId,
         startAt: new Date(),
