@@ -184,7 +184,20 @@ export function Gradebook({ students, assignments }: GradebookProps) {
             }
         })
     ];
-    return (
+    return !students.length ? (
+        <div className="flex flex-col items-center justify-center mt-6">
+            <p className="text-lg font-semibold mt-6">
+                You haven&apos;t added any students yet. Once you add students and create assignments, their scores will appear here.
+            </p>
+        </div>
+    ) : !assignments.length ? (
+        <div className="flex flex-col items-center justify-center mt-6">
+            <p className="text-lg font-semibold mt-6">
+                You haven&apos;t created any assignments yet.
+            </p>
+            <p>Your gradebook will show scores once you create at least one.</p>
+        </div>
+    ) : (
         <DataTable columns={columns} data={students} />
-    );
+    )
 }
