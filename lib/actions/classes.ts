@@ -188,7 +188,15 @@ export async function getClassTeacherWithRoster(classId: string) {
             },
             classTeachers: {
                 with: {
-                    teacher: true
+                    teacher: {
+                        columns: {
+                            id: true,
+                            firstName: true,
+                            lastName: true,
+                            email: true,
+                            image: true
+                        }
+                    }
                 }
             }
         }
