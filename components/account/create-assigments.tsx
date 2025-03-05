@@ -261,7 +261,7 @@ function DueDateSetter({ isDrawer, selectedActivities, setOpen }: { isDrawer?: b
                     control={form.control}
                     name="startDate"
                     render={({ field }) => (
-                        <FormItem className="flex flex-col">
+                        <FormItem className={cn("flex flex-col", isDrawer && "px-4")}>
                             <FormLabel>Start Date</FormLabel>
                             <div className="flex flex-row items-center gap-4">
                                 <Popover modal>
@@ -270,7 +270,7 @@ function DueDateSetter({ isDrawer, selectedActivities, setOpen }: { isDrawer?: b
                                             <Button
                                                 variant={"outline"}
                                                 className={cn(
-                                                    "w-[240px] pl-3 text-left font-normal",
+                                                    "w-[240px] flex-1 pl-3 text-left font-normal",
                                                     !field.value && "text-muted-foreground"
                                                 )}
                                             >
@@ -308,7 +308,7 @@ function DueDateSetter({ isDrawer, selectedActivities, setOpen }: { isDrawer?: b
                     control={form.control}
                     name="endDate"
                     render={({ field }) => (
-                        <FormItem className="flex flex-col">
+                        <FormItem className={cn("flex flex-col", isDrawer && "px-4")}>
                             <FormLabel>Due Date</FormLabel>
                             <div className="flex flex-row items-center gap-4">
                                 <Popover modal>
@@ -317,7 +317,7 @@ function DueDateSetter({ isDrawer, selectedActivities, setOpen }: { isDrawer?: b
                                             <Button
                                                 variant={"outline"}
                                                 className={cn(
-                                                    "w-[240px] pl-3 text-left font-normal",
+                                                    "w-[240px] flex-1 pl-3 text-left font-normal",
                                                     !field.value && "text-muted-foreground"
                                                 )}
                                             >
