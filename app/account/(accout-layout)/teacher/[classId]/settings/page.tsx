@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { LeaveClassButton } from "@/components/account/leave-class";
+import { DeleteClassButton } from "@/components/account/delete-class";
 
 export default async function Page({
     params,
@@ -20,9 +21,9 @@ export default async function Page({
     }
     const userId = session.user.id;
     return (
-        <section className="flex flex-col gap-4">
-            <div>
-            <h2 className="text-2xl font-semibold">{classItem.classTeachers.length} Teacher{classItem.classTeachers.length !== 1 && "s"}</h2>
+        <section className="flex flex-col divide-y divide-dashed">
+            <div className="pb-8">
+                <h2 className="text-2xl font-semibold">{classItem.classTeachers.length} Teacher{classItem.classTeachers.length !== 1 && "s"}</h2>
                 {classItem.classTeachers.map(ct => {
                     const nameStr = getDisplayName(ct.teacher.firstName, ct.teacher.lastName, ct.teacher.email!);
                     return (
@@ -49,7 +50,7 @@ export default async function Page({
                     )
                 })}
             </div>
-            <div>
+            <div className="py-8">
                 <h2 className="text-2xl font-semibold">{classItem.classStudents.length} Student{classItem.classStudents.length !== 1 && "s"}</h2>
                 <StudentsList students={classItem.classStudents.map(cs => ({
                     studentId: cs.student.id,
@@ -57,13 +58,14 @@ export default async function Page({
                     email: cs.student.email!,
                 }))} />
             </div>
-            <div className="space-y-4">
+            <div className="py-8 flex flex-col gap-4">
                 <h2 className="text-2xl font-semibold">Settings</h2>
                 <ClassSettingsForm defaultValues={{ name: classItem.name }} />
             </div>
-            <div className="space-y-4">
-                <h2 className="text-2xl font-semibold">Leave Class</h2>
-                <LeaveClassButton isTeacher/>
+            <div className="py-8 space-y-4">
+                <h2 className="text-2xl font-semibold">Danger Zone</h2>
+                <LeaveClassButton isTeacher />
+                <DeleteClassButton/>
             </div>
         </section>
     );

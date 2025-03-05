@@ -423,3 +423,21 @@ export async function createAssignments(activities: string[], classId: string) {
 
     await db.insert(assignments).values(newAssignments);
 }
+
+export async function deleteClass(classId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    await db.delete(classes).where(and(
+        eq(classes.id, classId),
+        exists(
+            db.select().from(classTeachers).where(and(
+                eq(classTeachers.classId, classId),
+                eq(classTeachers.teacherId, userId)
+            ))
+        )
+    ));
+}
