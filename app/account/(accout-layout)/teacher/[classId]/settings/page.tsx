@@ -25,6 +25,10 @@ export default async function Page({
                 <h2 className="text-2xl font-semibold">Settings</h2>
                 <ClassSettingsForm defaultValues={{ name: classItem.name }} />
             </div>
+            <div className="space-y-4">
+                <h2 className="text-2xl font-semibold">Leave Class</h2>
+                <LeaveClassButton isTeacher/>
+            </div>
         </section>
     );
 }
