@@ -34,11 +34,26 @@ type CoursesWithModulesAndLessonsAndActivities = Awaited<ReturnType<typeof getCo
 export function CreateAssignments({ isNoChildren, courses }: { isNoChildren?: boolean, courses: CoursesWithModulesAndLessonsAndActivities }) {
     const [open, setOpen] = React.useState(false)
     const [selectedActivities, setSelectedActivities] = React.useState<string[]>([])
+    const [dueDate, setDueDate] = React.useState<string>("");
+    const [showDueDateSetter, setShowDueDateSetter] = React.useState(false);
     const isDesktop = useMediaQuery("(min-width: 768px)")
 
-    const handleSubmit = () => {
-        console.log(selectedActivities);
+    const handleActivitySubmit = () => {
+        setShowDueDateSetter(true);
+    };
+
+    const handleDueDateSubmit = () => {
+        const dueDates = selectedActivities.reduce((acc, activityId) => {
+            acc[activityId] = dueDate;
+            return acc;
+        }, {} as Record<string, string>);
+        console.log(dueDates);
         setOpen(false);
+        setShowDueDateSetter(false);
+    };
+
+    const handleDueDateCancel = () => {
+        setShowDueDateSetter(false);
     };
 
     if (isDesktop) {
@@ -54,15 +69,29 @@ export function CreateAssignments({ isNoChildren, courses }: { isNoChildren?: bo
                     <DialogHeader className="sticky top-0 bg-background">
                         <DialogTitle>Assign Content</DialogTitle>
                         <DialogDescription>
-                            Assign Lessons
+                            {showDueDateSetter ? "Set Due Date" : "Select Activities"}
                         </DialogDescription>
                     </DialogHeader>
-                    <ContentSelector courses={courses} selectedActivities={selectedActivities} setSelectedActivities={setSelectedActivities} />
-                    <DialogFooter>
-                        <Button disabled={selectedActivities.length === 0} onClick={() => handleSubmit()}>
-                            ({selectedActivities.length > 0 ? "Assign " + selectedActivities.length : "Assign"})
-                        </Button>
-                    </DialogFooter>
+                    {showDueDateSetter ? (
+                        <>
+                            <DueDateSetter dueDate={dueDate} setDueDate={setDueDate} />
+                            <DialogFooter>
+                                <Button disabled={!dueDate} onClick={() => handleDueDateSubmit()}>
+                                    Assign
+                                </Button>
+                                <Button variant="outline" onClick={handleDueDateCancel}>Cancel</Button>
+                            </DialogFooter>
+                        </>
+                    ) : (
+                        <>
+                            <ContentSelector courses={courses} selectedActivities={selectedActivities} setSelectedActivities={setSelectedActivities} />
+                            <DialogFooter>
+                                <Button disabled={selectedActivities.length === 0} onClick={() => handleActivitySubmit()}>
+                                    ({selectedActivities.length > 0 ? "Next" : "Next"})
+                                </Button>
+                            </DialogFooter>
+                        </>
+                    )}
                 </DialogContent>
             </Dialog>
         )
@@ -80,18 +109,34 @@ export function CreateAssignments({ isNoChildren, courses }: { isNoChildren?: bo
                 <DrawerHeader className="text-left">
                     <DrawerTitle>Assign Content</DrawerTitle>
                     <DrawerDescription>
-                        Assign lessons.
+                        {showDueDateSetter ? "Set Due Date" : "Select Activities"}
                     </DrawerDescription>
                 </DrawerHeader>
-                <ContentSelector className="px-4" courses={courses} selectedActivities={selectedActivities} setSelectedActivities={setSelectedActivities} />
-                <DrawerFooter className="pt-2">
-                    <Button disabled={selectedActivities.length === 0} onClick={() => handleSubmit()}>
-                        ({selectedActivities.length > 0 ? "Assign " + selectedActivities.length : "Assign"})
-                    </Button>
-                    <DrawerClose asChild>
-                        <Button variant="outline">Cancel</Button>
-                    </DrawerClose>
-                </DrawerFooter>
+                {showDueDateSetter ? (
+                    <>
+                        <DueDateSetter dueDate={dueDate} setDueDate={setDueDate} />
+                        <DrawerFooter className="pt-2">
+                            <Button disabled={!dueDate} onClick={() => handleDueDateSubmit()}>
+                                Assign
+                            </Button>
+                            <DrawerClose asChild>
+                                <Button variant="outline" onClick={handleDueDateCancel}>Cancel</Button>
+                            </DrawerClose>
+                        </DrawerFooter>
+                    </>
+                ) : (
+                    <>
+                        <ContentSelector className="px-4" courses={courses} selectedActivities={selectedActivities} setSelectedActivities={setSelectedActivities} />
+                        <DrawerFooter className="pt-2">
+                            <Button disabled={selectedActivities.length === 0} onClick={() => handleActivitySubmit()}>
+                                ({selectedActivities.length > 0 ? "Next" : "Next"})
+                            </Button>
+                            <DrawerClose asChild>
+                                <Button variant="outline">Cancel</Button>
+                            </DrawerClose>
+                        </DrawerFooter>
+                    </>
+                )}
             </DrawerContent>
         </Drawer>
     )
@@ -176,4 +221,18 @@ function ContentSelector({ className, courses, selectedActivities, setSelectedAc
             </Accordion>
         </div>
     )
+}
+
+function DueDateSetter({ dueDate, setDueDate }: { dueDate: string, setDueDate: React.Dispatch<React.SetStateAction<string>> }) {
+    return (
+        <div className="flex flex-col p-4">
+            <label className="mb-2">Set Due Date</label>
+            <input
+                type="date"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                className="border p-1 w-full"
+            />
+        </div>
+    );
 }
