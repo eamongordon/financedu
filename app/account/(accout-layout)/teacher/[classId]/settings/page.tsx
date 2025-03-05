@@ -1,7 +1,11 @@
 import { getClassTeacherWithRoster } from "@/lib/actions/classes";
 import { StudentsList } from "@/components/account/students-list";
-import { getDisplayName } from "@/lib/utils";
+import { getDisplayName, getInitials } from "@/lib/utils";
 import { ClassSettingsForm } from "@/components/account/class-settings-form";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { User } from "lucide-react";
+import { auth } from "@/lib/auth";
+import { LeaveClassButton } from "@/components/account/leave-class";
 
 export default async function Page({
     params,
@@ -10,9 +14,41 @@ export default async function Page({
 }) {
     const classId = (await params).classId;
     const classItem = await getClassTeacherWithRoster(classId);
-
+    const session = await auth();
+    if (!session || !session.user) {
+        throw new Error("Unauthorized");
+    }
+    const userId = session.user.id;
     return (
-        <section>
+        <section className="flex flex-col gap-4">
+            <div>
+            <h2 className="text-2xl font-semibold">{classItem.classTeachers.length} Teacher{classItem.classTeachers.length !== 1 && "s"}</h2>
+                {classItem.classTeachers.map(ct => {
+                    const nameStr = getDisplayName(ct.teacher.firstName, ct.teacher.lastName, ct.teacher.email!);
+                    return (
+                        <div key={ct.teacherId} className="flex items-center justify-between py-4 p-6">
+                            <div className="flex flex-row items-center gap-4">
+                                <Avatar className="size-12">
+                                    {ct.teacher.image ? (
+                                        <AvatarImage src={ct.teacher.image} alt={nameStr} />
+                                    ) : null}
+                                    <AvatarFallback>
+                                        {getInitials(nameStr) || <User className="h-4 w-4" />}
+                                    </AvatarFallback>
+                                </Avatar>
+                                <div className="flex flex-col justify-start text-start gap-2">
+                                    <p className="leading-none font-semibold">
+                                        {nameStr} {ct.teacherId === userId && "(You)"}
+                                    </p>
+                                    {(ct.teacher.firstName || ct.teacher.lastName) && (
+                                        <p className="text-sm text-muted-foreground leading-none">{ct.teacher.email}</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
             <div>
                 <h2 className="text-2xl font-semibold">{classItem.classStudents.length} Student{classItem.classStudents.length !== 1 && "s"}</h2>
                 <StudentsList students={classItem.classStudents.map(cs => ({
