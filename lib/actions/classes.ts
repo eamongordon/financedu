@@ -18,7 +18,7 @@ export async function createClass(name: string) {
     return newClass[0];
 }
 
-export async function updateClass(classId: string, updates: { name?: string, description?: string }) {
+export async function updateClass(classId: string, updates: { name?: string }) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
