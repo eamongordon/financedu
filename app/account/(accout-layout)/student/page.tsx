@@ -30,7 +30,7 @@ export default async function StudentPage() {
                         {classes.map((classItem) => {
                             const teacherName = getDisplayName(classItem.classTeachers[0].teacher.firstName, classItem.classTeachers[0].teacher.lastName, classItem.classTeachers[0].teacher.email!);
                             return (
-                                <Link key={classItem.id} href={`/account/teacher/${classItem.id}`} className="flex items-center justify-between py-4 p-6">
+                                <Link key={classItem.id} href={`/account/student/${classItem.id}`} className="flex items-center justify-between py-4 p-6">
                                     <div className="flex flex-row items-center gap-4">
                                         <div className="flex flex-col justify-start text-start gap-2">
                                             <p className="leading-none font-semibold text-lg">
