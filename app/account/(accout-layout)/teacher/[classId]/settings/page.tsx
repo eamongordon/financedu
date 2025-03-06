@@ -71,8 +71,10 @@ export default async function Page({
                     ) : (
                         <TooltipProvider>
                             <Tooltip>
-                                <TooltipTrigger>
-                                    <LeaveClassButton isTeacher disabled />
+                                <TooltipTrigger asChild>
+                                    <span>
+                                        <LeaveClassButton isTeacher disabled />
+                                    </span>
                                 </TooltipTrigger>
                                 <TooltipContent>
                                     <p>You cannot leave a class if you are the only teacher.</p>
