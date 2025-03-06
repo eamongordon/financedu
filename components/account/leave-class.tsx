@@ -6,7 +6,7 @@ import { leaveClass } from "@/lib/actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-export function LeaveClassButton({ isTeacher, disabled }: { isTeacher: boolean, disabled?: boolean }) {
+export function LeaveClassButton({ isTeacher, disabled }: { isTeacher?: boolean, disabled?: boolean }) {
     const params = useParams<{ classId: string }>();
     const classId = params!.classId;
     const router = useRouter();
