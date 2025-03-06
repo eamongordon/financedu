@@ -163,7 +163,7 @@ export function Gradebook({ students, assignments }: GradebookProps) {
             return {
                 accessorKey: assignment.assignmentId,
                 header: () => (
-                    <div className="flex items-center flex-col gap-2 py-2">
+                    <div className="flex items-center flex-col gap-2 py-2 text-center">
                         {assignment.activityType === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
                         <span>{assignment.activityName}</span>
                     </div>
