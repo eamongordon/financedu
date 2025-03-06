@@ -31,6 +31,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.38.4",
+    "input-otp": "^1.4.2",
     "lucide-react": "^0.474.0",
     "next": "15.1.6",
     "next-auth": "^5.0.0-beta.25",
