@@ -24,7 +24,7 @@ function AssignmentsTable({ assignments }: { assignments: Assignments }) {
     return (
         <Table>
             <TableHeader>
-                <TableRow className="border-dashed">
+                <TableRow>
                     <TableHead>Activity</TableHead>
                     <TableHead>Due</TableHead>
                     <TableHead>Status</TableHead>
