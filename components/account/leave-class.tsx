@@ -6,7 +6,7 @@ import { leaveClass } from "@/lib/actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-export function LeaveClassButton({ isTeacher }: { isTeacher: boolean }) {
+export function LeaveClassButton({ isTeacher, disabled }: { isTeacher: boolean, disabled?: boolean }) {
     const params = useParams<{ classId: string }>();
     const classId = params!.classId;
     const router = useRouter();
@@ -23,7 +23,12 @@ export function LeaveClassButton({ isTeacher }: { isTeacher: boolean }) {
     }
 
     return (
-        <Button variant="destructive" onClick={() => handleSubmit()}>
+        <Button
+            variant={isTeacher ? "outline" : "destructive"}
+            {...isTeacher && { className: "border-destructive text-destructive hover:text-destructive" }}
+            disabled={disabled}
+            onClick={() => handleSubmit()}
+        >
             Leave Class
         </Button>
     );

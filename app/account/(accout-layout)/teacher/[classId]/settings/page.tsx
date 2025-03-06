@@ -7,6 +7,7 @@ import { User } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { LeaveClassButton } from "@/components/account/leave-class";
 import { DeleteClassButton } from "@/components/account/delete-class";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default async function Page({
     params,
@@ -64,8 +65,24 @@ export default async function Page({
             </div>
             <div className="py-8 space-y-4">
                 <h2 className="text-2xl font-semibold">Danger Zone</h2>
-                <LeaveClassButton isTeacher />
-                <DeleteClassButton/>
+                <div className="flex flex-row gap-2">
+                    {classItem.classTeachers.length > 1 ? (
+                        <LeaveClassButton isTeacher />
+                    ) : (
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger>
+                                    <LeaveClassButton isTeacher disabled />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>You cannot leave a class if you are the only teacher.</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+
+                    )}
+                    <DeleteClassButton />
+                </div>
             </div>
         </section>
     );
