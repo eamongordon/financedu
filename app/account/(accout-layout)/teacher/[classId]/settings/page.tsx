@@ -8,6 +8,7 @@ import { auth } from "@/lib/auth";
 import { LeaveClassButton } from "@/components/account/leave-class";
 import { DeleteClassButton } from "@/components/account/delete-class";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { InviteStudents } from "@/components/account/invite-students";
 
 export default async function Page({
     params,
@@ -53,11 +54,14 @@ export default async function Page({
             </div>
             <div className="py-8">
                 <h2 className="text-2xl font-semibold">{classItem.classStudents.length} Student{classItem.classStudents.length !== 1 && "s"}</h2>
-                <StudentsList students={classItem.classStudents.map(cs => ({
-                    studentId: cs.student.id,
-                    name: getDisplayName(cs.student.firstName, cs.student.lastName, cs.student.email!),
-                    email: cs.student.email!,
-                }))} />
+                <StudentsList
+                    students={classItem.classStudents.map(cs => ({
+                        studentId: cs.student.id,
+                        name: getDisplayName(cs.student.firstName, cs.student.lastName, cs.student.email!),
+                        email: cs.student.email!,
+                    }))}
+                    inviteButtonElem={<InviteStudents classCode={classItem.studentJoinCode} />}
+                />
             </div>
             <div className="py-8 flex flex-col gap-4">
                 <h2 className="text-2xl font-semibold">Settings</h2>

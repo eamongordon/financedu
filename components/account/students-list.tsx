@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { getInitials } from "@/lib/utils";
 import { User } from "lucide-react";
+import { InviteStudents } from "./invite-students";
 
 export type StudentItem = {
     studentId: string;
@@ -29,14 +30,17 @@ export type StudentItem = {
 
 interface StudentsListProps {
     students: StudentItem[];
+    inviteButtonElem: React.ReactElement<typeof InviteStudents>;
 }
 
 function DataTable<TData, TValue>({
     columns,
     data,
+    inviteButtonElem
 }: {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    inviteButtonElem: React.ReactElement<typeof InviteStudents>;
 }) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -61,8 +65,11 @@ function DataTable<TData, TValue>({
                     onChange={(event) =>
                         table.getColumn("name")?.setFilterValue(event.target.value)
                     }
-                    className="w-full"
+                    className="w-full sm:flex-1"
                 />
+                <div className="w-full sm:w-auto">
+                    {inviteButtonElem}
+                </div>
             </div>
             <div className="rounded-md border">
                 <Table>
@@ -130,7 +137,7 @@ function DataTable<TData, TValue>({
     )
 }
 
-export function StudentsList({ students }: StudentsListProps) {
+export function StudentsList({ students, inviteButtonElem }: StudentsListProps) {
     const router = useRouter();
 
     const studentColumns: ColumnDef<StudentItem>[] = [
@@ -171,9 +178,9 @@ export function StudentsList({ students }: StudentsListProps) {
 
                 return (
                     <div className="flex justify-end">
-                    <Button variant="ghost" className="text-destructive hover:text-destructive" onClick={handleRemove}>
-                        Remove
-                    </Button>
+                        <Button variant="ghost" className="text-destructive hover:text-destructive" onClick={handleRemove}>
+                            Remove
+                        </Button>
                     </div>
                 );
             },
@@ -181,6 +188,6 @@ export function StudentsList({ students }: StudentsListProps) {
     ];
 
     return (
-        <DataTable columns={studentColumns} data={students} />
+        <DataTable columns={studentColumns} data={students} inviteButtonElem={inviteButtonElem} />
     );
 }
