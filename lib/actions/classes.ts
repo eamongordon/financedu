@@ -129,6 +129,23 @@ export async function getClassTeacher(classId: string) {
     return classDetails;
 }
 
+export async function getClassFromClassCode(classCode: string) {
+    const classDetails = await db.query.classes.findFirst({
+        where: eq(classes.studentJoinCode, classCode),
+        with: {
+            classStudents: true,
+        },
+        columns: {
+            id: true,
+            name: true,
+            studentJoinCode: true
+        }
+    });
+
+    return classDetails;
+}
+
+
 export async function getClassTeacherWithAssignments(classId: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
