@@ -218,14 +218,14 @@ function ContentSelector({ className, courses, selectedActivities, setSelectedAc
 const FormSchema = z.object({
     startDate: z.date({
         required_error: "A start date is required.",
-    }).refine(date => date >= new Date(), {
-        message: "Start date cannot be in the past.",
     }),
-    endDate: z.date({
+    dueDate: z.date({
         required_error: "A due date is required.",
-    })
+    }).refine(date => date >= new Date(), {
+        message: "End date cannot be in the past.",
+    }),
 }).refine((data) => {
-    return data.startDate < data.endDate;
+    return data.startDate < data.dueDate;
 }, {
     message: "Due Date must be after Start Date.",
     path: ["startDate"]
@@ -236,7 +236,7 @@ function DueDateSetter({ isDrawer, selectedActivities, setOpen }: { isDrawer?: b
         resolver: zodResolver(FormSchema),
         defaultValues: {
             startDate: new Date(),
-            endDate: new Date(new Date(new Date().setDate(new Date().getDate() + 1)).setHours(23, 59, 59, 999)),
+            dueDate: new Date(new Date(new Date().setDate(new Date().getDate() + 1)).setHours(23, 59, 59, 999)),
         }
     })
 
@@ -247,8 +247,14 @@ function DueDateSetter({ isDrawer, selectedActivities, setOpen }: { isDrawer?: b
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         console.log(data);
         console.log(selectedActivities);
-        const activities = selectedActivities.map(activityId => activityId)
-        await createAssignments(activities, classId);
+        const assignments = selectedActivities.map(activityId => {
+            return {
+                activityId,
+                startAt: data.startDate,
+                dueAt: data.dueDate
+            }
+        })
+        await createAssignments(assignments, classId);
         toast.success("Assignments created successfully.");
         setOpen(false);
         router.refresh();
@@ -306,7 +312,7 @@ function DueDateSetter({ isDrawer, selectedActivities, setOpen }: { isDrawer?: b
                 />
                 <FormField
                     control={form.control}
-                    name="endDate"
+                    name="dueDate"
                     render={({ field }) => (
                         <FormItem className={cn("flex flex-col", isDrawer && "px-4")}>
                             <FormLabel>Due Date</FormLabel>

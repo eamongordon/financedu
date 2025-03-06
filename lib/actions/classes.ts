@@ -406,19 +406,25 @@ export async function getClassTeacherWithCompletion(classId: string) {
     return classActivitiesCompletion;
 }
 
-export async function createAssignments(activities: string[], classId: string) {
+type Assignment = {
+    activityId: string;
+    startAt: Date;
+    dueAt: Date;
+};
+
+export async function createAssignments(assignmentsArr: Assignment[], classId: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
     const userId = session.user.id;
 
-    const newAssignments = activities.map(activityId => ({
-        activityId,
+    const newAssignments = assignmentsArr.map(assignment => ({
+        activityId: assignment.activityId,
         classId: classId,
         teacherId: userId,
-        startAt: new Date(),
-        dueAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        startAt: assignment.startAt,
+        dueAt: assignment.dueAt
     }));
 
     await db.insert(assignments).values(newAssignments);
