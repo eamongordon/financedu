@@ -68,7 +68,7 @@ export function TeacherList({ classItem, userId }: { classItem: ClassItem, userI
             })}
             {classItem.classTeacherInvites.map((classTeacherInvite) => {
                 return (
-                    <div key={classTeacherInvite.id} className="flex items-center justify-between py-4 p-6">
+                    <div key={classTeacherInvite.id} className="flex flex-wrap gap-4 items-center justify-between py-4 p-6">
                         <div className="flex flex-row items-center gap-4">
                             <Avatar className="size-12">
                                 <AvatarFallback>
