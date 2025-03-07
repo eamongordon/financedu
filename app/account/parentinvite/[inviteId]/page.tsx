@@ -5,15 +5,15 @@ import { ParentInvite } from "@/components/parentinvite";
 export default async function Page({
     params,
 }: {
-    params: Promise<{ parentId: string }>
+    params: Promise<{ inviteId: string }>
 }) {
-    const parentId = (await params).parentId;
+    const inviteId = (await params).inviteId;
     const session = await auth();
     const isLoggedIn = session && session.user && session.user.id;
     if (!isLoggedIn) {
         throw new Error("Not authenticated");
     }
-    const invite = await getParentChildInvite(parentId);
+    const invite = await getParentChildInvite(inviteId);
     if (!invite) {
         throw new Error("Invite not found");
     }

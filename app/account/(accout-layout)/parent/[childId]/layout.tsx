@@ -44,7 +44,7 @@ export default async function LessonLayout({
             <div className="space-y-0.5 border-b pb-6">
                 <h2 className="text-2xl font-bold tracking-tight">Progress for {nameStr}</h2>
                 <p className="text-muted-foreground">
-                    Added on {formatDate(childParentObj.acceptedAt!)}
+                    Added on {formatDate(childParentObj.createdAt!)}
                 </p>
             </div>
             <TabsNav navItems={navItems} />

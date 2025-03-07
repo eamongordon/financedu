@@ -5,7 +5,8 @@ import {
   text,
   primaryKey,
   integer,
-  decimal
+  decimal,
+  unique
 } from "drizzle-orm/pg-core"
 import { sql } from 'drizzle-orm'
 import type { AdapterAccountType } from "next-auth/adapters"
@@ -268,11 +269,23 @@ export const parentChild = pgTable("parentChild", {
   childId: text("childId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  firstInvitedAt: timestamp("firstInvitedAt", { mode: "date", withTimezone: true }).defaultNow(),
-  lastInvitedAt: timestamp("lastInvitedAt", { mode: "date", withTimezone: true }).defaultNow(),
-  acceptedAt: timestamp("acceptedAt", { mode: "date", withTimezone: true }),
+  createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).defaultNow(),
 }, (parentChild) => [
   primaryKey({ columns: [parentChild.parentId, parentChild.childId] })
+]);
+
+export const parentChildInvite = pgTable("parentChildInvite", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  parentId: text("parentId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  childEmail: text("childEmail").notNull(),
+  firstInvitedAt: timestamp("firstInvitedAt", { mode: "date", withTimezone: true }).defaultNow(),
+  lastInvitedAt: timestamp("lastInvitedAt", { mode: "date", withTimezone: true }).defaultNow()
+}, (t) => [
+  unique().on(t.parentId, t.childEmail)
 ]);
 
 function generateJoinCode() {
@@ -337,6 +350,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   userCompletion: many(userCompletion),
   parentChildChild: many(parentChild, { relationName: 'child' }),
   parentChildParent: many(parentChild, { relationName: 'parent' }),
+  parentChildInvites: many(parentChildInvite),
 }))
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -471,6 +485,13 @@ export const parentChildRelations = relations(parentChild, ({ one }) => ({
     fields: [parentChild.childId],
     references: [users.id],
     relationName: 'child',
+  }),
+}));
+
+export const parentChildInviteRelations = relations(parentChildInvite, ({ one }) => ({
+  parent: one(users, {
+    fields: [parentChildInvite.parentId],
+    references: [users.id],
   }),
 }));
 

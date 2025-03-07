@@ -18,13 +18,13 @@ export function ParentInvite({ invite }: { invite: ParentChildInvite }) {
 
     async function handleAccept() {
         setIsAllowedLoading(true);
-        await acceptParentChildInvite(invite.parentId);
+        await acceptParentChildInvite(invite.id);
         setStatus('accepted');
     }
 
     async function handleReject() {
         setIsRejectedLoading(true);
-        await rejectParentChildInvite(invite.parentId);
+        await rejectParentChildInvite(invite.id);
         setStatus('rejected');
     }
 
