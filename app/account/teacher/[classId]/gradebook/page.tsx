@@ -1,4 +1,5 @@
 import { Gradebook } from "@/components/account/gradebook";
+import { InviteStudents } from "@/components/account/invite-students";
 import { getClassTeacherWithCompletion } from "@/lib/actions";
 import { getDisplayName } from "@/lib/utils";
 
@@ -25,7 +26,23 @@ export default async function Page({
         activityName: assignmentObj.activity.title,
         activityType: assignmentObj.activity.type
     }));
-    return (
+
+    return !tableStudents.length ? (
+        <div className="flex flex-col items-center justify-center mt-6 text-center gap-6">
+            <div className="space-y-1">
+                <p className="text-lg font-semibold mt-6">You haven&apos;t added any students yet.</p>
+                <p>Once you add students and create assignments, their scores will appear here.</p>
+            </div>
+            <InviteStudents isNoStudents classCode={classItem.studentJoinCode} />
+        </div>
+    ) : !tableAssignments.length ? (
+        <div className="flex flex-col items-center justify-center mt-6">
+            <p className="text-lg font-semibold mt-6">
+                You haven&apos;t created any assignments yet.
+            </p>
+            <p>Your gradebook will show scores once you create at least one.</p>
+        </div>
+    ) : (
         <Gradebook students={tableStudents} assignments={tableAssignments} />
     );
 }

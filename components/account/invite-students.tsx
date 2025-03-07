@@ -27,7 +27,7 @@ import { Label } from "../ui/label";
 import { toast } from "sonner";
 import Link from "next/link";
 
-export function InviteStudents({ classCode }: { classCode: string }) {
+export function InviteStudents({ classCode, isNoStudents }: { classCode: string; isNoStudents?: boolean }) {
     const [open, setOpen] = React.useState(false)
     const isDesktop = useMediaQuery("(min-width: 768px)")
 
@@ -35,7 +35,10 @@ export function InviteStudents({ classCode }: { classCode: string }) {
         return (
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button className="w-full">
+                    <Button
+                        {...isNoStudents ? { variant: "outline" } : {}}
+                        {...!isNoStudents ? { className: "w-full" } : {}}
+                    >
                         <Plus />
                         Invite Students
                     </Button>
@@ -48,7 +51,6 @@ export function InviteStudents({ classCode }: { classCode: string }) {
                     <DialogFooter>
                         <Button
                             variant="outline"
-                            className="w-full"
                             onClick={() => setOpen(false)}
                         >
                             Done
@@ -62,7 +64,10 @@ export function InviteStudents({ classCode }: { classCode: string }) {
     return (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
-                <Button className="w-full">
+                <Button
+                    {...isNoStudents ? { variant: "outline" } : {}}
+                    {...!isNoStudents ? { className: "w-full" } : {}}
+                >
                     <Plus />
                     Add Students
                 </Button>

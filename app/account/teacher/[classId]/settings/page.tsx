@@ -32,14 +32,24 @@ export default async function Page({
             </div>
             <div className="py-8">
                 <h2 className="text-2xl font-semibold">{classItem.classStudents.length} Student{classItem.classStudents.length !== 1 && "s"}</h2>
-                <StudentsList
-                    students={classItem.classStudents.map(cs => ({
-                        studentId: cs.student.id,
-                        name: getDisplayName(cs.student.firstName, cs.student.lastName, cs.student.email!),
-                        email: cs.student.email!,
-                    }))}
-                    inviteButtonElem={<InviteStudents classCode={classItem.studentJoinCode} />}
-                />
+                {
+                    classItem.classStudents.length > 0 ? (
+                        <StudentsList
+                            students={classItem.classStudents.map(cs => ({
+                                studentId: cs.student.id,
+                                name: getDisplayName(cs.student.firstName, cs.student.lastName, cs.student.email!),
+                                email: cs.student.email!,
+                            }))}
+                            inviteButtonElem={<InviteStudents classCode={classItem.studentJoinCode} />}
+                        />) : (
+                        <div className="flex flex-col items-center justify-center gap-4">
+                            <p className="text-lg font-semibold mt-6">
+                                No Students are in this class yet.
+                            </p>
+                            <InviteStudents isNoStudents classCode={classItem.studentJoinCode} />
+                        </div>
+                    )
+                }
             </div>
             <div className="py-8 flex flex-col gap-4">
                 <h2 className="text-2xl font-semibold">Settings</h2>
