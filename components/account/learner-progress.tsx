@@ -233,8 +233,9 @@ function DataTable<TData, TValue>({
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    No results.
+                                <TableCell colSpan={columns.length} className="h-24 text-center space-y-2">
+                                    <h3 className="text-base font-semibold">No Results Found</h3>
+                                    {data.length > 0 ? <p>Try adjusting your filters.</p> : <p>Once you complete an activity, it will show here.</p>}
                                 </TableCell>
                             </TableRow>
                         )}
