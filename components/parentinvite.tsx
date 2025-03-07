@@ -73,8 +73,8 @@ export function ParentInvite({ invite }: { invite: ParentChildInvite }) {
                         <h2>{nameStr} will not have access to your account.</h2>
                     </div>
                     <div className="flex space-x-4">
-                        <Link href="/account/parent" className={buttonVariants()}>
-                            Back to Dashboard
+                        <Link href="/" className={buttonVariants()}>
+                            Back to Home
                         </Link>
                     </div>
                 </>
