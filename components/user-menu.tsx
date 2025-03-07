@@ -68,9 +68,6 @@ export default function UserMenu({ imageSrc, name, email, isMobile, roles }: Use
         <DropdownMenuItem asChild>
           <Link href="/account/learner">Dashboard</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/account/settings">Settings</Link>
-        </DropdownMenuItem>
         {roles?.includes("parent") && (
           <DropdownMenuItem asChild>
             <Link href="/account/parent">Children</Link>
@@ -86,6 +83,9 @@ export default function UserMenu({ imageSrc, name, email, isMobile, roles }: Use
             <Link href="/account/student">Classes</Link>
           </DropdownMenuItem>
         )}
+        <DropdownMenuItem asChild>
+          <Link href="/account/settings">Settings</Link>
+        </DropdownMenuItem>
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
             <span>Theme: {theme === "light" ? "Light" : theme === "dark" ? "Dark" : "System"}</span>

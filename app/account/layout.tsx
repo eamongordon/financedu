@@ -9,16 +9,20 @@ export const metadata: Metadata = {
   description: "Advanced form example using react-hook-form and Zod.",
 }
 
-const defaultNavItems = [
+const defaultNavItemsTop = [
   {
     title: "Dashboard",
     href: "/account/learner",
     matchingHrefs: ["/account/learner", "/account/learner/progress"],
-  },
+  }
+]
+
+
+const defaultNavItemsBottom = [
   {
     title: "Settings",
-    href: "/account/settings",
-  },
+    href: "/account/settings"
+  }
 ]
 
 interface SettingsLayoutProps {
@@ -35,7 +39,7 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
   const initials = getInitials(nameStr);
 
   const navItems = [
-    ...defaultNavItems,
+    ...defaultNavItemsTop,
     ...(session?.user?.roles?.includes("parent") ? [{
       title: "Children",
       href: "/account/parent",
@@ -48,6 +52,7 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
       title: "Classes",
       href: "/account/student",
     }] : []),
+    ...defaultNavItemsBottom
   ];
 
   return (
@@ -57,7 +62,7 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
           <aside className="-mx-4 md:w-1/4 lg:w-1/5">
             <div className="px-2 flex items-center space-x-4 mb-6">
               <Avatar className="lg:size-1/4 aspect-square">
-                <AvatarImage src={avatar ?? undefined} alt={nameStr}/>
+                <AvatarImage src={avatar ?? undefined} alt={nameStr} />
                 <AvatarFallback>{initials}</AvatarFallback>
               </Avatar>
               <div className="flex flex-col justify-center gap-1">
