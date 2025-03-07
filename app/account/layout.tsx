@@ -65,9 +65,9 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
                 <AvatarImage src={avatar ?? undefined} alt={nameStr} />
                 <AvatarFallback>{initials}</AvatarFallback>
               </Avatar>
-              <div className="flex flex-col justify-center gap-1">
+              <div className="flex flex-col justify-center gap-1 overflow-hidden">
                 <span className="block leading-none font-semibold">Welcome,</span>
-                <span className="block leading-none">{nameStr}</span>
+                <span className="block leading-none truncate">{nameStr}</span>
               </div>
             </div>
             <SidebarNav items={navItems} />
