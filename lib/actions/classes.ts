@@ -1,9 +1,10 @@
 "use server";
 
 import { eq, and, exists, or } from "drizzle-orm";
-import { assignments, classes, classStudents, classTeachers } from "../db/schema";
+import { assignments, classes, classStudents, classTeachers, classTeacherInvite } from "../db/schema";
 import { db } from "../db";
 import { auth } from "../auth";
+import { sendClassTeacherInviteEmail } from "./emails";
 
 export async function createClass(name: string) {
     const session = await auth();
@@ -484,4 +485,132 @@ export async function deleteClass(classId: string) {
             ))
         )
     ));
+}
+
+export async function createClassTeacherInvite(classId: string, teacherEmail: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    const classDetails = await db.query.classes.findFirst({
+        where: and(
+            eq(classes.id, classId),
+            exists(
+                db.select().from(classTeachers).where(and(
+                    eq(classTeachers.classId, classId),
+                    eq(classTeachers.teacherId, userId)
+                ))
+            )
+        )
+    });
+
+    if (!classDetails) {
+        throw new Error("Class not found or permission denied");
+    }
+
+    const inviteObj = await db.insert(classTeacherInvite).values({ classId, teacherEmail }).onConflictDoUpdate({
+        target: [classTeacherInvite.classId, classTeacherInvite.teacherEmail],
+        set: { lastInvitedAt: new Date() }
+    }).returning({ id: classTeacherInvite.id });
+
+    return await sendClassTeacherInviteEmail({
+        teacherEmail: teacherEmail,
+        className: classDetails.name,
+        inviteId: inviteObj[0].id
+    });
+}
+
+export async function resendClassTeacherInvite(inviteId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+
+    const invite = await db.query.classTeacherInvite.findFirst({
+        where: and(eq(classTeacherInvite.id, inviteId)),
+        with: {
+            class: {
+                columns: {
+                    id: true,
+                    name: true
+                }
+            }
+        }
+    });
+
+    if (!invite) {
+        throw new Error("Invite not found or you are not authorized to resend this invite");
+    }
+
+    await db.update(classTeacherInvite)
+        .set({ lastInvitedAt: new Date() })
+        .where(eq(classTeacherInvite.id, inviteId));
+
+    return await sendClassTeacherInviteEmail({
+        teacherEmail: invite.teacherEmail,
+        className: invite.class.name,
+        inviteId: invite.id,
+    });
+}
+
+export async function acceptClassTeacherInvite(inviteId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const teacherId = session.user.id;
+
+    const invite = await db.query.classTeacherInvite.findFirst({
+        where: eq(classTeacherInvite.id, inviteId),
+    });
+
+    if (!invite) {
+        throw new Error("Invite not found");
+    }
+
+    await db.insert(classTeachers).values({ classId: invite.classId, teacherId }).onConflictDoNothing(
+        { target: [classTeachers.classId, classTeachers.teacherId] }
+    );
+    await db.delete(classTeacherInvite).where(eq(classTeacherInvite.id, inviteId));
+}
+
+export async function rejectClassTeacherInvite(inviteId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+
+    await db.delete(classTeacherInvite).where(eq(classTeacherInvite.id, inviteId));
+}
+
+export async function deleteClassTeacherInvite(inviteId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    const invite = await db.query.classTeacherInvite.findFirst({
+        where: and(eq(classTeacherInvite.id, inviteId)),
+        with: {
+            class: {
+                columns: {
+                    id: true
+                },
+                with: {
+                    classTeachers: {
+                        where: eq(classTeachers.teacherId, userId)
+                    }
+                }
+            }
+        }
+    });
+
+    if (!invite || !invite.class.classTeachers.length) {
+        throw new Error("Invite not found or you are not authorized to cancel this invite");
+    }
+
+    await db.delete(classTeacherInvite).where(eq(classTeacherInvite.id, inviteId));
 }

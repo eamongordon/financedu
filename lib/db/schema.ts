@@ -343,6 +343,20 @@ export const assignments = pgTable("assignment", {
   dueAt: timestamp("dueAt", { mode: "date", withTimezone: true }).notNull(),
 })
 
+export const classTeacherInvite = pgTable("classTeacherInvite", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  classId: text("classId")
+    .notNull()
+    .references(() => classes.id, { onDelete: "cascade" }),
+  teacherEmail: text("teacherEmail").notNull(),
+  firstInvitedAt: timestamp("firstInvitedAt", { mode: "date", withTimezone: true }).defaultNow(),
+  lastInvitedAt: timestamp("lastInvitedAt", { mode: "date", withTimezone: true }).defaultNow()
+}, (t) => [
+  unique().on(t.classId, t.teacherEmail)
+]);
+
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   sessions: many(sessions),
@@ -499,6 +513,7 @@ export const classesRelations = relations(classes, ({ many }) => ({
   classTeachers: many(classTeachers),
   classStudents: many(classStudents),
   assignments: many(assignments),
+  classTeacherInvites: many(classTeacherInvite),
 }))
 
 export const classTeachersRelations = relations(classTeachers, ({ one }) => ({
@@ -533,3 +548,10 @@ export const assignmentsRelations = relations(assignments, ({ one }) => ({
     references: [activities.id],
   }),
 }))
+
+export const classTeacherInviteRelations = relations(classTeacherInvite, ({ one }) => ({
+  class: one(classes, {
+    fields: [classTeacherInvite.classId],
+    references: [classes.id],
+  }),
+}));
