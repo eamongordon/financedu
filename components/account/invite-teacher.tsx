@@ -49,7 +49,7 @@ export function InviteTeacher({ classId }: { classId: string }) {
         return (
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button className="mt-6">
+                    <Button>
                         <Plus />
                         Invite Teacher
                     </Button>
@@ -70,7 +70,7 @@ export function InviteTeacher({ classId }: { classId: string }) {
     return (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
-                <Button className="mt-6">
+                <Button>
                     <Plus />
                     Invite Teacher
                 </Button>

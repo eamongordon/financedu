@@ -577,40 +577,10 @@ export async function acceptClassTeacherInvite(inviteId: string) {
     await db.delete(classTeacherInvite).where(eq(classTeacherInvite.id, inviteId));
 }
 
-export async function rejectClassTeacherInvite(inviteId: string) {
-    const session = await auth();
-    if (!session || !session.user || !session.user.id) {
-        throw new Error("Not authenticated");
-    }
-
-    await db.delete(classTeacherInvite).where(eq(classTeacherInvite.id, inviteId));
-}
-
 export async function deleteClassTeacherInvite(inviteId: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
-    }
-    const userId = session.user.id;
-
-    const invite = await db.query.classTeacherInvite.findFirst({
-        where: and(eq(classTeacherInvite.id, inviteId)),
-        with: {
-            class: {
-                columns: {
-                    id: true
-                },
-                with: {
-                    classTeachers: {
-                        where: eq(classTeachers.teacherId, userId)
-                    }
-                }
-            }
-        }
-    });
-
-    if (!invite || !invite.class.classTeachers.length) {
-        throw new Error("Invite not found or you are not authorized to cancel this invite");
     }
 
     await db.delete(classTeacherInvite).where(eq(classTeacherInvite.id, inviteId));

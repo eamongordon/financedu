@@ -5,8 +5,10 @@ import { Button } from "../ui/button";
 import { leaveClass } from "@/lib/actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { cn } from "@/lib/utils";
 
-export function LeaveClassButton({ isTeacher, disabled }: { isTeacher?: boolean, disabled?: boolean }) {
+export function LeaveClassButton({ isTeacher, disabled, isGhost }: { isTeacher?: boolean, disabled?: boolean, isGhost?: boolean }) {
     const params = useParams<{ classId: string }>();
     const classId = params!.classId;
     const router = useRouter();
@@ -22,11 +24,29 @@ export function LeaveClassButton({ isTeacher, disabled }: { isTeacher?: boolean,
         }
     }
 
-    return (
+    return disabled ? (
+        <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <span>
+                        <Button
+                            variant={isTeacher ? isGhost ? "ghost" : "outline" : "destructive"}
+                            {...(isTeacher && isGhost ? { className: "text-destructive" } : { className: "border-destructive text-destructive hover:text-destructive" })}
+                            disabled
+                        >
+                            Leave Class
+                        </Button>
+                    </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>You cannot leave a class if you are the only teacher.</p>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
+    ) : (
         <Button
-            variant={isTeacher ? "outline" : "destructive"}
-            {...isTeacher && { className: "border-destructive text-destructive hover:text-destructive" }}
-            disabled={disabled}
+            variant={isGhost ? "ghost" : isTeacher ? "outline" : "destructive"}
+            className={cn(isTeacher && "text-destructive hover:text-destructive", !isGhost && "border-destructive")}
             onClick={() => handleSubmit()}
         >
             Leave Class
