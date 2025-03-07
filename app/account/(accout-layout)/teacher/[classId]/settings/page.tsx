@@ -9,6 +9,7 @@ import { LeaveClassButton } from "@/components/account/leave-class";
 import { DeleteClassButton } from "@/components/account/delete-class";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { InviteStudents } from "@/components/account/invite-students";
+import { InviteTeacher } from "@/components/account/invite-teacher";
 
 export default async function Page({
     params,
@@ -51,6 +52,7 @@ export default async function Page({
                         </div>
                     )
                 })}
+                <InviteTeacher classId={classId} />
             </div>
             <div className="py-8">
                 <h2 className="text-2xl font-semibold">{classItem.classStudents.length} Student{classItem.classStudents.length !== 1 && "s"}</h2>
