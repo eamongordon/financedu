@@ -259,10 +259,14 @@ export async function getTeacherClasses() {
     const userId = session.user.id;
 
     const teacherClasses = await db.query.classes.findMany({
-        where: exists(
-            db.select().from(classTeachers).where(eq(classTeachers.teacherId, userId))
+        where: (classes, { exists }) => exists(
+            db.select()
+                .from(classTeachers)
+                .where(and(
+                    eq(classTeachers.classId, classes.id),
+                    eq(classTeachers.teacherId, userId)
+                ))
         ),
-        //todo: use count utility when issue fixed
         with: {
             classStudents: true
         }
@@ -279,8 +283,13 @@ export async function getStudentClasses() {
     const userId = session.user.id;
 
     const studentClasses = await db.query.classes.findMany({
-        where: exists(
-            db.select().from(classStudents).where(eq(classStudents.studentId, userId))
+        where: (classes, { exists }) => exists(
+            db.select()
+                .from(classTeachers)
+                .where(and(
+                    eq(classTeachers.classId, classes.id),
+                    eq(classTeachers.teacherId, userId)
+                ))
         ),
         with: {
             classTeachers: {
