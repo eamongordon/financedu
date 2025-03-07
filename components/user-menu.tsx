@@ -73,7 +73,17 @@ export default function UserMenu({ imageSrc, name, email, isMobile, roles }: Use
         </DropdownMenuItem>
         {roles?.includes("parent") && (
           <DropdownMenuItem asChild>
-            <Link href="/account/parent">My Children</Link>
+            <Link href="/account/parent">Children</Link>
+          </DropdownMenuItem>
+        )}
+        {roles?.includes("teacher") && (
+          <DropdownMenuItem asChild>
+            <Link href="/account/teacher">Classes</Link>
+          </DropdownMenuItem>
+        )}
+        {!roles?.includes("teacher") && (
+          <DropdownMenuItem asChild>
+            <Link href="/account/student">Classes</Link>
           </DropdownMenuItem>
         )}
         <DropdownMenuSub>

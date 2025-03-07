@@ -16,7 +16,7 @@ const defaultNavItems = [
     matchingHrefs: ["/account/learner", "/account/learner/progress"],
   },
   {
-    title: "Account",
+    title: "Settings",
     href: "/account/settings",
   },
 ]
@@ -37,9 +37,17 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
   const navItems = [
     ...defaultNavItems,
     ...(session?.user?.roles?.includes("parent") ? [{
-      title: "My Children",
+      title: "Children",
       href: "/account/parent",
-    }] : [])
+    }] : []),
+    ...(session?.user?.roles?.includes("teacher") ? [{
+      title: "Classes",
+      href: "/account/teacher",
+    }] : []),
+    ...(!session?.user?.roles?.includes("teacher") ? [{
+      title: "Classes",
+      href: "/account/student",
+    }] : []),
   ];
 
   return (
