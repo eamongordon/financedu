@@ -53,42 +53,6 @@ export function ChildList({ parentChildren }: { parentChildren: ParentChildren }
         </div>
     ) : (
         <Card className="mt-6 divide-y shadow-none">
-            {parentChildren.pending.map((childParentInviteObj) => {
-                return (
-                    <div key={childParentInviteObj.id} className="flex items-center justify-between py-4 p-6">
-                        <div className="flex flex-row items-center gap-4">
-                            <Avatar className="size-12">
-                                <AvatarFallback>
-                                    {getInitials(childParentInviteObj.childEmail!) || <User className="h-4 w-4" />}
-                                </AvatarFallback>
-                            </Avatar>
-                            <div className="flex flex-col justify-start text-start gap-2">
-                                <p className="leading-none font-semibold">
-                                    {childParentInviteObj.childEmail}
-                                </p>
-                            </div>
-                        </div>
-                        <div className="flex gap-2">
-                            <Button
-                                variant="outline"
-                                onClick={() => handleResendInvite(childParentInviteObj.id)}
-                                disabled={loadingState[childParentInviteObj.id]?.resend}
-                                isLoading={loadingState[childParentInviteObj.id]?.resend}
-                            >
-                                Resend Invite
-                            </Button>
-                            <Button
-                                variant="destructive"
-                                onClick={() => cancelInvite(childParentInviteObj.id)}
-                                disabled={loadingState[childParentInviteObj.id]?.cancel}
-                                isLoading={loadingState[childParentInviteObj.id]?.cancel}
-                            >
-                                Cancel Invite
-                            </Button>
-                        </div>
-                    </div>
-                );
-            })}
             {parentChildren.approved.map((childParentObj) => {
                 const nameStr = getDisplayName(childParentObj.child.firstName, childParentObj.child.lastName, childParentObj.child.email!);
                 return (
@@ -133,6 +97,42 @@ export function ChildList({ parentChildren }: { parentChildren: ParentChildren }
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </Link>
+                );
+            })}
+            {parentChildren.pending.map((childParentInviteObj) => {
+                return (
+                    <div key={childParentInviteObj.id} className="flex items-center justify-between py-4 p-6">
+                        <div className="flex flex-row items-center gap-4">
+                            <Avatar className="size-12">
+                                <AvatarFallback>
+                                    {getInitials(childParentInviteObj.childEmail!) || <User className="h-4 w-4" />}
+                                </AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col justify-start text-start gap-2">
+                                <p className="leading-none font-semibold">
+                                    {childParentInviteObj.childEmail}
+                                </p>
+                            </div>
+                        </div>
+                        <div className="flex gap-2">
+                            <Button
+                                variant="outline"
+                                onClick={() => handleResendInvite(childParentInviteObj.id)}
+                                disabled={loadingState[childParentInviteObj.id]?.resend}
+                                isLoading={loadingState[childParentInviteObj.id]?.resend}
+                            >
+                                Resend Invite
+                            </Button>
+                            <Button
+                                variant="destructive"
+                                onClick={() => cancelInvite(childParentInviteObj.id)}
+                                disabled={loadingState[childParentInviteObj.id]?.cancel}
+                                isLoading={loadingState[childParentInviteObj.id]?.cancel}
+                            >
+                                Cancel Invite
+                            </Button>
+                        </div>
+                    </div>
                 );
             })}
         </Card>

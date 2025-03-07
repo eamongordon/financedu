@@ -34,6 +34,38 @@ export function TeacherList({ classItem, userId }: { classItem: ClassItem, userI
 
     return (
         <Card className="mt-6 divide-y shadow-none">
+            {classItem.classTeachers.map((classTeacherObj) => {
+                const nameStr = getDisplayName(classTeacherObj.teacher.firstName, classTeacherObj.teacher.lastName, classTeacherObj.teacher.email!);
+                return (
+                    <div key={classTeacherObj.teacherId} className="flex items-center justify-between py-4 p-6">
+                        <div className="flex flex-row items-center gap-4">
+                            <Avatar className="size-12">
+                                {classTeacherObj.teacher.image ? (
+                                    <AvatarImage src={classTeacherObj.teacher.image} alt={nameStr} />
+                                ) : null}
+                                <AvatarFallback>
+                                    {getInitials(nameStr) || <User className="h-4 w-4" />}
+                                </AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col justify-start text-start gap-2">
+                                <p className="leading-none font-semibold">
+                                    {nameStr || classTeacherObj.teacher.email}
+                                </p>
+                                {nameStr && (
+                                    <p className="text-sm text-muted-foreground leading-none">{classTeacherObj.teacher.email}</p>
+                                )}
+                            </div>
+                        </div>
+                        {classTeacherObj.teacherId === userId && (
+                            <LeaveClassButton
+                                isGhost
+                                isTeacher
+                                disabled={classItem.classTeachers.length === 1}
+                            />
+                        )}
+                    </div>
+                );
+            })}
             {classItem.classTeacherInvites.map((classTeacherInvite) => {
                 return (
                     <div key={classTeacherInvite.id} className="flex items-center justify-between py-4 p-6">
@@ -67,38 +99,6 @@ export function TeacherList({ classItem, userId }: { classItem: ClassItem, userI
                                 Cancel Invite
                             </Button>
                         </div>
-                    </div>
-                );
-            })}
-            {classItem.classTeachers.map((classTeacherObj) => {
-                const nameStr = getDisplayName(classTeacherObj.teacher.firstName, classTeacherObj.teacher.lastName, classTeacherObj.teacher.email!);
-                return (
-                    <div key={classTeacherObj.teacherId} className="flex items-center justify-between py-4 p-6">
-                        <div className="flex flex-row items-center gap-4">
-                            <Avatar className="size-12">
-                                {classTeacherObj.teacher.image ? (
-                                    <AvatarImage src={classTeacherObj.teacher.image} alt={nameStr} />
-                                ) : null}
-                                <AvatarFallback>
-                                    {getInitials(nameStr) || <User className="h-4 w-4" />}
-                                </AvatarFallback>
-                            </Avatar>
-                            <div className="flex flex-col justify-start text-start gap-2">
-                                <p className="leading-none font-semibold">
-                                    {nameStr || classTeacherObj.teacher.email}
-                                </p>
-                                {nameStr && (
-                                    <p className="text-sm text-muted-foreground leading-none">{classTeacherObj.teacher.email}</p>
-                                )}
-                            </div>
-                        </div>
-                        {classTeacherObj.teacherId === userId && (
-                            <LeaveClassButton
-                                isGhost
-                                isTeacher
-                                disabled={classItem.classTeachers.length === 1}
-                            />
-                        )}
                     </div>
                 );
             })}
