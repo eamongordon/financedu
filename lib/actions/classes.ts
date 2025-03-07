@@ -585,3 +585,28 @@ export async function deleteClassTeacherInvite(inviteId: string) {
 
     await db.delete(classTeacherInvite).where(eq(classTeacherInvite.id, inviteId));
 }
+
+export async function getClassTeacherInvite(inviteId: string) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+
+    const invite = await db.query.classTeacherInvite.findFirst({
+        where: eq(classTeacherInvite.id, inviteId),
+        with: {
+            class: {
+                columns: {
+                    id: true,
+                    name: true
+                }
+            }
+        }
+    });
+
+    if (!invite) {
+        throw new Error("Invite not found");
+    }
+
+    return invite;
+}

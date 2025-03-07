@@ -79,7 +79,7 @@ const parentChildEmailHtml = (url: string, parentName: string): string => {
 };
 
 export async function sendClassTeacherInviteEmail({ teacherEmail, className, inviteId }: { teacherEmail: string, className: string, inviteId: string }) {
-    const url = `https://financedu.vercel.app/classinvite/${inviteId}`;
+    const url = `https://financedu.vercel.app/teacherinvite/${inviteId}`;
     const result = await transport.sendMail({
         to: teacherEmail,
         from: process.env.EMAIL_FROM,
