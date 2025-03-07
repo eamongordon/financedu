@@ -167,6 +167,8 @@ export default function AuthForm() {
     }
   };
 
+  const currentParams = new URLSearchParams(Array.from(searchParams!.entries()));
+
   return (
     <div>
       <div className="sm:mx-auto w-full rounded-xl">
@@ -213,7 +215,7 @@ export default function AuthForm() {
                 </SessionProvider>
                 <p className="text-center text-sm pt-8 pb-8 px-16">
                   Don&apos;t have an account?{" "}
-                  <Link href="/signup">
+                  <Link href={`/signup?${currentParams.toString()}`}>
                     <button className="hover:opacity-80 transition-opacity tap-highlight-transparent font-semibold text-sm" onClick={() => setSelected("/signup")}>
                       Sign Up
                     </button>
@@ -393,7 +395,7 @@ export default function AuthForm() {
               </SessionProvider>
               <p className="text-center text-sm pt-8 pb-8 px-16">
                 Already have an account?{" "}
-                <Link href="/login">
+                <Link href={`/login?${currentParams.toString()}`}>
                   <button className="hover:opacity-80 transition-opacity tap-highlight-transparent font-semibold text-sm" onClick={() => setSelected("/login")}>
                     Log In
                   </button>
