@@ -56,7 +56,7 @@ import { toast } from "sonner";
 
 type CoursesWithModulesAndLessonsAndActivities = Awaited<ReturnType<typeof getCoursesWithModulesAndLessonsAndActivities>>
 
-export function CreateAssignments({ isNoChildren, courses }: { isNoChildren?: boolean, courses: CoursesWithModulesAndLessonsAndActivities }) {
+export function CreateAssignments({ isNone, courses }: { isNone?: boolean, courses: CoursesWithModulesAndLessonsAndActivities }) {
     const [open, setOpen] = React.useState(false)
     const [selectedActivities, setSelectedActivities] = React.useState<string[]>([])
     const [showDueDateSetter, setShowDueDateSetter] = React.useState(false);
@@ -70,7 +70,10 @@ export function CreateAssignments({ isNoChildren, courses }: { isNoChildren?: bo
         return (
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button className="w-full" {...isNoChildren ? { variant: "outline" } : {}}>
+                    <Button
+                        {...!isNone ? { className: "w-full" } : {}}
+                        {...isNone ? { variant: "outline" } : {}}
+                    >
                         <Plus />
                         Create Assignments
                     </Button>
@@ -102,7 +105,10 @@ export function CreateAssignments({ isNoChildren, courses }: { isNoChildren?: bo
     return (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
-                <Button className="w-full">
+                <Button
+                    {...!isNone ? { className: "w-full" } : {}}
+                    {...isNone ? { variant: "outline" } : {}}
+                >
                     <Plus />
                     Create Assignments
                 </Button>
