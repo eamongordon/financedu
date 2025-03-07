@@ -237,7 +237,8 @@ export async function getClassTeacherWithRoster(classId: string) {
                         }
                     }
                 }
-            }
+            },
+            classTeacherInvites: true
         }
     });
 

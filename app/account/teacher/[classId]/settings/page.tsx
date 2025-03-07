@@ -52,6 +52,26 @@ export default async function Page({
                         </div>
                     )
                 })}
+                {classItem.classTeacherInvites.map(cti => {
+                    return (
+                        <div key={cti.id} className="flex items-center justify-between py-4 p-6">
+                            <div className="flex flex-row items-center gap-4">
+                                <Avatar className="size-12">
+                                    <AvatarFallback>
+                                        {getInitials(cti.teacherEmail) || <User className="h-4 w-4" />}
+                                    </AvatarFallback>
+                                </Avatar>
+                                <div className="flex flex-col justify-start text-start gap-2">
+                                    <p className="leading-none font-semibold">
+                                        {cti.teacherEmail}
+                                    </p>
+                                    <p className="text-sm text-muted-foreground leading-none">Pending</p>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+                )}
                 <InviteTeacher classId={classId} />
             </div>
             <div className="py-8">
