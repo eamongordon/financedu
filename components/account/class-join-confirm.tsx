@@ -35,7 +35,7 @@ export function ClassJoinConfirm({ classItem }: { classItem: ClassItem }) {
                 <Button className="w-full text-base" isLoading={isLoading} onClick={handleJoin}>
                     Join {classItem!.name}
                 </Button>
-                <Button variant="outline" className="w-full text-base" onClick={() => router.push("/account/joinclass")}>
+                <Button variant="outline" className="w-full text-base" onClick={() => router.push("/join")}>
                     I&apos;m in a different class
                 </Button>
             </div>

@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { ClassJoinConfirm } from "@/components/account/class-join-confirm";
 import { ClassCodeForm } from "@/components/account/class-code-form";
 import { getClassFromClassCode } from "@/lib/actions";
+import { redirect } from "next/navigation";
 
 export default async function Page({
     searchParams,
@@ -11,8 +12,9 @@ export default async function Page({
     const joinCode = (await searchParams)?.code as string | undefined;
     const session = await auth();
     const isLoggedIn = session && session.user && session.user.id;
+    
     if (!isLoggedIn) {
-        throw new Error("Not authenticated");
+       return redirect(`/login?redirect=${encodeURIComponent(`/join?code=${joinCode}`)}`);
     }
 
     const classItem = joinCode ? await getClassFromClassCode(joinCode) : undefined;
