@@ -1,7 +1,9 @@
 import { CreateClass } from "@/components/account/create-class";
+import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getStudentClasses } from "@/lib/actions";
 import { getDisplayName } from "@/lib/utils";
+import { Plus } from "lucide-react";
 import Link from "next/link";
 
 export default async function StudentPage() {
@@ -19,11 +21,17 @@ export default async function StudentPage() {
             </div>
             <div>
                 {classes.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center mt-6">
-                        <p className="text-lg font-semibold mt-6">
-                            You haven&pos;t joined any classes yet.
+                    <div className="flex flex-col items-center justify-center gap-6 mt-6">
+                        <p className="text-lg font-semibold">
+                            You haven&apos;t joined any classes yet.
                         </p>
-                        <CreateClass isNoChildren />
+                        <Link
+                            className={buttonVariants({ variant: "outline" })}
+                            href="/join"
+                        >
+                            <Plus />
+                            Join One
+                        </Link>
                     </div>
                 ) : (
                     <Card className="mt-6 divide-y shadow-none">

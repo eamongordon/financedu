@@ -41,7 +41,7 @@ import { createClass } from "@/lib/actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-export function CreateClass({ isNoChildren }: { isNoChildren?: boolean }) {
+export function CreateClass({ isNoClasses }: { isNoClasses?: boolean }) {
     const [open, setOpen] = React.useState(false)
     const isDesktop = useMediaQuery("(min-width: 768px)")
 
@@ -49,7 +49,7 @@ export function CreateClass({ isNoChildren }: { isNoChildren?: boolean }) {
         return (
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button className="mt-6" {...isNoChildren ? { variant: "outline" } : {}}>
+                    <Button className="mt-6" {...isNoClasses ? { variant: "outline" } : {}}>
                         <Plus />
                         Create Class
                     </Button>

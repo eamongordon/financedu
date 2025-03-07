@@ -22,7 +22,7 @@ export default async function TeacherPage() {
                         <p className="text-lg font-semibold mt-6">
                             Setup your classes and manage your students.
                         </p>
-                        <CreateClass isNoChildren />
+                        <CreateClass isNoClasses />
                     </div>
                 ) : (
                     <Card className="mt-6 divide-y shadow-none">
