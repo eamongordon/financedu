@@ -177,7 +177,7 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
                     <div className="h-full justify-center items-center flex flex-col gap-4">
                         <div className="flex flex-col gap-2 items-center">
                             <h1 className="text-2xl font-semibold text-center">Quiz Finished</h1>
-                            <p className="text-center text-muted-foreground">{getAccuracyMessage(getCorrectAnswersCount(), questionResponses.length)}</p>
+                            <p className="text-center text-muted-foreground">{getAccuracyMessage(getCorrectAnswersCount(), activity.activityToQuestions.length)}</p>
                         </div>
                         <div className="flex flex-col gap-2 items-center">
                             <p className="text-center text-muted-foreground font-semibold">{`${getCorrectAnswersCount()} / ${activity.activityToQuestions.length} Correct`}</p>
