@@ -59,11 +59,22 @@ export function CreateAssignments({ isNone, courses }: { isNone?: boolean, cours
         })
         await createAssignments(assignments, classId);
         toast.success("Assignments created successfully.");
+        resetData();
         setOpen(false);
-        setShowDueDateSetter(false);
-        setSelectedActivities([]);
         router.refresh();
     };
+
+    const handleOpenChange = (isOpen: boolean) => {
+        setOpen(isOpen);
+        if (!isOpen) {
+            resetData();
+        }
+    };
+
+    function resetData() {
+        setShowDueDateSetter(false);
+        setSelectedActivities([]);
+    }
 
     function NextButton() {
         return (
@@ -75,7 +86,7 @@ export function CreateAssignments({ isNone, courses }: { isNone?: boolean, cours
 
     if (isDesktop) {
         return (
-            <Dialog open={open} onOpenChange={setOpen}>
+            <Dialog open={open} onOpenChange={handleOpenChange}>
                 <DialogTrigger asChild>
                     <Button
                         {...!isNone ? { className: "w-full" } : {}}
@@ -108,7 +119,7 @@ export function CreateAssignments({ isNone, courses }: { isNone?: boolean, cours
     }
 
     return (
-        <Drawer open={open} onOpenChange={setOpen}>
+        <Drawer open={open} onOpenChange={handleOpenChange}>
             <DrawerTrigger asChild>
                 <Button
                     {...!isNone ? { className: "w-full" } : {}}
