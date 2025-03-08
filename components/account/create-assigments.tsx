@@ -65,6 +65,14 @@ export function CreateAssignments({ isNone, courses }: { isNone?: boolean, cours
         router.refresh();
     };
 
+    function NextButton() {
+        return (
+            <Button disabled={selectedActivities.length === 0} onClick={() => handleActivitySubmit()}>
+                {selectedActivities.length > 0 ? `Next (${selectedActivities.length} Selected)` : "Next"}
+            </Button>
+        );
+    }
+
     if (isDesktop) {
         return (
             <Dialog open={open} onOpenChange={setOpen}>
@@ -90,9 +98,7 @@ export function CreateAssignments({ isNone, courses }: { isNone?: boolean, cours
                         <>
                             <ContentSelector courses={courses} selectedActivities={selectedActivities} setSelectedActivities={setSelectedActivities} />
                             <DialogFooter>
-                                <Button disabled={selectedActivities.length === 0} onClick={() => handleActivitySubmit()}>
-                                    {selectedActivities.length > 0 ? `Next (${selectedActivities.length} Selected)` : "Next"}
-                                </Button>
+                                <NextButton />
                             </DialogFooter>
                         </>
                     )}
@@ -125,9 +131,7 @@ export function CreateAssignments({ isNone, courses }: { isNone?: boolean, cours
                     <>
                         <ContentSelector className="px-4" courses={courses} selectedActivities={selectedActivities} setSelectedActivities={setSelectedActivities} />
                         <DrawerFooter className="pt-2">
-                            <Button disabled={selectedActivities.length === 0} onClick={() => handleActivitySubmit()}>
-                                ({selectedActivities.length > 0 ? "Next" : "Next"})
-                            </Button>
+                            <NextButton />
                             <DrawerClose asChild>
                                 <Button variant="outline">Cancel</Button>
                             </DrawerClose>
