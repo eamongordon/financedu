@@ -619,3 +619,30 @@ export async function getClassTeacherInvite(inviteId: string) {
 
     return invite;
 }
+
+export async function editAssignment(assignmentId: string, updates: { startAt?: Date, dueAt?: Date }) {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+        throw new Error("Not authenticated");
+    }
+    const userId = session.user.id;
+
+    const updatedAssignment = await db.update(assignments)
+        .set(updates)
+        .where(and(
+            eq(assignments.id, assignmentId),
+            exists(
+                db.select().from(classTeachers).where(and(
+                    eq(classTeachers.classId, assignments.classId),
+                    eq(classTeachers.teacherId, userId)
+                ))
+            )
+        ))
+        .returning();
+
+    if (!updatedAssignment.length) {
+        throw new Error("Assignment not found or permission denied");
+    }
+
+    return updatedAssignment[0];
+}

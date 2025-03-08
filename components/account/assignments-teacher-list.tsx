@@ -21,6 +21,7 @@ import { deleteAssignment } from "@/lib/actions/classes";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { type CreateAssignments } from "@/components/account/create-assigments"; // Adjust the import path as necessary
+import { EditAssignment } from "./edit-assignment";
 
 interface UserProgressProps {
     assignments: AssignmentItem[];
@@ -216,7 +217,7 @@ export function AssignmentsTeacherList({ assignments, createAssignmentsElem }: U
                 };
 
                 return (
-                    <DropdownMenu>
+                    <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="h-8 w-8 p-0">
                                 <span className="sr-only">Open menu</span>
@@ -224,7 +225,13 @@ export function AssignmentsTeacherList({ assignments, createAssignmentsElem }: U
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                            <EditAssignment
+                                assignment={{
+                                    id: row.original.assignmentId,
+                                    startAt: row.original.startDate,
+                                    dueAt: row.original.dueDate
+                                }}
+                            />
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                                 className="text-destructive"

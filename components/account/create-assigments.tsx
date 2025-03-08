@@ -28,31 +28,10 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 import { Checkbox } from "@/components/ui/checkbox"
 import { type getCoursesWithModulesAndLessonsAndActivities } from "@/lib/actions";
 import { cn } from "@/lib/utils";
-
-import { zodResolver } from "@hookform/resolvers/zod"
-import { format } from "date-fns"
-import { CalendarIcon } from "lucide-react"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-
-import { Calendar } from "@/components/ui/calendar"
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
-import { TimePicker12Demo } from "@/components/time-picker/time-picker-12h-demo";
 import { useParams, useRouter } from "next/navigation";
 import { createAssignments } from "@/lib/actions";
 import { toast } from "sonner";
+import { DueDateSetter, type DueDateSetterData } from "@/components/account/duedate-setter";
 
 type CoursesWithModulesAndLessonsAndActivities = Awaited<ReturnType<typeof getCoursesWithModulesAndLessonsAndActivities>>
 
@@ -70,7 +49,7 @@ export function CreateAssignments({ isNone, courses }: { isNone?: boolean, cours
     const classId = params!.classId;
     const router = useRouter();
 
-    const handleDueDateSubmit = async (data: z.infer<typeof FormSchema>) => {
+    const handleDueDateSubmit = async (data: DueDateSetterData) => {
         const assignments = selectedActivities.map(activityId => {
             return {
                 activityId,
@@ -239,143 +218,4 @@ function ContentSelector({ className, courses, selectedActivities, setSelectedAc
             </Accordion>
         </div>
     )
-}
-
-const FormSchema = z.object({
-    startDate: z.date({
-        required_error: "A start date is required.",
-    }),
-    dueDate: z.date({
-        required_error: "A due date is required.",
-    }).refine(date => date >= new Date(), {
-        message: "End date cannot be in the past.",
-    }),
-}).refine((data) => {
-    return data.startDate < data.dueDate;
-}, {
-    message: "Due Date must be after Start Date.",
-    path: ["startDate"]
-});
-
-function DueDateSetter({ isDrawer, onSubmit }: { isDrawer?: boolean, selectedActivities: string[], setOpen: React.Dispatch<React.SetStateAction<boolean>>, onSubmit: (data: z.infer<typeof FormSchema>) => void }) {
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
-        defaultValues: {
-            startDate: new Date(),
-            dueDate: new Date(new Date(new Date().setDate(new Date().getDate() + 1)).setHours(23, 59, 59, 999)),
-        }
-    })
-
-    return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="startDate"
-                    render={({ field }) => (
-                        <FormItem className={cn("flex flex-col", isDrawer && "px-4")}>
-                            <FormLabel>Start Date</FormLabel>
-                            <div className="flex flex-row items-center gap-4">
-                                <Popover modal>
-                                    <PopoverTrigger asChild>
-                                        <FormControl>
-                                            <Button
-                                                variant={"outline"}
-                                                className={cn(
-                                                    "w-[240px] flex-1 pl-3 text-left font-normal",
-                                                    !field.value && "text-muted-foreground"
-                                                )}
-                                            >
-                                                {field.value ? (
-                                                    format(field.value, "PPP")
-                                                ) : (
-                                                    <span>Pick a date</span>
-                                                )}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                            </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                        <Calendar
-                                            mode="single"
-                                            selected={field.value}
-                                            onSelect={field.onChange}
-                                            disabled={(date) =>
-                                                date < new Date()
-                                            }
-                                            initialFocus
-                                        />
-                                    </PopoverContent>
-                                </Popover>
-                                <TimePicker12Demo
-                                    setDate={field.onChange}
-                                    date={field.value}
-                                />
-                            </div>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="dueDate"
-                    render={({ field }) => (
-                        <FormItem className={cn("flex flex-col", isDrawer && "px-4")}>
-                            <FormLabel>Due Date</FormLabel>
-                            <div className="flex flex-row items-center gap-4">
-                                <Popover modal>
-                                    <PopoverTrigger asChild>
-                                        <FormControl>
-                                            <Button
-                                                variant={"outline"}
-                                                className={cn(
-                                                    "w-[240px] flex-1 pl-3 text-left font-normal",
-                                                    !field.value && "text-muted-foreground"
-                                                )}
-                                            >
-                                                {field.value ? (
-                                                    format(field.value, "PPP")
-                                                ) : (
-                                                    <span>Pick a date</span>
-                                                )}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                            </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                        <Calendar
-                                            mode="single"
-                                            selected={field.value}
-                                            onSelect={field.onChange}
-                                            disabled={(date) =>
-                                                date < form.getValues("startDate")
-                                            }
-                                            initialFocus
-                                        />
-                                    </PopoverContent>
-                                    <TimePicker12Demo
-                                        setDate={field.onChange}
-                                        date={field.value}
-                                    />
-                                </Popover>
-                            </div>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                {isDrawer ? (
-                    <DrawerFooter className="pt-2">
-                        <Button type="submit">Assign</Button>
-                        <DrawerClose asChild>
-                            <Button variant="outline">Cancel</Button>
-                        </DrawerClose>
-                    </DrawerFooter>
-                ) : (
-                    <DialogFooter>
-                        <Button type="submit">Assign</Button>
-                    </DialogFooter>
-                )}
-            </form>
-        </Form>
-    );
 }
