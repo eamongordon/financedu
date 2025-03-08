@@ -42,8 +42,8 @@ export function TextQuestion({ question, onResponseChange, onValidChange, showAn
                     control={form.control}
                     name="response"
                     render={({ field }) => (
-                        <FormItem>
-                            <FormLabel dangerouslySetInnerHTML={{ __html: question.instructions ?? "" }} />
+                        <FormItem className="space-y-6">
+                            <FormLabel className="leading-normal text-base" dangerouslySetInnerHTML={{ __html: question.instructions ?? "" }} />
                             <FormControl>
                                 <Textarea disabled={showAnswer} placeholder={question.placeholder ?? undefined} {...field} />
                             </FormControl>

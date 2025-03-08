@@ -47,8 +47,8 @@ export function NumericQuestion({ question, onResponseChange, onValidChange, sho
           render={({ field }) => {
             const isCorrect = Number(field.value) === Number(question.numericAnswer);
             return (
-              <FormItem>
-                <FormLabel dangerouslySetInnerHTML={{ __html: question.instructions ?? "" }} />
+              <FormItem className="space-y-6">
+                <FormLabel className="text-base" dangerouslySetInnerHTML={{ __html: question.instructions ?? "" }} />
                 <FormControl>
                   <Input disabled={showAnswer} type="number" {...field} onChange={field.onChange} />
                 </FormControl>
