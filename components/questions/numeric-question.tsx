@@ -36,7 +36,6 @@ export function NumericQuestion({ question, onResponseChange, onValidChange, sho
 
   function onChange(data: z.infer<typeof FormSchema>) {
     onResponseChange(data.response);
-    onValidChange(form.formState.isValid);
   }
 
   return (
