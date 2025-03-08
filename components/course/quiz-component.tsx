@@ -181,7 +181,7 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
                         </div>
                         <div className="flex flex-col gap-2 items-center">
                             <p className="text-center text-muted-foreground font-semibold">{`${getCorrectAnswersCount()} / ${activity.activityToQuestions.length} Correct`}</p>
-                            <Progress value={(getCorrectAnswersCount() / questionResponses.length) * 100} className="bg-secondary/40" />
+                            <Progress value={(getCorrectAnswersCount() / questionResponses.length) * 100} className="bg-destructive/40" />
                         </div>
                         <Button
                             onClick={handleRetry} className="mt-4"
