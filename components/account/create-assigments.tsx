@@ -23,7 +23,7 @@ import {
     DrawerTitle,
     DrawerTrigger,
 } from "@/components/ui/drawer"
-import { Plus } from "lucide-react"
+import { CircleHelp, FileText, Plus } from "lucide-react"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 import { Checkbox } from "@/components/ui/checkbox"
 import { type getCoursesWithModulesAndLessonsAndActivities } from "@/lib/actions";
@@ -180,7 +180,10 @@ function ContentSelector({ className, courses, selectedActivities, setSelectedAc
                     <AccordionItem key={course.id} value={course.id}>
                         <div className="flex flex-row items-center justify-between">
                             <AccordionTrigger className="justify-end flex-row-reverse gap-4">
-                                {course.title}
+                                <div className="flex flex-col justify-start text-start gap-1">
+                                    <p className="block font-semibold leading-none">{course.title}</p>
+                                    <p className="block text-sm leading-none">Course</p>
+                                </div>
                             </AccordionTrigger>
                             <Checkbox
                                 checked={course.modules.every(module => module.lessons.every(lesson => lesson.activities.every(activity => selectedActivities.includes(activity.id))))}
@@ -192,7 +195,10 @@ function ContentSelector({ className, courses, selectedActivities, setSelectedAc
                                 <AccordionItem key={module.id} value={module.id} className="pl-4">
                                     <div className="flex flex-row items-center justify-between">
                                         <AccordionTrigger className="justify-end flex-row-reverse gap-4">
-                                            {module.title}
+                                            <div className="flex flex-col justify-start text-start gap-1">
+                                                <p className="block font-semibold leading-none">{module.title}</p>
+                                                <p className="block text-sm leading-none">Module</p>
+                                            </div>
                                         </AccordionTrigger>
                                         <Checkbox
                                             checked={module.lessons.every(lesson => lesson.activities.every(activity => selectedActivities.includes(activity.id)))}
@@ -204,7 +210,10 @@ function ContentSelector({ className, courses, selectedActivities, setSelectedAc
                                             <AccordionItem key={lesson.id} value={lesson.id} className="pl-4">
                                                 <div className="flex flex-row items-center justify-between">
                                                     <AccordionTrigger className="justify-end flex-row-reverse gap-4">
-                                                        {lesson.title}
+                                                        <div className="flex flex-col justify-start text-start gap-1">
+                                                            <p className="block font-semibold leading-none">{lesson.title}</p>
+                                                            <p className="block text-sm leading-none">Lesson</p>
+                                                        </div>
                                                     </AccordionTrigger>
                                                     <Checkbox
                                                         checked={lesson.activities.every(activity => selectedActivities.includes(activity.id))}
@@ -213,8 +222,14 @@ function ContentSelector({ className, courses, selectedActivities, setSelectedAc
                                                 </div>
                                                 <AccordionContent>
                                                     {lesson.activities.map(activity => (
-                                                        <div key={activity.id} className="flex flex-row items-center justify-between pl-4">
-                                                            {activity.title}
+                                                        <div key={activity.id} className="flex flex-row items-center justify-between pl-8">
+                                                            <div className="flex flex-row items-center gap-4 py-2">
+                                                                {activity.type === "Article" ? <FileText strokeWidth={1.5} className="text-muted-foreground" /> : <CircleHelp strokeWidth={1.5} className="text-muted-foreground" />}
+                                                                <div className="flex flex-col justify-start text-start gap-1">
+                                                                    <p className="block font-semibold leading-none">{activity.title}</p>
+                                                                    <p className="block text-sm leading-none">{activity.type}</p>
+                                                                </div>
+                                                            </div>
                                                             <Checkbox
                                                                 checked={selectedActivities.includes(activity.id)}
                                                                 onCheckedChange={(isChecked) => handleCheckboxChange(!!isChecked, 'activity', activity.id)}
