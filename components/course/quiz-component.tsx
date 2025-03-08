@@ -51,7 +51,7 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
                 break;
             case "text":
                 setResponse("");
-                setValidity(true);
+                setValidity(false);
                 break;
             case "matching":
                 setResponse([]);
@@ -172,7 +172,12 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
                         showAnswer={showAnswer}
                     />
                 ) : currentQuestion.type === "text" ? (
-                    <TextQuestion question={currentQuestion} />
+                    <TextQuestion
+                        question={currentQuestion}
+                        onResponseChange={handleResponseChange}
+                        onValidChange={handleValidChange}
+                        showAnswer={showAnswer}
+                    />
                 ) : currentQuestion.type === "matching" ? (
                     <MatchingQuestion
                         question={currentQuestion}
