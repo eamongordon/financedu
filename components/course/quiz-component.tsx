@@ -14,6 +14,8 @@ import { useParams, useRouter } from 'next/navigation'
 import { getNextActivityLink } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { markActivityComplete } from "@/lib/actions";
+import { Progress } from "../ui/progress";
+import { RotateCw } from "lucide-react";
 
 type Response = string | string[] | number | { id: string, response: string }[];
 
@@ -136,11 +138,34 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
         }
     };
 
+    const getCorrectAnswersCount = () => {
+        return questionResponses.filter(isCorrect => isCorrect).length;
+    };
+
+    const getAccuracyMessage = (correctAnswers: number, totalQuestions: number) => {
+        if (correctAnswers === totalQuestions) {
+            return "Perfect score! Well done!";
+        } else if (correctAnswers >= totalQuestions * 0.75) {
+            return "Awesome! You did very well.";
+        } else {
+            return "Don't worry, you're getting there!";
+        }
+    };
+
     const getDotClass = (index: number) => {
         if (index < questionResponses.length) {
             return questionResponses[index] ? "bg-primary border-primary" : "bg-muted";
         }
         return "";
+    };
+
+    const handleRetry = () => {
+        setCurrentQuestionIndex(0);
+        setResponse([]);
+        setValidity(false);
+        setShowAnswer(false);
+        setQuestionResponses([]);
+        setIsQuizFinished(false);
     };
 
     const { href, label } = getNextActivityLink(currentCourseId, currentModuleId, currentLessonId, nextActivity);
@@ -149,7 +174,23 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
         <div className="flex flex-col items-center h-[calc(100dvh-202px)] sm:min-h-[calc(100vh-196px)] relative">
             <div className="py-8 w-full flex justify-center h-[calc(100vh-274px)] sm:h-[calc(100vh-268px)] overflow-scroll">
                 {isQuizFinished ? (
-                    <p>You finished the quiz</p>
+                    <div className="h-full justify-center items-center flex flex-col gap-4">
+                        <div className="flex flex-col gap-2 items-center">
+                            <h1 className="text-2xl font-semibold text-center">Quiz Finished</h1>
+                            <p className="text-center text-muted-foreground">{getAccuracyMessage(getCorrectAnswersCount(), questionResponses.length)}</p>
+                        </div>
+                        <div className="flex flex-col gap-2 items-center">
+                            <p className="text-center text-muted-foreground font-semibold">{`${getCorrectAnswersCount()} / ${activity.activityToQuestions.length} Correct`}</p>
+                            <Progress value={(getCorrectAnswersCount() / questionResponses.length) * 100} className="bg-secondary/40" />
+                        </div>
+                        <Button
+                            onClick={handleRetry} className="mt-4"
+                            variant="outline"
+                        >
+                            <RotateCw />
+                            Retry Quiz
+                        </Button>
+                    </div>
                 ) : currentQuestion.type === "radio" ? (
                     <RadioQuestion
                         question={currentQuestion}
