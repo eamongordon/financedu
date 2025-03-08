@@ -66,6 +66,26 @@ export function CreateAssignments({ isNone, courses }: { isNone?: boolean, cours
         setShowDueDateSetter(true);
     };
 
+    const params = useParams<{ classId: string }>();
+    const classId = params!.classId;
+    const router = useRouter();
+
+    const handleDueDateSubmit = async (data: z.infer<typeof FormSchema>) => {
+        const assignments = selectedActivities.map(activityId => {
+            return {
+                activityId,
+                startAt: data.startDate,
+                dueAt: data.dueDate
+            }
+        })
+        await createAssignments(assignments, classId);
+        toast.success("Assignments created successfully.");
+        setOpen(false);
+        setShowDueDateSetter(false);
+        setSelectedActivities([]);
+        router.refresh();
+    };
+
     if (isDesktop) {
         return (
             <Dialog open={open} onOpenChange={setOpen}>
@@ -86,7 +106,7 @@ export function CreateAssignments({ isNone, courses }: { isNone?: boolean, cours
                         </DialogDescription>
                     </DialogHeader>
                     {showDueDateSetter ? (
-                        <DueDateSetter selectedActivities={selectedActivities} setOpen={setOpen} />
+                        <DueDateSetter selectedActivities={selectedActivities} setOpen={setOpen} onSubmit={handleDueDateSubmit} />
                     ) : (
                         <>
                             <ContentSelector courses={courses} selectedActivities={selectedActivities} setSelectedActivities={setSelectedActivities} />
@@ -121,7 +141,7 @@ export function CreateAssignments({ isNone, courses }: { isNone?: boolean, cours
                     </DrawerDescription>
                 </DrawerHeader>
                 {showDueDateSetter ? (
-                    <DueDateSetter selectedActivities={selectedActivities} isDrawer setOpen={setOpen} />
+                    <DueDateSetter selectedActivities={selectedActivities} isDrawer setOpen={setOpen} onSubmit={handleDueDateSubmit} />
                 ) : (
                     <>
                         <ContentSelector className="px-4" courses={courses} selectedActivities={selectedActivities} setSelectedActivities={setSelectedActivities} />
@@ -237,7 +257,7 @@ const FormSchema = z.object({
     path: ["startDate"]
 });
 
-function DueDateSetter({ isDrawer, selectedActivities, setOpen }: { isDrawer?: boolean, selectedActivities: string[], setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
+function DueDateSetter({ isDrawer, onSubmit }: { isDrawer?: boolean, selectedActivities: string[], setOpen: React.Dispatch<React.SetStateAction<boolean>>, onSubmit: (data: z.infer<typeof FormSchema>) => void }) {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -245,26 +265,6 @@ function DueDateSetter({ isDrawer, selectedActivities, setOpen }: { isDrawer?: b
             dueDate: new Date(new Date(new Date().setDate(new Date().getDate() + 1)).setHours(23, 59, 59, 999)),
         }
     })
-
-    const params = useParams<{ classId: string }>();
-    const classId = params!.classId;
-    const router = useRouter();
-
-    async function onSubmit(data: z.infer<typeof FormSchema>) {
-        console.log(data);
-        console.log(selectedActivities);
-        const assignments = selectedActivities.map(activityId => {
-            return {
-                activityId,
-                startAt: data.startDate,
-                dueAt: data.dueDate
-            }
-        })
-        await createAssignments(assignments, classId);
-        toast.success("Assignments created successfully.");
-        setOpen(false);
-        router.refresh();
-    }
 
     return (
         <Form {...form}>
