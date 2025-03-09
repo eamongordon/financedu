@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { ThemeSwitcher } from './theme-switcher';
 
 export default function Footer() {
     return (
@@ -52,8 +53,8 @@ export default function Footer() {
                             </li>
 
                         </ul>
-                        <div className="flex justify-items-start">
-                            <div className='h-8 w-12 bg-gray-800' />
+                        <div className="flex justify-items-start mt-6">
+                            <ThemeSwitcher/>
                         </div>
 
                     </div>
