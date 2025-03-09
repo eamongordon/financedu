@@ -52,3 +52,25 @@ export const editUser = async (
         throw error;
     }
 };
+
+export const deleteUser = async () => {
+    const session = await auth();
+    if (!session || !session.user || !session.user.email) {
+        throw new Error("Not authenticated");
+    }
+
+    const userId = session.user.id;
+
+    if (!userId) {
+        throw new Error("User ID is not defined");
+    }
+
+    try {
+        const response = await db.delete(users)
+            .where(eq(users.id, userId))
+            .returning();
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};

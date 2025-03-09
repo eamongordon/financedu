@@ -5,6 +5,7 @@ import { ProfileForm, type ProfileFormValues } from "@/components/account/profil
 import { RolesSettingsForm, type RolesFormValues } from "@/components/account/roles-settings-form";
 import { LoginSettingsForm, type LoginFormValues } from "@/components/account/login-settings-form";
 import { useRouter, useSearchParams } from 'next/navigation';
+import { DeleteUserButton } from "./delete-user";
 
 interface SettingsTabsProps {
     profileDefaultValues: ProfileFormValues;
@@ -49,7 +50,15 @@ export default function SettingsTabs({ profileDefaultValues, rolesDefaultValues,
                 <RolesSettingsForm defaultValues={rolesDefaultValues} />
             </TabsContent>
             <TabsContent value="login" className="py-4">
-                <LoginSettingsForm defaultValues={loginDefaultValues} />
+                <div className="flex flex-col gap-8 divide-y divide-dashed">
+                    <LoginSettingsForm defaultValues={loginDefaultValues} />
+                    <div className="pt-6 space-y-4" id="delete-account">
+                        <h2 className="text-2xl font-semibold">Danger Zone</h2>
+                        <div>
+                            <DeleteUserButton />
+                        </div>
+                    </div>
+                </div>
             </TabsContent>
         </Tabs>
     );
