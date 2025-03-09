@@ -7,15 +7,20 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 export function LeaveClassButton({ isTeacher, disabled, isGhost }: { isTeacher?: boolean, disabled?: boolean, isGhost?: boolean }) {
     const params = useParams<{ classId: string }>();
     const classId = params!.classId;
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
+
     async function handleSubmit() {
         const confirmed = window.confirm("Are you sure you want to leave this class?");
         if (!confirmed) return;
+        setLoading(true);
         await leaveClass(classId);
+        setLoading(false);
         toast.success("Successfully left the class!");
         if (isTeacher) {
             router.push("/account/teacher");
@@ -48,6 +53,7 @@ export function LeaveClassButton({ isTeacher, disabled, isGhost }: { isTeacher?:
             variant={isGhost ? "ghost" : isTeacher ? "outline" : "destructive"}
             className={cn(isTeacher && "text-destructive hover:text-destructive", !isGhost && "border-destructive")}
             onClick={() => handleSubmit()}
+            disabled={loading}
         >
             Leave Class
         </Button>
