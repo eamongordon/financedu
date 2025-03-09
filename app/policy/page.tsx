@@ -95,7 +95,7 @@ const Page = async () => {
                             <p>Have a suggestion for improving Financedu? Notice an error in our site? Need to contact us for another reason?
                                 <br />
                                 <br />
-                                Contact Us at: <Link className="font-semibold text-primary" href="mailto:prospectorminerals@prospectorminerals.com">prospectorminerals@prospectorminerals.com</Link>.
+                                Contact Us at: <Link className="font-semibold text-primary" href="mailto:info@financedu.org">info@financedu.org</Link>.
                             </p>
                         </div>
                     </section>
