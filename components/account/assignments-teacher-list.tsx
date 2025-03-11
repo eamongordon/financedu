@@ -185,20 +185,20 @@ export function AssignmentsTeacherList({ assignments, createAssignmentsElem }: U
             },
         },
         {
-            accessorKey: "dueDate",
-            header: "Due Date",
+            accessorKey: "startDate",
+            header: "Start Date",
             cell: ({ row }) => {
-                const formatted = formatDate(row.getValue("dueDate"));
+                const formatted = formatDate(row.getValue("startDate"));
                 return (
                     <p className="text-secondary">{formatted}</p>
                 );
             },
         },
         {
-            accessorKey: "startDate",
-            header: "Start Date",
+            accessorKey: "dueDate",
+            header: "Due Date",
             cell: ({ row }) => {
-                const formatted = formatDate(row.getValue("startDate"));
+                const formatted = formatDate(row.getValue("dueDate"));
                 return (
                     <p className="text-secondary">{formatted}</p>
                 );
