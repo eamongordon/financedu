@@ -52,7 +52,7 @@ export function ChildList({ parentChildren }: { parentChildren: ParentChildren }
             <InviteChild isNoChildren />
         </div>
     ) : (
-        <Card className="mt-6 divide-y shadow-none">
+        <Card className="mt-6 divide-y">
             {parentChildren.approved.map((childParentObj) => {
                 const nameStr = getDisplayName(childParentObj.child.firstName, childParentObj.child.lastName, childParentObj.child.email!);
                 return (

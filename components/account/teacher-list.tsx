@@ -33,7 +33,7 @@ export function TeacherList({ classItem, userId }: { classItem: ClassItem, userI
     }
 
     return (
-        <Card className="mt-6 divide-y shadow-none">
+        <Card className="mt-6 divide-y">
             {classItem.classTeachers.map((classTeacherObj) => {
                 const nameStr = getDisplayName(classTeacherObj.teacher.firstName, classTeacherObj.teacher.lastName, classTeacherObj.teacher.email!);
                 return (

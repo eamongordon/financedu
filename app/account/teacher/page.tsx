@@ -25,7 +25,7 @@ export default async function TeacherPage() {
                         <CreateClass isNoClasses />
                     </div>
                 ) : (
-                    <Card className="mt-6 divide-y shadow-none">
+                    <Card className="mt-6 divide-y">
                         {classes.map((classItem) => {
                             //const teacherName = getDisplayName(classItem., classItem.child.lastName, classItem.child.email!);
                             return (

@@ -34,7 +34,7 @@ export default async function StudentPage() {
                         </Link>
                     </div>
                 ) : (
-                    <Card className="mt-6 divide-y shadow-none">
+                    <Card className="mt-6 divide-y">
                         {classes.map((classItem) => {
                             const teacherName = getDisplayName(classItem.classTeachers[0].teacher.firstName, classItem.classTeachers[0].teacher.lastName, classItem.classTeachers[0].teacher.email!);
                             return (
