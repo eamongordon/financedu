@@ -20,9 +20,9 @@ export function Hero() {
                     <h1 className="text-[26px] md:text-left md:text-5xl font-semibold">Financial Education For Youth</h1>
                     <p className="text-lg text-muted-foreground">Empowering youth to live successful financial lives through online, cost-free, and customizable curricula.</p>
                     <div className="flex flex-row justify-center md:justify-normal flex-wrap lg:flex-nowrap gap-2 lg:gap-4">
-                        <Link href="/login" className={cn(buttonVariants({ size: "lg" }), "w-full md:w-32 lg:w-[140px]")}>Learners</Link>
-                        <Link href="/login" className={cn(buttonVariants({ size: "lg" }), "w-full md:w-32 lg:w-[140px]")}>Parents</Link>
-                        <Link href="/login" className={cn(buttonVariants({ size: "lg" }), "w-full md:w-32 lg:w-[140px]")}>Educators</Link>
+                        <Link href="/signup" className={cn(buttonVariants({ size: "lg" }), "w-full md:w-32 lg:w-[140px]")}>Learners</Link>
+                        <Link href="/parents" className={cn(buttonVariants({ size: "lg" }), "w-full md:w-32 lg:w-[140px]")}>Parents</Link>
+                        <Link href="/educators" className={cn(buttonVariants({ size: "lg" }), "w-full md:w-32 lg:w-[140px]")}>Educators</Link>
                     </div>
                 </div>
             </div>
