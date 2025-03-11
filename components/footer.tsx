@@ -4,7 +4,7 @@ import { ThemeSwitcher } from './theme-switcher';
 
 export default function Footer() {
     return (
-        <footer className="bg-stone-50 dark:bg-zinc-900">
+        <footer className="bg-muted/50">
             <div className="mx-auto max-w-screen-xl space-y-8 px-4 py-16 sm:px-6 lg:space-y-16 lg:px-8">
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
                     <div>
@@ -19,7 +19,7 @@ export default function Footer() {
                                     href="https://www.facebook.com/financedu.org/"
                                     rel="noreferrer"
                                     target="_blank"
-                                    className="text-gray-700 dark:text-gray-200 transition hover:opacity-75"
+                                    className="text-accent-foreground transition hover:opacity-75"
                                 >
                                     <span className="sr-only">Facebook</span>
 
@@ -38,7 +38,7 @@ export default function Footer() {
                                     href="https://www.instagram.com/financedu_org/"
                                     rel="noreferrer"
                                     target="_blank"
-                                    className="text-gray-700 dark:text-gray-200 transition hover:opacity-75"
+                                    className="text-accent-foreground transition hover:opacity-75"
                                 >
                                     <span className="sr-only">Instagram</span>
 
@@ -65,19 +65,19 @@ export default function Footer() {
 
                             <ul className="mt-6 space-y-4 text-sm">
                                 <li>
-                                    <Link href="/minerals" className="text-gray-700 dark:text-gray-300 transition hover:opacity-75"> Minerals </Link>
+                                    <Link href="/minerals" className="text-accent-foreground transition hover:opacity-75"> Minerals </Link>
                                 </li>
 
                                 <li>
-                                    <Link href="/localities" className="text-gray-700 dark:text-gray-300 transition hover:opacity-75"> Localities </Link>
+                                    <Link href="/localities" className="text-accent-foreground transition hover:opacity-75"> Localities </Link>
                                 </li>
 
                                 <li>
-                                    <Link href="/photos" className="text-gray-700 dark:text-gray-300 transition hover:opacity-75"> Photos </Link>
+                                    <Link href="/photos" className="text-accent-foreground transition hover:opacity-75"> Photos </Link>
                                 </li>
 
                                 <li>
-                                    <Link href="/articles" className="text-gray-700 dark:text-gray-300 transition hover:opacity-75"> Articles </Link>
+                                    <Link href="/articles" className="text-accent-foreground transition hover:opacity-75"> Articles </Link>
                                 </li>
                             </ul>
                         </div>
@@ -87,15 +87,15 @@ export default function Footer() {
 
                             <ul className="mt-6 space-y-4 text-sm">
                                 <li>
-                                    <Link href="/login" className="text-gray-700 dark:text-gray-300 transition hover:opacity-75"> Log In </Link>
+                                    <Link href="/login" className="text-accent-foreground transition hover:opacity-75"> Log In </Link>
                                 </li>
 
                                 <li>
-                                    <Link href="/signup" className="text-gray-700 dark:text-gray-300 transition hover:opacity-75"> Sign Up </Link>
+                                    <Link href="/signup" className="text-accent-foreground transition hover:opacity-75"> Sign Up </Link>
                                 </li>
 
                                 <li>
-                                    <Link href="/account/settings" className="text-gray-700 dark:text-gray-300 transition hover:opacity-75"> Settings </Link>
+                                    <Link href="/account/settings" className="text-accent-foreground transition hover:opacity-75"> Settings </Link>
                                 </li>
                             </ul>
                         </div>
@@ -105,11 +105,11 @@ export default function Footer() {
 
                             <ul className="mt-6 space-y-4 text-sm">
                                 <li>
-                                    <Link href="/policy" className="text-gray-700 dark:text-gray-300 transition hover:opacity-75"> About </Link>
+                                    <Link href="/policy" className="text-accent-foreground transition hover:opacity-75"> About </Link>
                                 </li>
 
                                 <li>
-                                    <Link href="/policy#contact" className="text-gray-700 dark:text-gray-300 transition hover:opacity-75"> Contact Us </Link>
+                                    <Link href="/policy#contact" className="text-accent-foreground transition hover:opacity-75"> Contact Us </Link>
                                 </li>
                             </ul>
                         </div>
@@ -119,15 +119,15 @@ export default function Footer() {
 
                             <ul className="mt-6 space-y-4 text-sm">
                                 <li>
-                                    <Link href="/policy#copyright" className="text-gray-700 dark:text-gray-300 transition hover:opacity-75"> Copyright Policy </Link>
+                                    <Link href="/policy#copyright" className="text-accent-foreground transition hover:opacity-75"> Copyright Policy </Link>
                                 </li>
 
                                 <li>
-                                    <Link href="/policy#termsofuse" className="text-gray-700 dark:text-gray-300 transition hover:opacity-75"> Terms of Use </Link>
+                                    <Link href="/policy#termsofuse" className="text-accent-foreground transition hover:opacity-75"> Terms of Use </Link>
                                 </li>
 
                                 <li>
-                                    <Link href="/policy#privacy" className="text-gray-700 dark:text-gray-300 transition hover:opacity-75"> Privacy Policy </Link>
+                                    <Link href="/policy#privacy" className="text-accent-foreground transition hover:opacity-75"> Privacy Policy </Link>
                                 </li>
                             </ul>
                         </div>
