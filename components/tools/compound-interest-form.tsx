@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, useWatch } from "react-hook-form"
 import { z } from "zod"
+import { formatCurrency } from "@/lib/utils"
 
 import {
     Form,
@@ -151,7 +152,7 @@ export function CompoundInterestForm() {
                             name="principal"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Principal</FormLabel>
+                                    <FormLabel>Principal (USD)</FormLabel>
                                     <FormControl>
                                         <Input placeholder="Principal" {...field} />
                                     </FormControl>
@@ -266,11 +267,11 @@ export function CompoundInterestForm() {
             </div>
             <div className="w-full md:w-2/3 px-4 py-4 md:p-8 space-y-4 md:space-y-8">
                 <div className="flex flex-col gap-4">
-                    <h2 className="font-semibold text-lg md:text-2xl">After {chartData.length - 1} years, at an annual rate of {form.getValues("apr")}%, you would have ${(chartData[chartData.length - 1].principal + chartData[chartData.length - 1].interest + chartData[chartData.length - 1].contributions).toFixed(2)}</h2>
+                    <h2 className="font-semibold text-lg md:text-2xl">After {chartData.length - 1} years, at an annual rate of {form.getValues("apr")}%, you would have {formatCurrency(chartData[chartData.length - 1].principal + chartData[chartData.length - 1].interest + chartData[chartData.length - 1].contributions)}</h2>
                     <div>
-                        <p className="text-chart-1 text-lg font-semibold">Principal: ${chartData[chartData.length - 1].principal.toFixed(2)}</p>
-                        <p className="text-primary text-lg font-semibold">Interest: ${chartData[chartData.length - 1].interest.toFixed(2)}</p>
-                        <p className="text-chart-2 text-lg font-semibold">Contributions: ${chartData[chartData.length - 1].contributions.toFixed(2)}</p>
+                        <p className="text-chart-1 text-lg font-semibold">Principal: {formatCurrency(chartData[chartData.length - 1].principal)}</p>
+                        <p className="text-primary text-lg font-semibold">Interest: {formatCurrency(chartData[chartData.length - 1].interest)}</p>
+                        <p className="text-chart-2 text-lg font-semibold">Contributions: {formatCurrency(chartData[chartData.length - 1].contributions)}</p>
                     </div>
                 </div>
                 <InterestChart chartData={chartData} type="compound" />

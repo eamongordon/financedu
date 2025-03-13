@@ -1,6 +1,7 @@
 "use client"
 
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
+import { formatCurrency } from "@/lib/utils"
 
 import {
   ChartConfig,
@@ -41,7 +42,7 @@ export function InterestChart({ chartData, type }: { chartData: ChartData, type:
             tickLine={false}
             tickMargin={10}
             axisLine={false}
-            tickFormatter={(value) => `$${value}`}
+            tickFormatter={(value) => formatCurrency(value)}
           />
           <CartesianGrid vertical={false} />
           <XAxis
@@ -49,7 +50,7 @@ export function InterestChart({ chartData, type }: { chartData: ChartData, type:
             tickLine={false}
             tickMargin={10}
             axisLine={false}
-            tickFormatter={(value) => `${value}`}
+            tickFormatter={(value) => value === 0 ? "Now" : `${value}`}
           />
           <ChartTooltip content={
             <ChartTooltipContent
@@ -58,7 +59,7 @@ export function InterestChart({ chartData, type }: { chartData: ChartData, type:
                 <>
                   {index === 0 && (
                     <div className="basis-full text-sm font-semibold text-foreground">
-                      Year {item.payload.year}
+                      {item.payload.year ? `Year ${item.payload.year}` : "Now"}
                     </div>
                   )}
                   {(index !== 2 || chartData.some((obj) => obj.contributions)) && (
@@ -74,22 +75,15 @@ export function InterestChart({ chartData, type }: { chartData: ChartData, type:
                       {chartConfig[name as keyof typeof chartConfig]?.label ||
                         name}
                       <div className="ml-auto flex items-baseline gap-0.5 font-medium tabular-nums text-foreground">
-                        <span className="font-normal text-muted-foreground">
-                          $
-                        </span>
-                        {Number(value).toFixed(2)}
+                        {formatCurrency(Number(value))}
                       </div>
                     </>
                   )}
-                  {/* Add this after the last item */}
                   {index === 2 && (
                     <div className="mt-1.5 flex basis-full items-center border-t pt-1.5 text-xs font-medium text-foreground">
                       Total
                       <div className="ml-auto flex items-baseline gap-0.5 font-medium tabular-nums text-foreground">
-                        <span className="font-normal text-muted-foreground">
-                          $
-                        </span>
-                        {(item.payload.principal + item.payload.interest + item.payload.contributions).toFixed(2)}
+                        {formatCurrency(item.payload.principal + item.payload.interest + item.payload.contributions)}
                       </div>
                     </div>
                   )}
