@@ -29,9 +29,9 @@ body {
     --ring: 0 0% 3.9%;
     --chart-1: 115 98% 39%;
     --chart-2: 115 68% 73%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --chart-3: 194 100% 31%;
+    --chart-4: 194 100% 46%;
+    --chart-5: 194 81% 71%;
     --radius: 0.5rem;
   }
 
@@ -57,9 +57,9 @@ body {
     --ring: 0 0% 83.1%;
     --chart-1: 115 68% 35%;
     --chart-2: 115 98% 18%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --chart-3: 194 81% 40%;
+    --chart-4: 194 100% 30%;
+    --chart-5: 194 100% 20%;
   }
 }
 
@@ -67,6 +67,7 @@ body {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

@@ -11,21 +11,6 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 
-const chartConfig = {
-  principal: {
-    label: "Principal",
-    color: "hsl(var(--chart-1))",
-  },
-  interest: {
-    label: "Interest",
-    color: "hsl(var(--primary))",
-  },
-  contributions: {
-    label: "Contributions",
-    color: "hsl(var(--chart-2))"
-  }
-} satisfies ChartConfig
-
 type ChartData = {
   year: number,
   principal: number,
@@ -33,7 +18,21 @@ type ChartData = {
   contributions: number,
 }[];
 
-export function CompoundInterestChart({ chartData }: { chartData: ChartData }) {
+export function InterestChart({ chartData, type }: { chartData: ChartData, type: "simple" | "compound" }) {
+  const chartConfig = {
+    principal: {
+      label: "Principal",
+      color: type === "compound" ? "hsl(var(--chart-1))" : "hsl(var(--chart-3))"
+    },
+    interest: {
+      label: "Interest",
+      color: type === "compound" ? "hsl(var(--primary))" : "hsl(var(--chart-4))"
+    },
+    contributions: {
+      label: "Contributions",
+      color: type === "compound" ? "hsl(var(--chart-2))" : "hsl(var(--chart-5))"
+    }
+  } satisfies ChartConfig
   return (
     <div>
       <ChartContainer config={chartConfig}>

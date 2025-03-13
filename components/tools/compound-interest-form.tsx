@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, useWatch } from "react-hook-form"
 import { z } from "zod"
 
-import { toast } from "sonner";
 import {
     Form,
     FormControl,
@@ -16,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
-import { CompoundInterestChart } from "./compound-interest-chart";
+import { InterestChart } from "./interest-chart";
 import { useState } from "react";
 
 const compoundInterestFormSchema = z.object({
@@ -137,11 +136,8 @@ export function CompoundInterestForm() {
                 interest: interval.interestTotal,
                 contributions: interval.contributionTotal
             })));
-            console.log("result", result)
-            toast.success(`Future Value: $${result.finalAmount.toFixed(2)}`);
         } catch (error) {
             console.error(error);
-            toast.error("Something went wrong.");
         }
     }
 
@@ -277,7 +273,7 @@ export function CompoundInterestForm() {
                         <p className="text-chart-2 text-lg font-semibold">Contributions: ${chartData[chartData.length - 1].contributions.toFixed(2)}</p>
                     </div>
                 </div>
-                <CompoundInterestChart chartData={chartData} />
+                <InterestChart chartData={chartData} type="compound" />
             </div>
         </main>
     )
