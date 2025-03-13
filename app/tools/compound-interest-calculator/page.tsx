@@ -9,7 +9,7 @@ const breadcrumbs = [
 export default function CompoundInterestCalculatorPage() {
     return (
         <div>
-            <Banner title="Compound Interest Calculator" breadcrumbs={breadcrumbs}/>
+            <Banner title="Compound Interest Calculator" breadcrumbs={breadcrumbs} className="from-chart-1 to-primary/85"/>
             <CompoundInterestForm />
         </div>
     );
