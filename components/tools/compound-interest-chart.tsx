@@ -1,6 +1,6 @@
 "use client"
 
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 import {
   ChartConfig,
@@ -38,6 +38,12 @@ export function CompoundInterestChart({ chartData }: { chartData: ChartData }) {
     <div>
       <ChartContainer config={chartConfig}>
         <BarChart accessibilityLayer data={chartData}>
+          <YAxis
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            tickFormatter={(value) => `$${value}`}
+          />
           <CartesianGrid vertical={false} />
           <XAxis
             dataKey="year"
@@ -51,6 +57,11 @@ export function CompoundInterestChart({ chartData }: { chartData: ChartData }) {
               hideLabel
               formatter={(value, name, item, index) => (
                 <>
+                  {index === 0 && (
+                    <div className="basis-full text-sm font-semibold text-foreground">
+                      Year {item.payload.year}
+                    </div>
+                  )}
                   {(index !== 2 || chartData.some((obj) => obj.contributions)) && (
                     <>
                       <div
@@ -87,7 +98,7 @@ export function CompoundInterestChart({ chartData }: { chartData: ChartData }) {
               )}
             />
           } />
-          <ChartLegend content={<ChartLegendContent />} />
+          <ChartLegend content={<ChartLegendContent className="font-semibold text-muted-foreground" />} />
           <Bar
             dataKey="principal"
             stackId="a"

@@ -147,7 +147,7 @@ export function CompoundInterestForm() {
 
     return (
         <main className="flex flex-col md:flex-row">
-            <div className="w-full md:w-1/3 bg-muted/60 px-4 md:p-6">
+            <div className="w-full md:w-1/3 bg-muted/60 px-4 md:p-6 py-4">
                 <Form {...form}>
                     <form onChange={form.handleSubmit(onChange)} className="space-y-8">
                         <FormField
@@ -268,12 +268,14 @@ export function CompoundInterestForm() {
                     </form>
                 </Form>
             </div>
-            <div className="w-full md:w-2/3 px-4 md:p-8 space-y-4">
-                <h2 className="font-semibold text-lg md:text-2xl">After {chartData.length - 1} years, at an annual rate of {form.getValues("apr")}%, you would have ${(chartData[chartData.length - 1].principal + chartData[chartData.length - 1].interest + chartData[chartData.length - 1].contributions).toFixed(2)}</h2>
-                <div>
-                    <p className="text-chart-1 text-lg font-semibold">Final Principal: ${chartData[chartData.length - 1].principal.toFixed(2)}</p>
-                    <p className="text-primary text-lg font-semibold">Final Interest: ${chartData[chartData.length - 1].interest.toFixed(2)}</p>
-                    <p className="text-chart-2 text-lg font-semibold">Final Contributions: ${chartData[chartData.length - 1].contributions.toFixed(2)}</p>
+            <div className="w-full md:w-2/3 px-4 py-4 md:p-8 space-y-4 md:space-y-8">
+                <div className="flex flex-col gap-4">
+                    <h2 className="font-semibold text-lg md:text-2xl">After {chartData.length - 1} years, at an annual rate of {form.getValues("apr")}%, you would have ${(chartData[chartData.length - 1].principal + chartData[chartData.length - 1].interest + chartData[chartData.length - 1].contributions).toFixed(2)}</h2>
+                    <div>
+                        <p className="text-chart-1 text-lg font-semibold">Principal: ${chartData[chartData.length - 1].principal.toFixed(2)}</p>
+                        <p className="text-primary text-lg font-semibold">Interest: ${chartData[chartData.length - 1].interest.toFixed(2)}</p>
+                        <p className="text-chart-2 text-lg font-semibold">Contributions: ${chartData[chartData.length - 1].contributions.toFixed(2)}</p>
+                    </div>
                 </div>
                 <CompoundInterestChart chartData={chartData} />
             </div>

@@ -300,7 +300,8 @@ const ChartLegendContent = React.forwardRef<
                 <itemConfig.icon />
               ) : (
                 <div
-                  className="h-2 w-2 shrink-0 rounded-[2px]"
+                  //modify chart legend width and height for desktop
+                  className="h-2 w-2 sm:h-3 sm:w-3 shrink-0 rounded-[2px] sm:rounded-[3px]"
                   style={{
                     backgroundColor: item.color,
                   }}
