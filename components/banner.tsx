@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from './ui/breadcrumb';
+import { Fragment } from 'react';
 
 interface Breadcrumb {
     href: string;
@@ -30,14 +31,14 @@ export default function Banner({ title, backgroundImage, className, breadcrumbs 
                     <BreadcrumbList className="text-neutral-100">
                         {breadcrumbs.map((breadcrumb, index) => (
                             index < breadcrumbs.length - 1 ? (
-                                <>
-                                    <BreadcrumbItem key={index}>
+                                <Fragment key={index}>
+                                    <BreadcrumbItem >
                                         <BreadcrumbLink className="hover:text-white" asChild>
                                             <Link href={breadcrumb.href}>{breadcrumb.label}</Link>
                                         </BreadcrumbLink>
                                     </BreadcrumbItem>
-                                    <BreadcrumbSeparator key={`separator-${index}`} />
-                                </>
+                                    <BreadcrumbSeparator />
+                                </Fragment>
                             ) : (
                                 <BreadcrumbItem key={index}>
                                     <BreadcrumbPage className="text-white">{breadcrumb.label}</BreadcrumbPage>
