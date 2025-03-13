@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, buttonVariants } from './ui/button';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { Separator } from './ui/separator';
 import { type Roles } from '@/lib/db/schema';
+import { usePathname } from 'next/navigation';
 
 export default function HeaderComp({
   userData
@@ -22,6 +23,17 @@ export default function HeaderComp({
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const loggedIn = !!userData;
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
+  const handleMobileMenuItemClick = (targetPath: string) => {
+    if (pathname === targetPath || (targetPath && targetPath.startsWith('/#') && targetPath.substring(0, 1) === pathname)) {
+      setIsMenuOpen(false);
+    }
+  }
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background">
@@ -33,9 +45,9 @@ export default function HeaderComp({
         {/* Menu items and button */}
         <div className="flex-1 flex items-center justify-end">
           <div className="hidden md:flex space-x-4">
-            <Link href="#home" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Home</Link>
+            <Link href="/" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Home</Link>
             <Link href="/courses" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Courses</Link>
-            <Link href="#contact" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Contact</Link>
+            <Link href="about" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Contact</Link>
             <div className='ml-4 self-center'>
               {loggedIn ? (
                 <UserMenu name={userData.name!} email={userData.email!} roles={userData.roles} />
@@ -70,14 +82,14 @@ export default function HeaderComp({
       <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden absolute h-screen w-full backdrop-blur-xl bg-background/80`} id="mobile-menu">
         <div className="p-6 space-y-6">
           <div className='flex flex-col gap-4'>
-            <Link href="#home" className="text-foreground hover:text-primary block text-base font-semibold">Home</Link>
-            <Link href="/courses" className="text-foreground hover:text-primary block text-base font-semibold">Courses</Link>
-            <Link href="#contact" className="text-foreground hover:text-primary block text-base font-semibold">Contact</Link>
+            <Link href="/" className="text-foreground hover:text-primary block text-base font-semibold" onClick={() => handleMobileMenuItemClick('/')}>Home</Link>
+            <Link href="/courses" className="text-foreground hover:text-primary block text-base font-semibold" onClick={() => handleMobileMenuItemClick('/courses')}>Courses</Link>
+            <Link href="/about" className="text-foreground hover:text-primary block text-base font-semibold" onClick={() => handleMobileMenuItemClick('/about')}>Contact</Link>
           </div>
           <Separator />
           <div className='flex flex-col gap-2'>
             {loggedIn ? (
-                <UserMenu isMobile name={userData.name!} email={userData.email!} roles={userData.roles} />
+              <UserMenu isMobile name={userData.name!} email={userData.email!} roles={userData.roles} />
             ) : (
               <div className='flex flex-row gap-2'>
                 <Link href="/login" className={cn(buttonVariants({ variant: "secondary" }), "w-full")}>Log In</Link>
