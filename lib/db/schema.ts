@@ -295,7 +295,7 @@ function generateJoinCode() {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
 
-export const classes = pgTable("class", {
+export const classes = pgTable("classes", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
