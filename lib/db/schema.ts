@@ -244,6 +244,9 @@ export const standards = pgTable("standard", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
+  title: text("title").notNull(),
+  category: text("category"),
+  state: text("state").notNull(),
   description: text("description"),
   objectives: text("objectives"),
 })
