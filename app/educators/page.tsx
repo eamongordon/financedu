@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Banner from "@/components/banner";
 import { CloudsDarkClass, CloudsLightClass } from "@/components/illustrations/clouds";
 import { DividerStripes } from "@/components/illustrations/divider-stripes";
@@ -6,6 +7,11 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+    title: 'Educators',
+    description: 'Financedu offers a platform for students and teachers to utilize our free, fun, and engaging financial education courses and resources.'
+}
 
 export default function EducatorPage() {
     return (

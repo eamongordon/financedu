@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { listCourses } from "@/lib/actions";
 import Banner from "@/components/banner";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -5,6 +6,11 @@ import Image from "next/image";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+
+export const metadata: Metadata = {
+    title: 'Courses',
+    description: 'Browse a collection of free, detailed, and interactive financial courses for youth, ranging from budgeting to investing.'
+}
 
 export default async function CoursesPage() {
     const courses = await listCourses();

@@ -1,8 +1,14 @@
+import type { Metadata } from 'next';
 import { auth } from "@/lib/auth";
 import { ClassJoinConfirm } from "@/components/account/class-join-confirm";
 import { ClassCodeForm } from "@/components/account/class-code-form";
 import { getClassFromClassCode } from "@/lib/actions";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+    title: 'Join Class',
+    description: 'Join your class and complete assignments on Financedu, a free online financial education platform.'
+}
 
 export default async function Page({
     searchParams,

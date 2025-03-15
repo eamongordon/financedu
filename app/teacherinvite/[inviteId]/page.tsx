@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import { auth } from "@/lib/auth";
 import { getClassTeacherInvite } from "@/lib/actions";
 import { TeacherInvite } from "@/components/teacherinvite";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+    title: 'Join Class'
+}
 
 export default async function Page({
     params,

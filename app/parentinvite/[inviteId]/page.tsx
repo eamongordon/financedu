@@ -1,7 +1,12 @@
+import type { Metadata } from 'next';
 import { auth } from "@/lib/auth";
 import { getParentChildInvite } from "@/lib/actions";
 import { ParentInvite } from "@/components/parentinvite";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+    title: 'Parent Access Request'
+}
 
 export default async function Page({
     params,

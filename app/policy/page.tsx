@@ -3,13 +3,8 @@ import Link from 'next/link'
 import AnchorMenu from '@/components/policy/anchormenu'
 
 export const metadata: Metadata = {
-    title: 'Policy | Financedu',
-    description: 'View our site policy, including copyright policy, terms of use, cookie policy, and privacy policy.',
-    openGraph: {
-        images: ['/Fluorite-164_horiz-Optimized.jpg'],
-        siteName: 'Financedu',
-        url: '/policy'
-    }
+    title: 'Policy',
+    description: 'View our site policy, including copyright policy, terms of use, cookie policy, and privacy policy.'
 }
 
 const Page = async () => {

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import Image from "next/image";
@@ -22,6 +23,11 @@ const resources = [
         cta: "Calculate Interest"
     }
 ];
+
+export const metadata: Metadata = {
+    title: "Resources",
+    description: "Browse a collection of free, detailed, and interactive financial resources, ranging from calculators to a glossary!",
+};
 
 export default function ResourcePage() {
     return (
