@@ -1,6 +1,6 @@
 import Banner from '@/components/banner';
 import { StandardsFilters } from '@/components/standards/filters';
-import { getStandards } from '@/lib/actions';
+import { getActivityDisplay, getLessonDisplay, getStandards } from '@/lib/actions';
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -20,14 +20,23 @@ const Page = async (
         typeof searchParams.state === 'string' ? searchParams.state : undefined
     const categories =
         Array.isArray(searchParams.categories) && searchParams.categories.every(item => typeof item === 'string') ? searchParams.categories : undefined;
+    const lessonId =
+        typeof searchParams.lessonId === 'string' ? searchParams.lessonId : undefined
+    const activityId =
+        typeof searchParams.activityId === 'string' ? searchParams.activityId : undefined
+
 
     const filterObj = {
         title,
         state,
         categories,
+        lessonId,
+        activityId
     };
 
     const standards = await getStandards(filterObj);
+    const lesson = lessonId ? await getLessonDisplay(lessonId) : undefined;
+    const activity = activityId ? await getActivityDisplay(activityId) : undefined;
 
     return (
         <>
@@ -43,6 +52,8 @@ const Page = async (
                                     categories: categories ?? ["Credit", "Risk", "Saving", "Investment", "Earning", "Spending", "Career Technical (CTE)"],
                                 }
                             }
+                            lesson={lesson}
+                            activity={activity}
                         />
                     </div>
                 </section>

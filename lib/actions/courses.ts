@@ -1,7 +1,7 @@
 "use server";
 
-import { eq, gt, and, lt, inArray, ilike } from "drizzle-orm";
-import { courses, modules, lessons, activities, userCompletion, standards } from "../db/schema";
+import { eq, gt, and, lt, inArray, ilike, SQL } from "drizzle-orm";
+import { courses, modules, lessons, activities, userCompletion, standards, activityToStandards } from "../db/schema";
 import { db } from "../db";
 import { auth } from "../auth";
 
@@ -640,8 +640,8 @@ export async function getUserCompletion() {
     return courses;
 }
 
-export async function getStandards(filters: { title?: string, state?: string, categories?: string[] }) {
-    const conditions = [];
+export async function getStandards(filters: { title?: string, state?: string, categories?: string[], activityId?: string, lessonId?: string }) {
+    const conditions: SQL<unknown>[] = [];
     if (filters.title) {
         conditions.push(ilike(standards.title, `%${filters.title}%`));
     }
@@ -653,8 +653,56 @@ export async function getStandards(filters: { title?: string, state?: string, ca
     }
 
     const standardsList = await db.query.standards.findMany({
-        where: and(...conditions),
+        where: (standards, { exists }) => and(
+            ...conditions,
+            filters.activityId ? exists(
+                db.select()
+                    .from(activityToStandards)
+                    .where(and(
+                        eq(activityToStandards.activityId, filters.activityId!),
+                        eq(activityToStandards.standardId, standards.id)
+                    ))
+            ) : undefined,
+            filters.lessonId ? exists(
+                db.select()
+                    .from(activities)
+                    .where(and(
+                        eq(activities.lessonId, filters.lessonId!),
+                        exists(
+                            db.select()
+                                .from(activityToStandards)
+                                .where(and(
+                                    eq(activityToStandards.activityId, activities.id),
+                                    eq(activityToStandards.standardId, standards.id)
+                                ))
+                        )
+                    ))
+            ) : undefined
+        )
     });
 
     return standardsList;
+}
+
+export async function getLessonDisplay(lessonId: string) {
+    const lesson = await db.query.lessons.findFirst({
+        where: eq(lessons.id, lessonId),
+        columns: {
+            id: true,
+            title: true
+        }
+    });
+    return lesson;
+}
+
+export async function getActivityDisplay(activityId: string) {
+    const activity = await db.query.activities.findFirst({
+        where: eq(activities.id, activityId),
+        columns: {
+            id: true,
+            title: true,
+            type: true
+        }
+    });
+    return activity;
 }
