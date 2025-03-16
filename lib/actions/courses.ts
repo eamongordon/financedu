@@ -1,7 +1,7 @@
 "use server";
 
-import { eq, gt, and, lt } from "drizzle-orm";
-import { courses, modules, lessons, activities, userCompletion } from "../db/schema";
+import { eq, gt, and, lt, inArray, ilike } from "drizzle-orm";
+import { courses, modules, lessons, activities, userCompletion, standards } from "../db/schema";
 import { db } from "../db";
 import { auth } from "../auth";
 
@@ -638,4 +638,23 @@ export async function getUserCompletion() {
     });
 
     return courses;
+}
+
+export async function getStandards(filters: { title?: string, state?: string, categories?: string[] }) {
+    const conditions = [];
+    if (filters.title) {
+        conditions.push(ilike(standards.title, `%${filters.title}%`));
+    }
+    if (filters.state) {
+        conditions.push(eq(standards.state, filters.state));
+    }
+    if (filters.categories && filters.categories.length > 0) {
+        conditions.push(inArray(standards.category, filters.categories));
+    }
+
+    const standardsList = await db.query.standards.findMany({
+        where: and(...conditions),
+    });
+
+    return standardsList;
 }
