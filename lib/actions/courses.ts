@@ -1,7 +1,7 @@
 "use server";
 
 import { eq, gt, and, lt, inArray, ilike, SQL } from "drizzle-orm";
-import { courses, modules, lessons, activities, userCompletion, standards, activityToStandards } from "../db/schema";
+import { courses, modules, lessons, activities, userCompletion, standards, activityToStandards, glossary } from "../db/schema";
 import { db } from "../db";
 import { auth } from "../auth";
 
@@ -705,4 +705,21 @@ export async function getActivityDisplay(activityId: string) {
         }
     });
     return activity;
+}
+
+export async function getGlossary() {
+    const glossary = await db.query.glossary.findMany();
+    return glossary;
+}
+
+export async function getGlossaryTerm(slug: string) {
+    const term = await db.query.glossary.findFirst({
+        where: eq(glossary.slug, slug)
+    });
+
+    if (!term) {
+        throw new Error("Term not found");
+    }
+
+    return term;
 }

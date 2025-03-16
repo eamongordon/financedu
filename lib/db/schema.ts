@@ -360,6 +360,16 @@ export const classTeacherInvite = pgTable("classTeacherInvite", {
   unique().on(t.classId, t.teacherEmail)
 ]);
 
+export const glossary = pgTable("glossary", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  slug: text("slug").notNull(),
+  title: text("title").notNull(),
+  definition: text("definition").notNull(),
+  topics: text("topics").array().default(sql`'{}'::text[]`)
+})
+
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   sessions: many(sessions),
