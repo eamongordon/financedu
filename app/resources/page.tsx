@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import Image from "next/image";
 import Banner from "@/components/banner";
@@ -46,27 +46,31 @@ export const metadata: Metadata = {
 export default function ResourcePage() {
     return (
         <div>
-            <Banner title="Resources" className="from-[#A4EB9E] to-[#00B5EA] bg-gradient-to-r"/>
-            <ul className="flex justify-center items-center flex-wrap gap-4 my-4 sm:my-10 px-4">
+            <Banner title="Resources" className="from-[#A4EB9E] to-[#00B5EA] bg-gradient-to-r" />
+            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-screen-xl mx-auto p-4 sm:p-6 lg:p-8">
                 {resources.map((resource) => (
-                    <li key={resource.title}>
-                        <Card className="w-full sm:w-[375px] overflow-hidden">
-                            <div className="relative w-full h-40 bg-[#f6efe6] dark:bg-[#f6efe6]/50">
-                                <Image
-                                    src={resource.image ?? "/homepage-banner.jpg"}
-                                    alt={resource.title}
-                                    layout="fill"
-                                    className="object-cover opacity-30 grayscale sepia-[0.6] contrast-50"
-                                />
+                    <li key={resource.title} className="flex">
+                        <Card className="w-full flex flex-col justify-between overflow-hidden">
+                            <div>
+                                <div className="relative w-full h-40 bg-[#f6efe6] dark:bg-[#f6efe6]/50">
+                                    <Image
+                                        src={resource.image ?? "/homepage-banner.jpg"}
+                                        alt={resource.title}
+                                        layout="fill"
+                                        className="object-cover opacity-30 grayscale sepia-[0.6] contrast-50"
+                                    />
+                                </div>
+                                <CardHeader className="pb-4">
+                                    <CardTitle className="text-[22px]">{resource.title}</CardTitle>
+                                    <p className="text-muted-foreground text-sm mt-2">{resource.type}</p>
+                                </CardHeader>
+                                <CardContent className="flex flex-col gap-6">
+                                    <p className="text-muted-foreground">{resource.description}</p>
+                                </CardContent>
                             </div>
-                            <CardHeader className="pb-4">
-                                <CardTitle className="text-[22px]">{resource.title}</CardTitle>
-                                <p className="text-muted-foreground text-sm mt-2">{resource.type}</p>
-                            </CardHeader>
-                            <CardContent className="flex flex-col gap-6">
-                                <p className="text-muted-foreground">{resource.description}</p>
+                            <CardFooter>
                                 <Link href={resource.href} className={cn(buttonVariants(), "w-full")}>{resource.cta}</Link>
-                            </CardContent>
+                            </CardFooter>
                         </Card>
                     </li>
                 ))}
