@@ -26,7 +26,7 @@ export default async function GlossaryPage() {
 
     return (
         <main>
-            <Banner title="Glossary" className="from-[#4BDB7B] to-[#00B5EA]" />
+            <Banner title="Glossary" className="from-[#02CF46] to-[#79D6F1] bg-gradient-to-tr" />
             <nav className="px-4 sm:px-6 lg:px-8 flex flex-wrap justify-center w-full bg-muted overflow-auto">
                 {alphabet.map(letter => (
                     <Link href={`#${letter}`} key={letter} className={cn(buttonVariants({ variant: "ghost" }), "font-semibold text-lg h-12")}>
