@@ -21,6 +21,20 @@ const resources = [
         image: "/resources/simple-interest-calculator.png",
         type: "Calculator",
         cta: "Calculate Interest"
+    }, {
+        title: "Glossary",
+        description: "A comprehensive dictionary of financial terms at your fingertips.",
+        href: "/glossary",
+        image: "/resources/glossary.png",
+        type: "Database",
+        cta: "Explore Terms"
+    }, {
+        title: "Financial Education Standards",
+        description: "A searchable database of statewide and national financial education standards.",
+        image: "/resources/financial-education-standards.png",
+        type: "Database",
+        cta: "View Standards",
+        href: "https://www.financedu.org/standards"
     }
 ];
 
