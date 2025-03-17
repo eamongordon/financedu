@@ -118,7 +118,7 @@ export const courses = pgTable("course", {
   courseLength: text("courseLength").notNull(),
   gradeLevels: text("gradeLevels").notNull(),
   image: text("image"),
-  slug: text("slug").notNull(),
+  slug: text("slug").notNull().unique(),
 })
 
 export const modules = pgTable("module", {
@@ -133,7 +133,7 @@ export const modules = pgTable("module", {
   objectives: text("objectives"),
   order: integer("order").notNull(),
   icon: text("icon"),
-  slug: text("slug").notNull(),
+  slug: text("slug").notNull().unique(),
 })
 
 export const lessons = pgTable("lesson", {
@@ -147,7 +147,7 @@ export const lessons = pgTable("lesson", {
   description: text("description"),
   objectives: text("objectives"),
   order: integer("order").notNull(),
-  slug: text("slug").notNull(),
+  slug: text("slug").notNull().unique(),
 })
 
 export const activities = pgTable("activity", {
@@ -163,7 +163,7 @@ export const activities = pgTable("activity", {
   content: text("content"),
   topics: text("topics").array(),
   order: integer("order").notNull(),
-  slug: text("slug").notNull(),
+  slug: text("slug").notNull().unique(),
 })
 
 export const activityToQuestions = pgTable("activityToQuestion", {
@@ -368,7 +368,7 @@ export const glossary = pgTable("glossary", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  slug: text("slug").notNull(),
+  slug: text("slug").notNull().unique(),
   title: text("title").notNull(),
   definition: text("definition").notNull(),
   topics: text("topics").array().default(sql`'{}'::text[]`)
