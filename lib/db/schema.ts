@@ -118,6 +118,7 @@ export const courses = pgTable("course", {
   courseLength: text("courseLength").notNull(),
   gradeLevels: text("gradeLevels").notNull(),
   image: text("image"),
+  slug: text("slug").notNull(),
 })
 
 export const modules = pgTable("module", {
@@ -132,6 +133,7 @@ export const modules = pgTable("module", {
   objectives: text("objectives"),
   order: integer("order").notNull(),
   icon: text("icon"),
+  slug: text("slug").notNull(),
 })
 
 export const lessons = pgTable("lesson", {
@@ -145,6 +147,7 @@ export const lessons = pgTable("lesson", {
   description: text("description"),
   objectives: text("objectives"),
   order: integer("order").notNull(),
+  slug: text("slug").notNull(),
 })
 
 export const activities = pgTable("activity", {
@@ -159,7 +162,8 @@ export const activities = pgTable("activity", {
   description: text("description"),
   content: text("content"),
   topics: text("topics").array(),
-  order: integer("order").notNull()
+  order: integer("order").notNull(),
+  slug: text("slug").notNull(),
 })
 
 export const activityToQuestions = pgTable("activityToQuestion", {
