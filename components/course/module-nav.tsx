@@ -11,7 +11,7 @@ import { CompletionIcon } from "../ui/completion-icon";
 
 interface ModuleNavProps extends React.HTMLAttributes<HTMLElement> {
   modules: {
-    id: string
+    slug: string
     title: string
     icon?: string | null,
     href: string
@@ -21,7 +21,7 @@ interface ModuleNavProps extends React.HTMLAttributes<HTMLElement> {
 
 export function ModuleNav({ className, modules, ...props }: ModuleNavProps) {
   const segments = useSelectedLayoutSegments()
-  const currentModuleId = segments![segments!.length - 1]
+  const currentModuleSlug = segments![segments!.length - 1]
 
   return (
     <nav
@@ -33,12 +33,12 @@ export function ModuleNav({ className, modules, ...props }: ModuleNavProps) {
     >
       {modules.map((module) => (
         <Link
-          key={module.id}
+          key={module.slug}
           href={module.href}
           className={cn(
             buttonVariants({ variant: "ghost" }),
             "border-l-4 border-l-transparent py-8 rounded-none text-base [&_svg]:size-4 whitespace-normal gap-6",
-            currentModuleId === module.id
+            currentModuleSlug === module.slug
               ? "border-l-primary bg-accent hover:bg-muted"
               : "",
             "justify-start"
@@ -47,7 +47,7 @@ export function ModuleNav({ className, modules, ...props }: ModuleNavProps) {
           <CompletionIcon
             isComplete={module.isComplete}
             icon={module.icon ? <DynamicIcon name={module.icon as keyof typeof dynamicIconImports} strokeWidth={1.5} /> : <GraduationCap strokeWidth={1.5} />}
-            isCurrent={currentModuleId === module.id}
+            isCurrent={currentModuleSlug === module.slug}
           />
           {module.title}
         </Link>

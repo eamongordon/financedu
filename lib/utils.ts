@@ -6,16 +6,16 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function getNextActivityLink(courseId: string, moduleId: string, lessonId: string, nextActivity: NextActivity) {
-  const href = nextActivity.module ? `/courses/${courseId}/${nextActivity.module.id}/${nextActivity.lesson.id}/${nextActivity.lesson.activities[0].id}` :
-      nextActivity.lesson ? `/courses/${courseId}/${moduleId}/${nextActivity.lesson.id}/${nextActivity.lesson.activities[0].id}` :
-          nextActivity.activity ? `/courses/${courseId}/${moduleId}/${lessonId}/${nextActivity.activity.id}` :
-              `/courses/${nextActivity.course.id}`;
+export function getNextActivityLink(courseSlug: string, moduleSlug: string, lessonSlug: string, nextActivity: NextActivity) {
+  const href = nextActivity.module ? `/courses/${courseSlug}/${nextActivity.module.id}/${nextActivity.lesson.slug}/${nextActivity.lesson.activities[0].slug}` :
+    nextActivity.lesson ? `/courses/${courseSlug}/${moduleSlug}/${nextActivity.lesson.slug}/${nextActivity.lesson.activities[0].slug}` :
+      nextActivity.activity ? `/courses/${courseSlug}/${moduleSlug}/${lessonSlug}/${nextActivity.activity.slug}` :
+        `/courses/${nextActivity.course.slug}`;
 
   const label = nextActivity.module ?
-      `Next: Module ${nextActivity.module.order}` :
-      nextActivity.lesson ? `Next: Lesson ${nextActivity.lesson.order}` :
-          nextActivity.activity ? `Next: ${nextActivity.activity.type}` : "All Done!";
+    `Next: Module ${nextActivity.module.order}` :
+    nextActivity.lesson ? `Next: Lesson ${nextActivity.lesson.order}` :
+      nextActivity.activity ? `Next: ${nextActivity.activity.type}` : "All Done!";
 
   return { href, label };
 }

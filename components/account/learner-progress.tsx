@@ -35,13 +35,13 @@ function formatDate(date: Date) {
 }
 
 export type CompletedActivityItem = {
-    activityId: string;
+    activitySlug: string;
     activityTitle: string
     activityType: string
     lessonTitle: string;
-    lessonId: string;
-    moduleId: string;
-    courseId: string;
+    lessonSlug: string;
+    moduleSlug: string;
+    courseSlug: string;
     completedAt: Date
 }
 
@@ -56,7 +56,7 @@ const columns: ColumnDef<CompletedActivityItem>[] = [
 
             return (
                 <Link
-                    href={`/courses/${row.original.courseId}/${row.original.moduleId}/${row.original.lessonId}/${row.original.activityId}`}
+                    href={`/courses/${row.original.courseSlug}/${row.original.moduleSlug}/${row.original.lessonSlug}/${row.original.activitySlug}`}
                     className="flex flex-row items-center gap-4"
                 >
                     <CompletionIcon

@@ -40,7 +40,7 @@ export default async function CoursesPage() {
                                         <p className="text-muted-foreground text-2xl">7 - 12</p>
                                     </div>
                                 </div>
-                                <Link href={`/courses/${course.id}`} className={cn(buttonVariants(), "w-full")}>View Course</Link>
+                                <Link href={`/courses/${course.slug}`} className={cn(buttonVariants(), "w-full")}>View Course</Link>
                             </CardContent>
                         </Card>
                     </li>

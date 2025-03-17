@@ -10,17 +10,17 @@ import { SessionProvider } from "next-auth/react";
 export default async function LessonPage({
     params,
 }: {
-    params: Promise<{ activityId: string, lessonId: string, moduleId: string, courseId: string }>,
+    params: Promise<{ activitySlug: string, lessonSlug: string, moduleSlug: string, courseSlug: string }>,
 }) {
-    const { activityId, lessonId, moduleId, courseId } = await params;
-    const activity = await getActivity(activityId);
-    const nextActivity = await getNextActivity(activityId);
-    const { href, label } = getNextActivityLink(courseId, moduleId, lessonId, nextActivity);
+    const { activitySlug, lessonSlug, moduleSlug, courseSlug } = await params;
+    const activity = await getActivity(activitySlug);
+    const nextActivity = await getNextActivity(activitySlug);
+    const { href, label } = getNextActivityLink(courseSlug, moduleSlug, lessonSlug, nextActivity);
 
     const session = await auth();
 
     if (session && session.user && session.user.id && activity.type === "Article") {
-        await markActivityComplete(activityId);
+        await markActivityComplete(activity.id);
     }
 
     return (

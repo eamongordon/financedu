@@ -9,13 +9,13 @@ export default async function Page({
     const childId = (await params).childId;
     const completedActivities = await getChildCompletedActivities(childId);
     const completedActivitiesTableData = completedActivities.map((completedActivityObj) => ({
-        activityId: completedActivityObj.activity.id,
+        activitySlug: completedActivityObj.activity.slug,
         activityTitle: completedActivityObj.activity.title,
         activityType: completedActivityObj.activity.type,
         lessonTitle: completedActivityObj.activity.lesson.title,
-        lessonId: completedActivityObj.activity.lesson.id,
-        moduleId: completedActivityObj.activity.lesson.module.id,
-        courseId: completedActivityObj.activity.lesson.module.courseId,
+        lessonSlug: completedActivityObj.activity.lesson.slug,
+        moduleSlug: completedActivityObj.activity.lesson.module.slug,
+        courseSlug: completedActivityObj.activity.lesson.module.course.slug,
         completedAt: completedActivityObj.completedAt! // Todo: Should be non-null
     }));
     return (

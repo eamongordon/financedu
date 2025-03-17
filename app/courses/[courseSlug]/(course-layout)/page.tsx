@@ -13,9 +13,9 @@ type CourseWithModulesAndLessonsAndUserCompletion = Awaited<ReturnType<typeof ge
 export default async function Page({
     params,
 }: {
-    params: Promise<{ courseId: string }>
+    params: Promise<{ courseSlug: string }>
 }) {
-    const slug = (await params).courseId;
+    const slug = (await params).courseSlug;
     const session = await auth();
     const isLoggedIn = session && session.user && session.user.id;
     const course = isLoggedIn
@@ -47,7 +47,7 @@ export default async function Page({
                                 icon={module.icon ? <DynamicIcon name={module.icon as keyof typeof dynamicIconImports} strokeWidth={1.5} /> : <GraduationCap strokeWidth={1.5} />}
                             />
                             <Link
-                                href={`/courses/${course.id}/${module.id}`}
+                                href={`/courses/${course.slug}/${module.slug}`}
                                 className={cn(buttonVariants({ variant: "link" }), isLoggedIn && (module as CourseWithModulesAndLessonsAndUserCompletion["modules"][number]).lessons.every(lesson => lesson.activities.every(activity => activity.userCompletion.length > 0)) ? "text-primary" : "text-card-foreground")}
                             >
                                 <CardTitle
@@ -62,7 +62,7 @@ export default async function Page({
                                 {module.lessons.map((lesson) => (
                                     <Link
                                         key={lesson.id}
-                                        href={`/courses/${course.id}/${module.id}/${lesson.id}/${lesson.activities.length > 0 ? lesson.activities[0].id : ""}`}
+                                        href={`/courses/${course.slug}/${module.slug}/${lesson.slug}/${lesson.activities.length > 0 ? lesson.activities[0].slug : ""}`}
                                         className={cn(
                                             buttonVariants({ variant: "link" }),
                                             "text-muted-foreground [&_svg]:size-4 whitespace-normal justify-start",

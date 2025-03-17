@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { LessonSidebar } from "@/components/course/lesson-sidebar";
 
 interface LessonLayoutProps {
-    params: Promise<{ courseId: string, moduleId: string, lessonId: string }>,
+    params: Promise<{ courseSlug: string, moduleSlug: string, lessonSlug: string }>,
     children: React.ReactNode
 }
 
@@ -11,15 +11,15 @@ type LessonWithActivities = Awaited<ReturnType<typeof getLessonWithActivities>>;
 type LessonWithActivitiesAndUserProgress = Awaited<ReturnType<typeof getLessonWithActivitiesAndUserProgress>>;
 
 export default async function LessonLayout({ params, children }: LessonLayoutProps) {
-    const { lessonId, courseId, moduleId } = await params;
-    const nextLesson = await getNextLesson(lessonId);
-    const previousLesson = await getPreviousLesson(lessonId);
+    const { lessonSlug, courseSlug, moduleSlug } = await params;
+    const nextLesson = await getNextLesson(lessonSlug);
+    const previousLesson = await getPreviousLesson(lessonSlug);
     const session = await auth();
 
     const isLoggedIn = session && session.user && session.user.id;
     const lesson = isLoggedIn
-        ? await getLessonWithActivitiesAndUserProgress(lessonId)
-        : await getLessonWithActivities(lessonId);
+        ? await getLessonWithActivitiesAndUserProgress(lessonSlug)
+        : await getLessonWithActivities(lessonSlug);
 
     return (
         <div className="w-full flex flex-col sm:flex-row sm:flex-grow sm:divide-x divide-border">
@@ -29,9 +29,9 @@ export default async function LessonLayout({ params, children }: LessonLayoutPro
                     previousLesson={previousLesson}
                     nextLesson={nextLesson}
                     isLoggedIn={true}
-                    moduleId={moduleId}
-                    courseId={courseId}
-                    lessonId={lessonId}
+                    moduleSlug={moduleSlug}
+                    courseSlug={courseSlug}
+                    lessonSlug={lessonSlug}
                 />
             ) : (
                 <LessonSidebar
@@ -39,9 +39,9 @@ export default async function LessonLayout({ params, children }: LessonLayoutPro
                     previousLesson={previousLesson}
                     nextLesson={nextLesson}
                     isLoggedIn={false}
-                    moduleId={moduleId}
-                    courseId={courseId}
-                    lessonId={lessonId}
+                    moduleSlug={moduleSlug}
+                    courseSlug={courseSlug}
+                    lessonSlug={lessonSlug}
                 />
             )}
             <div className="sm:w-2/3 flex flex-col items-center overflow-auto">

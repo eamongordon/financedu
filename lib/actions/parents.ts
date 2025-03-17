@@ -235,20 +235,26 @@ export async function getChildCompletedActivities(childId: string) {
                     lesson: {
                         with: {
                             module: {
+                                with: {
+                                    course: {
+                                        columns: {
+                                            slug: true,
+                                        }
+                                    }
+                                },
                                 columns: {
-                                    id: true,
-                                    courseId: true
+                                    slug: true,
                                 }
                             },
                         },
                         columns: {
-                            id: true,
+                            slug: true,
                             title: true
                         }
                     }
                 },
                 columns: {
-                    id: true,
+                    slug: true,
                     title: true,
                     type: true
                 }

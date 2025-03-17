@@ -42,10 +42,10 @@ function formatDate(date: Date) {
 
 export type AssignmentItem = {
     assignmentId: string;
-    courseId: string;
-    moduleId: string;
-    lessonId: string;
-    activityId: string;
+    courseSlug: string;
+    moduleSlug: string;
+    lessonSlug: string;
+    activitySlug: string;
     activityTitle: string;
     activityType: string;
     dueDate: Date;
@@ -169,7 +169,7 @@ export function AssignmentsTeacherList({ assignments, createAssignmentsElem }: U
                 const type = row.original.activityType;
                 return (
                     <Link
-                        href={`/courses/${row.original.courseId}/${row.original.moduleId}/${row.original.lessonId}/${row.original.activityId}`}
+                        href={`/courses/${row.original.courseSlug}/${row.original.moduleSlug}/${row.original.lessonSlug}/${row.original.activitySlug}`}
                         className="flex flex-row items-center gap-4"
                     >
                         <CompletionIcon

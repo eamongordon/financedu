@@ -48,8 +48,8 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
         setSelectedModule(moduleId);
     };
 
-    const selectedCourseData = selectedCourse ? courses.find(course => course.id === selectedCourse) : null;
-    const selectedModuleData = selectedModule ? selectedCourseData?.modules.find(module => module.id === selectedModule) : null;
+    const selectedCourseData = selectedCourse ? courses.find(course => course.slug === selectedCourse) : null;
+    const selectedModuleData = selectedModule ? selectedCourseData?.modules.find(module => module.slug === selectedModule) : null;
 
     return (
         <section>
@@ -58,10 +58,10 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
                     {courses.map((course) => {
                         const { completion, averageAccuracy, completionDate } = calculateCompletionAndAccuracy(course.modules.flatMap(module => module.lessons.flatMap(lesson => lesson.activities)));
                         return (
-                            <Card key={course.id} className="mb-4 cursor-pointer" onClick={() => handleCourseClick(course.id)}>
+                            <Card key={course.id} className="mb-4 cursor-pointer" onClick={() => handleCourseClick(course.slug)}>
                                 <CardHeader>
                                     <Link
-                                        href={`/courses/${course.id}`}
+                                        href={`/courses/${course.slug}`}
                                         target="_blank"
                                         className={cn(buttonVariants({ variant: "link" }), "text-card-foreground block p-0")}
                                     >
@@ -105,10 +105,10 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
                     {selectedCourseData.modules.map((module) => {
                         const { completion, averageAccuracy, completionDate } = calculateCompletionAndAccuracy(module.lessons.flatMap(lesson => lesson.activities));
                         return (
-                            <Card key={module.id} className="mb-4 cursor-pointer" onClick={() => handleModuleClick(module.id)}>
+                            <Card key={module.id} className="mb-4 cursor-pointer" onClick={() => handleModuleClick(module.slug)}>
                                 <CardHeader>
                                     <Link
-                                        href={`/courses/${selectedCourse}/${module.id}`}
+                                        href={`/courses/${selectedCourse}/${module.slug}`}
                                         target="_blank"
                                         className={cn(cn(buttonVariants({ variant: "link" }), "text-card-foreground block p-0"))}
                                     >
@@ -155,7 +155,7 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
                             <Card key={lesson.id} className="mb-4">
                                 <CardHeader>
                                     <Link
-                                        href={`/courses/${selectedCourse}/${selectedModule}/${lesson.id}/${lesson.activities[0].id}`}
+                                        href={`/courses/${selectedCourse}/${selectedModule}/${lesson.slug}/${lesson.activities[0].slug}`}
                                         target="_blank"
                                         className={cn(buttonVariants({ variant: "link" }), "text-card-foreground block p-0")}
                                     >
@@ -184,7 +184,7 @@ export function LearnerCompletion({ courses }: { courses: UserCompletion }) {
                                         {lesson.activities.map((activity) => (
                                             <Link
                                                 key={activity.id}
-                                                href={`/courses/${selectedCourse}/${selectedModule}/${lesson.id}/${activity.id}`}
+                                                href={`/courses/${selectedCourse}/${selectedModule}/${lesson.slug}/${activity.slug}`}
                                                 className={cn(
                                                     buttonVariants({ variant: "link" }),
                                                     "py-8 text-base text-foreground [&_svg]:size-4 whitespace-normal justify-start gap-6",

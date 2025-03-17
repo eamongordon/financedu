@@ -9,10 +9,10 @@ export default async function CourseLayout({
     params,
     children,
 }: {
-    params: Promise<{ courseId: string }>,
+    params: Promise<{ courseSlug: string }>,
     children: React.ReactNode
 }) {
-    const slug = (await params).courseId;
+    const slug = (await params).courseSlug;
 
     const session = await auth();
 
@@ -31,10 +31,10 @@ export default async function CourseLayout({
             >
                 <CourseHeader course={course} />
                 <ModuleNav modules={course.modules.map(module => ({
-                    id: module.id,
+                    slug: module.slug,
                     title: module.title,
                     icon: module.icon,
-                    href: `/courses/${slug}/${module.id}`,
+                    href: `/courses/${slug}/${module.slug}`,
                     isComplete: isLoggedIn ? (module as courseWithModulesAndLessonsAndUserCompletion["modules"][number]).lessons.every(lesson => lesson.activities.every(activity => activity.userCompletion.length > 0)) : false
                 }))} />
             </div>

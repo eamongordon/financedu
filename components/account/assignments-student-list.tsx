@@ -32,7 +32,7 @@ function AssignmentsTable({ assignments }: { assignments: Assignments }) {
             </TableHeader>
             <TableBody>
                 {assignments.map((assignment) => (
-                    <Link href={`/courses/${assignment.activity.lesson.module.courseId}/${assignment.activity.lesson.module.id}/${assignment.activity.lesson.id}/${assignment.activity.id}`} key={assignment.id} legacyBehavior>
+                    <Link href={`/courses/${assignment.activity.lesson.module.course.slug}/${assignment.activity.lesson.module.slug}/${assignment.activity.lesson.slug}/${assignment.activity.slug}`} key={assignment.id} legacyBehavior>
                         <TableRow>
                             <TableCell className="flex flex-row items-center gap-4">
                                 <CompletionIcon

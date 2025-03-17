@@ -29,10 +29,10 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
 
     const currentQuestion = activity.activityToQuestions[currentQuestionIndex].question;
 
-    const params = useParams<{ lessonId: string; moduleId: string, courseId: string }>();
-    const currentLessonId = params!.lessonId;
-    const currentModuleId = params!.moduleId;
-    const currentCourseId = params!.courseId;
+    const params = useParams<{ lessonSlug: string; moduleSlug: string, courseSlug: string }>();
+    const currentLessonSlug = params!.lessonSlug;
+    const currentModuleSlug = params!.moduleSlug;
+    const currentCourseSlug = params!.courseSlug;
 
     const router = useRouter();
     const { data: session } = useSession();
@@ -168,7 +168,7 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
         setIsQuizFinished(false);
     };
 
-    const { href, label } = getNextActivityLink(currentCourseId, currentModuleId, currentLessonId, nextActivity);
+    const { href, label } = getNextActivityLink(currentCourseSlug, currentModuleSlug, currentLessonSlug, nextActivity);
 
     return (
         <div className="flex flex-col items-center h-[calc(100dvh-202px)] sm:min-h-[calc(100vh-196px)] relative">

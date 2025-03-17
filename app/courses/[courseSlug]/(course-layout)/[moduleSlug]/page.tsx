@@ -12,14 +12,14 @@ type ModuleWithLessonsAndActivitiesAndUserCompletion = Awaited<ReturnType<typeof
 export default async function CourseLayout({
     params,
 }: {
-    params: Promise<{ moduleId: string }>,
+    params: Promise<{ moduleSlug: string }>,
 }) {
-    const moduleId = (await params).moduleId;
+    const moduleSlug = (await params).moduleSlug;
     const session = await auth();
     const isLoggedIn = session && session.user && session.user.id;
     const moduleObj = isLoggedIn
-        ? await getModuleWithLessonsAndActivitiesAndUserCompletion(moduleId)
-        : await getModuleWithLessonsAndActivities(moduleId);
+        ? await getModuleWithLessonsAndActivitiesAndUserCompletion(moduleSlug)
+        : await getModuleWithLessonsAndActivities(moduleSlug);
     return (
         <main className="pb-4 sm:py-4 w-full">
             <section className="flex flex-col gap-2 px-4 sm:px-0 pb-4 border-b">
@@ -39,7 +39,7 @@ export default async function CourseLayout({
                             {lesson.activities.map((activity) => (
                                 <Link
                                     key={activity.id}
-                                    href={`/courses/${moduleObj.courseId}/${moduleObj.id}/${lesson.id}/${activity.id}`}
+                                    href={`/courses/${moduleObj.slug}/${moduleObj.slug}/${lesson.slug}/${activity.slug}`}
                                     className={cn(
                                         buttonVariants({ variant: "link" }),
                                         "py-8 text-base text-foreground [&_svg]:size-4 whitespace-normal justify-start gap-6",

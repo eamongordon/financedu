@@ -22,9 +22,9 @@ interface LessonSidebarBaseProps {
     isLoggedIn: boolean;
     previousLesson: PreviousLesson;
     nextLesson: NextLesson;
-    moduleId: string;
-    courseId: string;
-    lessonId: string;
+    moduleSlug: string;
+    courseSlug: string;
+    lessonSlug: string;
 }
 
 interface LessonSidebarLoggedOutProps extends LessonSidebarBaseProps {
@@ -39,9 +39,9 @@ interface LessonSidebarLoggedInProps extends LessonSidebarBaseProps {
 
 type LessonSidebarProps = LessonSidebarLoggedOutProps | LessonSidebarLoggedInProps;
 
-export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn, nextLesson, previousLesson }: LessonSidebarProps) {
-    const params = useParams<{ activityId: string }>();
-    const activityId = params?.activityId;
+export function LessonSidebar({ lesson, lessonSlug, moduleSlug, courseSlug, isLoggedIn, nextLesson, previousLesson }: LessonSidebarProps) {
+    const params = useParams<{ activitySlug: string }>();
+    const activitySlug = params?.activitySlug;
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const pathname = usePathname();
 
@@ -70,10 +70,10 @@ export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn
                                     {lesson.module.icon ? <DynamicIcon name={lesson.module.icon as keyof typeof dynamicIconImports} strokeWidth={1.5} /> : <GraduationCap strokeWidth={1.5} />}
                                 </div>
                                 <div className="flex flex-col justify-center gap-2">
-                                    <Link href={`/courses/${courseId}`}>
+                                    <Link href={`/courses/${courseSlug}`}>
                                         <DrawerTitle className="text-xl font-bold leading-none">{lesson.module.course.title}</DrawerTitle>
                                     </Link>
-                                    <Link href={`/courses/${courseId}/${moduleId}`}>
+                                    <Link href={`/courses/${courseSlug}/${moduleSlug}`}>
                                         <p className="font-semibold text-secondary leading-none">{lesson.module.title}</p>
                                     </Link>
                                 </div>
@@ -83,15 +83,15 @@ export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn
                                 previousLesson={previousLesson}
                                 nextLesson={nextLesson}
                                 isLoggedIn={isLoggedIn}
-                                moduleId={moduleId}
-                                courseId={courseId}
+                                moduleSlug={moduleSlug}
+                                courseSlug={courseSlug}
                             />
                             <ActivityNav
                                 activities={lesson.activities}
-                                courseId={courseId}
-                                moduleId={moduleId}
-                                lessonId={lessonId}
-                                activityId={activityId}
+                                courseSlug={courseSlug}
+                                moduleSlug={moduleSlug}
+                                lessonSlug={lessonSlug}
+                                activitySlug={activitySlug}
                                 isLoggedIn={isLoggedIn}
                                 setIsDrawerOpen={setIsDrawerOpen}
                             />
@@ -106,10 +106,10 @@ export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn
                         {lesson.module.icon ? <DynamicIcon name={lesson.module.icon as keyof typeof dynamicIconImports} strokeWidth={1.5} /> : <GraduationCap strokeWidth={1.5} />}
                     </div>
                     <div className="flex flex-col justify-center gap-2">
-                        <Link href={`/courses/${courseId}`}>
+                        <Link href={`/courses/${courseSlug}`}>
                             <h2 className="text-xl font-bold leading-none">{lesson.module.course.title}</h2>
                         </Link>
-                        <Link href={`/courses/${courseId}/${moduleId}`}>
+                        <Link href={`/courses/${courseSlug}/${moduleSlug}`}>
                             <p className="font-semibold text-secondary leading-none">{lesson.module.title}</p>
                         </Link>
                     </div>
@@ -119,15 +119,15 @@ export function LessonSidebar({ lesson, lessonId, moduleId, courseId, isLoggedIn
                     previousLesson={previousLesson}
                     nextLesson={nextLesson}
                     isLoggedIn={isLoggedIn}
-                    moduleId={moduleId}
-                    courseId={courseId}
+                    moduleSlug={moduleSlug}
+                    courseSlug={courseSlug}
                 />
                 <ActivityNav
                     activities={lesson.activities}
-                    courseId={courseId}
-                    moduleId={moduleId}
-                    lessonId={lessonId}
-                    activityId={activityId}
+                    courseSlug={courseSlug}
+                    moduleSlug={moduleSlug}
+                    lessonSlug={lessonSlug}
+                    activitySlug={activitySlug}
                     isLoggedIn={isLoggedIn}
                     setIsDrawerOpen={setIsDrawerOpen}
                 />
@@ -141,16 +141,16 @@ interface NavigationButtonsProps {
     previousLesson: PreviousLesson;
     nextLesson: NextLesson;
     isLoggedIn: boolean;
-    moduleId: string;
-    courseId: string;
+    moduleSlug: string;
+    courseSlug: string;
 }
 
-function NavigationButtons({ lesson, previousLesson, nextLesson, moduleId, courseId }: NavigationButtonsProps) {
+function NavigationButtons({ lesson, previousLesson, nextLesson, moduleSlug, courseSlug }: NavigationButtonsProps) {
     return (
         <div className="w-full flex flex-row justify-between items-center px-2 md:px-8 py-3">
             {previousLesson.lesson ? (
                 <Link
-                    href={`/courses/${courseId}/${moduleId}/${previousLesson.lesson.id}/${previousLesson.lesson.activities[0].id}`}
+                    href={`/courses/${courseSlug}/${moduleSlug}/${previousLesson.lesson.slug}/${previousLesson.lesson.activities[0].slug}`}
                     className={cn(buttonVariants({ variant: "ghost" }), "[&_svg]:size-6 p-0")}
                 >
                     <ChevronLeft className="text-muted-foreground" />
@@ -163,7 +163,7 @@ function NavigationButtons({ lesson, previousLesson, nextLesson, moduleId, cours
             <h1 className="mx-2 text-lg font-bold text-center">{lesson.title}</h1>
             {nextLesson.lesson ? (
                 <Link
-                    href={`/courses/${courseId}/${moduleId}/${nextLesson.lesson.id}/${nextLesson.lesson.activities[0].id}`}
+                    href={`/courses/${courseSlug}/${moduleSlug}/${nextLesson.lesson.slug}/${nextLesson.lesson.activities[0].slug}`}
                     className={cn(buttonVariants({ variant: "ghost" }), "[&_svg]:size-6 p-0")}
                 >
                     <ChevronRight className="text-muted-foreground" />
@@ -179,35 +179,35 @@ function NavigationButtons({ lesson, previousLesson, nextLesson, moduleId, cours
 
 interface ActivityLinkProps {
     activities: (LessonWithActivities | LessonWithActivitiesAndUserProgress)["activities"];
-    courseId: string;
-    moduleId: string;
-    lessonId: string;
-    activityId: string | undefined;
+    courseSlug: string;
+    moduleSlug: string;
+    lessonSlug: string;
+    activitySlug: string | undefined;
     isLoggedIn: boolean;
     setIsDrawerOpen: (isOpen: boolean) => void;
 }
 
-function ActivityNav({ activities, courseId, moduleId, lessonId, activityId, isLoggedIn, setIsDrawerOpen }: ActivityLinkProps) {
+function ActivityNav({ activities, courseSlug, moduleSlug, lessonSlug, activitySlug, isLoggedIn, setIsDrawerOpen }: ActivityLinkProps) {
     return (
         <nav className="flex flex-col divide-y border-t border-b w-full">
             {activities.map((activity) => (
                 <Link
                     key={activity.id}
-                    href={`/courses/${courseId}/${moduleId}/${lessonId}/${activity.id}`}
+                    href={`/courses/${courseSlug}/${moduleSlug}/${lessonSlug}/${activity.slug}`}
                     className={cn(
                         buttonVariants({ variant: "ghost" }),
                         "border-l-4 border-l-transparent py-8 rounded-none text-base whitespace-normal gap-6",
-                        activityId === activity.id
+                        activitySlug === activity.slug
                             ? "border-l-primary bg-accent hover:bg-muted"
                             : "",
                         "justify-start"
                     )}
-                    onClick={() => activityId === activity.id && setIsDrawerOpen(false)}
+                    onClick={() => activitySlug === activity.slug && setIsDrawerOpen(false)}
                 >
                     <CompletionIcon
-                        isComplete={isLoggedIn ? ((activityId === activity.id && activity.type === "Article") || (activity as LessonWithActivitiesAndUserProgress["activities"][number]).userCompletion.some(userProgress => userProgress.activityId === activity.id)) : false}
+                        isComplete={isLoggedIn ? ((activitySlug === activity.slug && activity.type === "Article") || (activity as LessonWithActivitiesAndUserProgress["activities"][number]).userCompletion.some(userProgress => userProgress.activityId === activity.id)) : false}
                         icon={activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
-                        isCurrent={activityId === activity.id}
+                        isCurrent={activitySlug === activity.slug}
                     />
                     {activity.title}
                 </Link>

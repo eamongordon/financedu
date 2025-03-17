@@ -13,10 +13,10 @@ export default async function Page({
 
     const assignmentsTableData = classItem.assignments.map((assignmentObj) => ({
         assignmentId: assignmentObj.id,
-        courseId: assignmentObj.activity.lesson.module.courseId,
-        moduleId: assignmentObj.activity.lesson.module.id,
-        lessonId: assignmentObj.activity.lesson.id,
-        activityId: assignmentObj.activity.id,
+        courseSlug: assignmentObj.activity.lesson.module.course.slug,
+        moduleSlug: assignmentObj.activity.lesson.module.slug,
+        lessonSlug: assignmentObj.activity.lesson.slug,
+        activitySlug: assignmentObj.activity.slug,
         activityType: assignmentObj.activity.type,
         activityTitle: assignmentObj.activity.title,
         dueDate: assignmentObj.dueAt,

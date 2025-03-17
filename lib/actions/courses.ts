@@ -9,9 +9,9 @@ export async function listCourses() {
     return await db.query.courses.findMany();
 }
 
-export async function getCourse(courseId: string) {
+export async function getCourse(courseSlug: string) {
     const course = await db.query.courses.findFirst({
-        where: eq(courses.id, courseId),
+        where: eq(courses.slug, courseSlug),
     });
 
     if (!course) {
@@ -48,9 +48,9 @@ export async function getCoursesWithModulesAndLessonsAndActivities() {
     return courses;
 }
 
-export async function getCourseWithModulesAndLessons(courseId: string) {
+export async function getCourseWithModulesAndLessons(courseSlug: string) {
     const course = await db.query.courses.findFirst({
-        where: eq(courses.id, courseId),
+        where: eq(courses.slug, courseSlug),
         with: {
             modules: {
                 with: {
@@ -59,6 +59,7 @@ export async function getCourseWithModulesAndLessons(courseId: string) {
                             activities: {
                                 columns: {
                                     id: true,
+                                    slug: true,
                                     title: true,
                                     type: true
                                 },
@@ -80,15 +81,16 @@ export async function getCourseWithModulesAndLessons(courseId: string) {
     return course;
 }
 
-export async function getModuleWithLessonsAndActivities(moduleId: string) {
+export async function getModuleWithLessonsAndActivities(moduleSlug: string) {
     const moduleObj = await db.query.modules.findFirst({
-        where: eq(modules.id, moduleId),
+        where: eq(modules.slug, moduleSlug),
         with: {
             lessons: {
                 with: {
                     activities: {
                         columns: {
                             id: true,
+                            slug: true,
                             title: true,
                             type: true
                         },
@@ -107,9 +109,9 @@ export async function getModuleWithLessonsAndActivities(moduleId: string) {
     return moduleObj;
 }
 
-export async function getLessonWithActivities(lessonId: string) {
+export async function getLessonWithActivities(lessonSlug: string) {
     const lesson = await db.query.lessons.findFirst({
-        where: eq(lessons.id, lessonId),
+        where: eq(lessons.slug, lessonSlug),
         with: {
             activities: {
                 orderBy: (activities, { asc }) => [asc(activities.order)]
@@ -129,9 +131,9 @@ export async function getLessonWithActivities(lessonId: string) {
     return lesson;
 }
 
-export async function getActivity(activityId: string) {
+export async function getActivity(activitySlug: string) {
     const activity = await db.query.activities.findFirst({
-        where: eq(activities.id, activityId),
+        where: eq(activities.slug, activitySlug),
         with: {
             activityToQuestions: {
                 with: {
@@ -159,9 +161,9 @@ export async function getActivity(activityId: string) {
     return activity;
 }
 
-export async function getNextActivity(activityId: string) {
+export async function getNextActivity(activitySlug: string) {
     const currentActivity = await db.query.activities.findFirst({
-        where: eq(activities.id, activityId),
+        where: eq(activities.slug, activitySlug),
     });
 
     if (!currentActivity) {
@@ -255,9 +257,9 @@ export async function getNextActivity(activityId: string) {
     }
 }
 
-export async function getNextLesson(lessonId: string) {
+export async function getNextLesson(lessonSlug: string) {
     const currentLesson = await db.query.lessons.findFirst({
-        where: eq(lessons.id, lessonId),
+        where: eq(lessons.slug, lessonSlug),
         with: {
             module: {
                 with: {
@@ -321,9 +323,9 @@ export async function getNextLesson(lessonId: string) {
     }
 }
 
-export async function getPreviousLesson(lessonId: string) {
+export async function getPreviousLesson(lessonSlug: string) {
     const currentLesson = await db.query.lessons.findFirst({
-        where: eq(lessons.id, lessonId),
+        where: eq(lessons.slug, lessonSlug),
         with: {
             module: {
                 with: {
@@ -407,14 +409,14 @@ export async function markActivityComplete(activityId: string, correctAnswers?: 
     });
 }
 
-export async function getLessonWithActivitiesAndUserProgress(lessonId: string) {
+export async function getLessonWithActivitiesAndUserProgress(lessonSlug: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
     const userId = session.user.id;
     const lesson = await db.query.lessons.findFirst({
-        where: eq(lessons.id, lessonId),
+        where: eq(lessons.slug, lessonSlug),
         with: {
             activities: {
                 with: {
@@ -439,14 +441,14 @@ export async function getLessonWithActivitiesAndUserProgress(lessonId: string) {
     return lesson;
 }
 
-export async function getModuleWithLessonsAndActivitiesAndUserCompletion(moduleId: string) {
+export async function getModuleWithLessonsAndActivitiesAndUserCompletion(moduleSlug: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
     const userId = session.user.id;
     const moduleObj = await db.query.modules.findFirst({
-        where: eq(modules.id, moduleId),
+        where: eq(modules.slug, moduleSlug),
         with: {
             lessons: {
                 with: {
@@ -471,14 +473,14 @@ export async function getModuleWithLessonsAndActivitiesAndUserCompletion(moduleI
     return moduleObj;
 }
 
-export async function getCourseWithModulesAndLessonsAndUserCompletion(courseId: string) {
+export async function getCourseWithModulesAndLessonsAndUserCompletion(courseSlug: string) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
     const userId = session.user.id;
     const course = await db.query.courses.findFirst({
-        where: eq(courses.id, courseId),
+        where: eq(courses.slug, courseSlug),
         with: {
             modules: {
                 with: {
@@ -583,20 +585,26 @@ export async function getCompletedActivities() {
                     lesson: {
                         with: {
                             module: {
+                                with: {
+                                    course: {
+                                        columns: {
+                                            slug: true
+                                        }
+                                    }
+                                },
                                 columns: {
-                                    id: true,
-                                    courseId: true
+                                    slug: true
                                 }
                             }
                         },
                         columns: {
-                            id: true,
+                            slug: true,
                             title: true
                         }
                     }
                 },
                 columns: {
-                    id: true,
+                    slug: true,
                     title: true,
                     type: true
                 }

@@ -20,7 +20,7 @@ export default async function MainPage() {
                             <>
                                 <h3 className="text-lg font-semibold">Up Next</h3>
                                 <Link
-                                    href={`/courses/${currentCourseObj.course.id}/${currentCourseObj.nextActivity.module.id}/${currentCourseObj.nextActivity?.lesson.id}/${currentCourseObj.nextActivity.activity.id}`}
+                                    href={`/courses/${currentCourseObj.course.slug}/${currentCourseObj.nextActivity.module.slug}/${currentCourseObj.nextActivity?.lesson.slug}/${currentCourseObj.nextActivity.activity.slug}`}
                                     className={cn(
                                         buttonVariants({ variant: "ghost" }),
                                         "py-8 text-foreground [&_svg]:size-6 whitespace-normal justify-start flex flex-row items-center gap-4",

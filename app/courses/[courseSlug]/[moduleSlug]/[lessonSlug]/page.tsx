@@ -11,11 +11,11 @@ type LessonWithActivitiesAndUserProgress = Awaited<ReturnType<typeof getLessonWi
 export default async function LessonPage({
     params,
 }: {
-    params: Promise<{ courseId: string, moduleId: string, lessonId: string }>,
+    params: Promise<{ courseSlug: string, moduleSlug: string, lessonSlug: string }>,
 }) {
-    const courseId = (await params).courseId;
-    const moduleId = (await params).moduleId;
-    const lessonId = (await params).lessonId;
+    const courseId = (await params).courseSlug;
+    const moduleId = (await params).moduleSlug;
+    const lessonId = (await params).lessonSlug;
     const session = await auth();
     const isLoggedIn = session && session.user && session.user.id;
     const lesson = isLoggedIn ?
@@ -39,7 +39,7 @@ export default async function LessonPage({
                 {lesson.activities.map((activity) => (
                     <Link
                         key={activity.id}
-                        href={`/courses/${courseId}/${moduleId}/${lessonId}/${activity.id}`}
+                        href={`/courses/${courseId}/${moduleId}/${lessonId}/${activity.slug}`}
                         className={cn(
                             buttonVariants({ variant: "link" }),
                             "py-8 text-base text-foreground [&_svg]:size-4 whitespace-normal justify-start gap-6",
