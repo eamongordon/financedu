@@ -1,4 +1,5 @@
-import { getActivity, getNextActivity, markActivityComplete } from "@/lib/actions";
+import type { Metadata } from 'next';
+import { getActivity, getActivityDisplayBySlug, getNextActivity, markActivityComplete } from "@/lib/actions";
 import QuizComponent from "@/components/course/quiz-component";
 import { CircleHelp, FileText } from "lucide-react";
 import Link from "next/link";
@@ -7,11 +8,24 @@ import { getNextActivityLink } from "@/lib/utils";
 import { auth } from "@/lib/auth";
 import { SessionProvider } from "next-auth/react";
 
+type Props = {
+    params: Promise<{ activitySlug: string, lessonSlug: string, moduleSlug: string, courseSlug: string }>,
+}
+
+
+export async function generateMetadata(
+    { params }: Props
+): Promise<Metadata> {
+    const { activitySlug } = await params
+    const activity = await getActivityDisplayBySlug(activitySlug);
+    return {
+        title: `${activity?.title} - ${activity?.type}`,
+    }
+}
+
 export default async function LessonPage({
     params,
-}: {
-    params: Promise<{ activitySlug: string, lessonSlug: string, moduleSlug: string, courseSlug: string }>,
-}) {
+}: Props) {
     const { activitySlug, lessonSlug, moduleSlug, courseSlug } = await params;
     const activity = await getActivity(activitySlug);
     const nextActivity = await getNextActivity(activitySlug);

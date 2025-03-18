@@ -1,5 +1,6 @@
+import { Metadata } from "next";
 import { buttonVariants } from "@/components/ui/button";
-import { getLessonWithActivities, getLessonWithActivitiesAndUserProgress } from "@/lib/actions";
+import { getLessonDisplayBySlug, getLessonWithActivities, getLessonWithActivitiesAndUserProgress } from "@/lib/actions";
 import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import Link from "next/link"
@@ -8,11 +9,24 @@ import { CompletionIcon } from "@/components/ui/completion-icon";
 
 type LessonWithActivitiesAndUserProgress = Awaited<ReturnType<typeof getLessonWithActivitiesAndUserProgress>>;
 
+type Props = {
+    params: Promise<{ courseSlug: string, moduleSlug: string, lessonSlug: string }>
+}
+
+
+export async function generateMetadata(
+    { params }: Props
+): Promise<Metadata> {
+    const { lessonSlug } = await params
+    const lesson = await getLessonDisplayBySlug(lessonSlug);
+    return {
+        title: lesson?.title,
+    }
+}
+
 export default async function LessonPage({
     params,
-}: {
-    params: Promise<{ courseSlug: string, moduleSlug: string, lessonSlug: string }>,
-}) {
+}: Props) {
     const courseId = (await params).courseSlug;
     const moduleId = (await params).moduleSlug;
     const lessonId = (await params).lessonSlug;

@@ -1,7 +1,8 @@
+import { Metadata } from "next";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CompletionIcon } from "@/components/ui/completion-icon";
-import { getCourseWithModulesAndLessons, getCourseWithModulesAndLessonsAndUserCompletion } from "@/lib/actions"
+import { getCourseDisplayBySlug, getCourseWithModulesAndLessons, getCourseWithModulesAndLessonsAndUserCompletion } from "@/lib/actions"
 import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { GraduationCap } from "lucide-react";
@@ -10,11 +11,23 @@ import Link from "next/link";
 
 type CourseWithModulesAndLessonsAndUserCompletion = Awaited<ReturnType<typeof getCourseWithModulesAndLessonsAndUserCompletion>>;
 
+type Props = {
+    params: Promise<{ courseSlug: string }>
+}
+
+export async function generateMetadata(
+    { params }: Props
+): Promise<Metadata> {
+    const { courseSlug } = await params
+    const course = await getCourseDisplayBySlug(courseSlug);
+    return {
+        title: course?.title,
+    }
+}
+
 export default async function Page({
     params,
-}: {
-    params: Promise<{ courseSlug: string }>
-}) {
+}: Props) {
     const slug = (await params).courseSlug;
     const session = await auth();
     const isLoggedIn = session && session.user && session.user.id;

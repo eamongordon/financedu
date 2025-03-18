@@ -731,3 +731,47 @@ export async function getGlossaryTerm(slug: string) {
 
     return term;
 }
+
+/*---Metadata Functions---*/
+
+export async function getActivityDisplayBySlug(activitySlug: string) {
+    const activity = await db.query.activities.findFirst({
+        where: eq(activities.slug, activitySlug),
+        columns: {
+            id: true,
+            title: true,
+            type: true
+        }
+    });
+    return activity;
+}
+
+export async function getLessonDisplayBySlug(lessonSlug: string) {
+    const lesson = await db.query.lessons.findFirst({
+        where: eq(lessons.slug, lessonSlug),
+        columns: {
+            title: true
+        }
+    });
+    return lesson;
+}
+
+export async function getModuleDisplayBySlug(moduleSlug: string) {
+    const moduleObj = await db.query.modules.findFirst({
+        where: eq(modules.slug, moduleSlug),
+        columns: {
+            title: true
+        }
+    });
+    return moduleObj;
+}
+
+export async function getCourseDisplayBySlug(courseSlug: string) {
+    const course = await db.query.courses.findFirst({
+        where: eq(courses.slug, courseSlug),
+        columns: {
+            title: true
+        }
+    });
+    return course;
+}
