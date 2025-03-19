@@ -47,7 +47,8 @@ export default function HeaderComp({
           <div className="hidden md:flex space-x-4">
             <Link href="/courses" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Courses</Link>
             <Link href="/resources" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Resources</Link>
-            <Link href="about" className="text-foreground hover:text-primary px-3 py-2 font-semibold">About</Link>
+            <Link href="/about" className="text-foreground hover:text-primary px-3 py-2 font-semibold">About</Link>
+            <Link href="/donate" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Donate</Link>
             <div className='ml-4 self-center'>
               {loggedIn ? (
                 <UserMenu name={userData.name!} email={userData.email!} roles={userData.roles} />
@@ -85,6 +86,7 @@ export default function HeaderComp({
             <Link href="/courses" className="text-foreground hover:text-primary block text-base font-semibold" onClick={() => handleMobileMenuItemClick('/courses')}>Courses</Link>
             <Link href="/resources" className="text-foreground hover:text-primary block text-base font-semibold" onClick={() => handleMobileMenuItemClick('/resources')}>Resources</Link>
             <Link href="/about" className="text-foreground hover:text-primary block text-base font-semibold" onClick={() => handleMobileMenuItemClick('/about')}>Contact</Link>
+            <Link href="/donate" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Donate</Link>
           </div>
           <Separator />
           <div className='flex flex-col gap-2'>

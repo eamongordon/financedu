@@ -54,7 +54,7 @@ export default function Footer() {
 
                         </ul>
                         <div className="flex justify-items-start mt-6">
-                            <ThemeSwitcher/>
+                            <ThemeSwitcher />
                         </div>
 
                     </div>
@@ -106,6 +106,10 @@ export default function Footer() {
                             <ul className="mt-6 space-y-4 text-sm">
                                 <li>
                                     <Link href="/policy" className="text-accent-foreground transition hover:opacity-75"> About </Link>
+                                </li>
+
+                                <li>
+                                    <Link href="/donate" className="text-accent-foreground transition hover:opacity-75"> Donate </Link>
                                 </li>
 
                                 <li>
