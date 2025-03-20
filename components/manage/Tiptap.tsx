@@ -4,7 +4,7 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
-import { Image as ImageIcon, Link as LinkIcon, SquareSplitVertical } from 'lucide-react'
+import { Heading4, Image as ImageIcon, Link as LinkIcon, SquareSplitVertical } from 'lucide-react'
 import { useState } from 'react'
 import { Textarea } from '../ui/textarea'
 
@@ -76,6 +76,11 @@ export function MenuBar({ editor }: { editor: Editor | null }) {
       icon: <Heading3 className="size-4" />,
       onClick: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
       pressed: editor.isActive("heading", { level: 3 }),
+    },
+    {
+      icon: <Heading4 className="size-4" />,
+      onClick: () => editor.chain().focus().toggleHeading({ level: 4 }).run(),
+      pressed: editor.isActive("heading", { level: 4 }),
     },
     {
       icon: <Bold className="size-4" />,
