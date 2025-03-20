@@ -3,7 +3,7 @@
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
-import {Image as ImageIcon, SquareSplitVertical} from 'lucide-react'
+import { Image as ImageIcon, SquareSplitVertical } from 'lucide-react'
 import { useState } from 'react'
 import { Textarea } from '../ui/textarea'
 
@@ -12,29 +12,13 @@ export default function Tiptap() {
 
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({
-        bulletList: {
-          HTMLAttributes: {
-            class: "list-disc ml-3",
-          },
-        },
-        orderedList: {
-          HTMLAttributes: {
-            class: "list-decimal ml-3",
-          },
-        },
-        heading: {
-          HTMLAttributes: {
-            class: "text-lg font-bold",
-          },
-        },
-      }),
+      StarterKit,
       Image
     ],
     content: content,
     editorProps: {
       attributes: {
-        class: 'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl dark:prose-invert m-5 focus:outline-none',
+        class: 'prose dark:prose-invert focus:outline-none',
       },
     },
     onUpdate: ({ editor }) => {
@@ -130,7 +114,7 @@ export function MenuBar({ editor }: { editor: Editor | null }) {
       editor.chain().focus().setImage({ src: url }).run()
     }
   };
-  
+
   return (
     <div className="border rounded-md p-1 mb-1 bg-background space-x-2 z-50 sticky top-20">
       {Options.map((option, index) => (

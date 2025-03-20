@@ -1,5 +1,9 @@
 import Tiptap from '@/components/manage/Tiptap';
 
 export default function Home() {
-  return <Tiptap />
+  return (
+    <main className='p-4 flex justify-center items-center'>
+      <Tiptap />
+    </main>
+  );
 }
