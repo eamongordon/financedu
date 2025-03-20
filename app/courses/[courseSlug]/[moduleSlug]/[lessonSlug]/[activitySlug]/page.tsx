@@ -54,7 +54,7 @@ export default async function LessonPage({
             </section>
             {activity.type === "Article" && (
                 <div className="flex flex-col items-center h-[calc(100dvh-202px)] sm:min-h-[calc(100vh-196px)] relative">
-                    <div className="py-8 w-full flex justify-center h-[calc(100vh-274px)] sm:h-[calc(100vh-268px)] overflow-scroll">
+                    <div className="py-8 px-4 w-full flex justify-center h-[calc(100vh-274px)] sm:h-[calc(100vh-268px)] overflow-scroll">
                         <article className="prose dark:prose-invert" dangerouslySetInnerHTML={{ __html: activity.content! }} />
                     </div>
                     <div className="border-t w-full p-4 flex justify-end items-center absolute bottom-0 bg-background">
