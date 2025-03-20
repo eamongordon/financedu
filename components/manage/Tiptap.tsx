@@ -2,6 +2,8 @@
 
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import Image from '@tiptap/extension-image'
+import {Image as ImageIcon} from 'lucide-react'
 
 export default function Tiptap() {
   const editor = useEditor({
@@ -23,6 +25,7 @@ export default function Tiptap() {
           },
         },
       }),
+      Image
     ],
     content: '<p>Hello World! 🌎️</p>',
     editorProps: {
@@ -55,6 +58,7 @@ import {
 } from "lucide-react";
 import { Editor } from "@tiptap/react";
 import { Toggle } from '../ui/toggle'
+import { Button } from '../ui/button';
 
 export function MenuBar({ editor }: { editor: Editor | null }) {
   if (!editor) {
@@ -104,6 +108,14 @@ export function MenuBar({ editor }: { editor: Editor | null }) {
     }
   ];
 
+  const addImage = () => {
+    const url = window.prompt('URL')
+
+    if (url) {
+      editor.chain().focus().setImage({ src: url }).run()
+    }
+  };
+  
   return (
     <div className="border rounded-md p-1 mb-1 bg-background space-x-2 z-50">
       {Options.map((option, index) => (
@@ -115,6 +127,7 @@ export function MenuBar({ editor }: { editor: Editor | null }) {
           {option.icon}
         </Toggle>
       ))}
+      <Button variant="ghost" onClick={addImage}><ImageIcon /></Button>
     </div>
   );
 }
