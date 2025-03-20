@@ -281,7 +281,16 @@ export async function getNextLesson(lessonSlug: string) {
         where: and(eq(lessons.moduleId, currentModuleId), gt(lessons.order, currentOrder)),
         orderBy: (lessons, { asc }) => [asc(lessons.order)],
         with: {
-            activities: true
+            activities: {
+                orderBy: (activities, { asc }) => [asc(activities.order)],
+                columns: {
+                    id: true,
+                    slug: true,
+                    title: true,
+                    type: true
+                },
+                limit: 1
+            }
         }
     });
 
@@ -301,7 +310,16 @@ export async function getNextLesson(lessonSlug: string) {
                 orderBy: (lessons, { asc }) => [asc(lessons.order)],
                 limit: 1,
                 with: {
-                    activities: true
+                    activities: {
+                        orderBy: (activities, { asc }) => [asc(activities.order)],
+                        columns: {
+                            id: true,
+                            slug: true,
+                            title: true,
+                            type: true
+                        },
+                        limit: 1
+                    }
                 }
             }
         }
@@ -344,7 +362,16 @@ export async function getPreviousLesson(lessonSlug: string) {
         where: and(eq(lessons.moduleId, currentLesson.moduleId), lt(lessons.order, currentLesson.order)),
         orderBy: (lessons, { desc }) => [desc(lessons.order)],
         with: {
-            activities: true
+            activities: {
+                orderBy: (activities, { desc }) => [desc(activities.order)],
+                columns: {
+                    id: true,
+                    slug: true,
+                    title: true,
+                    type: true
+                },
+                limit: 1
+            }
         }
     });
 
@@ -364,7 +391,16 @@ export async function getPreviousLesson(lessonSlug: string) {
                 orderBy: (lessons, { desc }) => [desc(lessons.order)],
                 limit: 1,
                 with: {
-                    activities: true
+                    activities: {
+                        orderBy: (activities, { desc }) => [desc(activities.order)],
+                        columns: {
+                            id: true,
+                            slug: true,
+                            title: true,
+                            type: true
+                        },
+                        limit: 1
+                    }
                 }
             }
         }
