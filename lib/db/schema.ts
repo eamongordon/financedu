@@ -374,6 +374,18 @@ export const glossary = pgTable("glossary", {
   topics: text("topics").array().default(sql`'{}'::text[]`)
 })
 
+export const posts = pgTable("post", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  title: text("title").notNull(),
+  slug: text("slug").notNull().unique(),
+  content: text("content").notNull(),
+  excerpt: text("excerpt"),
+  coverImage: text("coverImage"),
+  publishedAt: timestamp("publishedAt", { mode: "date", withTimezone: true }).defaultNow(),
+})
+
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   sessions: many(sessions),
