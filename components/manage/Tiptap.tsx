@@ -4,8 +4,12 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import {Image as ImageIcon} from 'lucide-react'
+import { useState } from 'react'
+import { Textarea } from '../ui/textarea'
 
 export default function Tiptap() {
+  const [content, setContent] = useState('<p>Hello World! 🌎️</p>');
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -27,21 +31,27 @@ export default function Tiptap() {
       }),
       Image
     ],
-    content: '<p>Hello World! 🌎️</p>',
+    content: content,
     editorProps: {
       attributes: {
-        class: 'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl m-5 focus:outline-none',
+        class: 'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl dark:prose-invert m-5 focus:outline-none',
       },
     },
     onUpdate: ({ editor }) => {
-      console.log(editor.getHTML());
+      setContent(editor.getHTML());
     },
   });
 
+  const handleTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(event.target.value);
+    editor?.commands.setContent(event.target.value);
+  };
+
   return (
     <div>
+      <Textarea value={content} onChange={handleTextareaChange} className="mb-4" />
       <MenuBar editor={editor} />
-      <EditorContent editor={editor} />;
+      <EditorContent editor={editor} />
     </div>
   );
 }
@@ -117,7 +127,7 @@ export function MenuBar({ editor }: { editor: Editor | null }) {
   };
   
   return (
-    <div className="border rounded-md p-1 mb-1 bg-background space-x-2 z-50">
+    <div className="border rounded-md p-1 mb-1 bg-background space-x-2 z-50 sticky top-20">
       {Options.map((option, index) => (
         <Toggle
           key={index}
