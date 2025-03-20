@@ -3,7 +3,8 @@
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
-import { Image as ImageIcon, SquareSplitVertical } from 'lucide-react'
+import Link from '@tiptap/extension-link'
+import { Image as ImageIcon, Link as LinkIcon, SquareSplitVertical } from 'lucide-react'
 import { useState } from 'react'
 import { Textarea } from '../ui/textarea'
 
@@ -13,6 +14,7 @@ export default function Tiptap() {
   const editor = useEditor({
     extensions: [
       StarterKit,
+      Link,
       Image
     ],
     content: content,
@@ -104,6 +106,16 @@ export function MenuBar({ editor }: { editor: Editor | null }) {
       icon: <SquareSplitVertical className="size-4" />,
       onClick: () => editor.chain().focus().setHorizontalRule().run(),
       pressed: editor.isActive("horizontalRule"),
+    },
+    {
+      icon: <LinkIcon className="size-4" />,
+      onClick: () => {
+        const url = window.prompt('URL')
+
+        if (url) {
+          editor.chain().focus().setLink({ href: url }).run()
+        }
+      }
     }
   ];
 
