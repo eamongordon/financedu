@@ -3,7 +3,7 @@
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
-import {Image as ImageIcon} from 'lucide-react'
+import {Image as ImageIcon, SquareSplitVertical} from 'lucide-react'
 import { useState } from 'react'
 import { Textarea } from '../ui/textarea'
 
@@ -115,6 +115,11 @@ export function MenuBar({ editor }: { editor: Editor | null }) {
       icon: <ListOrdered className="size-4" />,
       onClick: () => editor.chain().focus().toggleOrderedList().run(),
       preesed: editor.isActive("orderedList"),
+    },
+    {
+      icon: <SquareSplitVertical className="size-4" />,
+      onClick: () => editor.chain().focus().setHorizontalRule().run(),
+      preesed: editor.isActive("horizontalRule"),
     }
   ];
 
