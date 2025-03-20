@@ -68,7 +68,7 @@ export function DonationForm() {
                                     </FormControl>
                                     <Label
                                         htmlFor="one-time"
-                                        className="h-10 inline-flex items-center justify-center w-full hover:bg-accent font-semibold rounded-l-md bg-popover border-muted border-l-2 border-t-2 border-b-2 peer-data-[state=checked]:bg-primary [&:has([data-state=checked])]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:text-primary-foreground [&:has([data-state=checked])]:border-primary"
+                                        className="h-10 inline-flex items-center justify-center w-full hover:bg-accent font-semibold rounded-l-md bg-popover border-muted border-l-2 border-t-2 border-b-2 peer-data-[state=checked]:bg-primary [&:has([data-state=checked])]:bg-primary peer-data-[state=checked]:text-primary-foreground [&:has([data-state=checked])]:text-primary-foreground"
                                     >
                                         One Time
                                     </Label>
@@ -79,7 +79,7 @@ export function DonationForm() {
                                     </FormControl>
                                     <Label
                                         htmlFor="recurring"
-                                        className="h-10 inline-flex items-center justify-center w-full hover:bg-accent font-semibold rounded-r-md bg-popover border-muted border-r-2 border-t-2 border-b-2 peer-data-[state=checked]:bg-primary [&:has([data-state=checked])]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:text-primary-foreground [&:has([data-state=checked])]:border-primary"
+                                        className="h-10 inline-flex items-center justify-center w-full hover:bg-accent font-semibold rounded-r-md bg-popover border-muted border-r-2 border-t-2 border-b-2 peer-data-[state=checked]:bg-primary [&:has([data-state=checked])]:bg-primary peer-data-[state=checked]:text-primary-foreground [&:has([data-state=checked])]:text-primary-foreground"
                                     >
                                         Recurring
                                     </Label>
