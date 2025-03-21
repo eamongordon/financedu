@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Banner from "@/components/banner";
 import { DonationForm } from "@/components/donate/donate-form";
 import Link from "next/link";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 
 export const metadata: Metadata = {
     title: 'Donate',
@@ -27,6 +28,41 @@ export default function DonatePage() {
                         <DonationForm />
                     </div>
                 </div>
+            </div>
+            <div className="px-4 sm:px-6 lg:px-8 py-8 space-y-2">
+                <h2 className="text-2xl font-bold">Frequently Asked Questions</h2>
+                <Accordion type="single" collapsible>
+                    <AccordionItem value="1">
+                        <AccordionTrigger>Which Methods of Payment do you accept?</AccordionTrigger>
+                        <AccordionContent>
+                            Online donations are processed via Stripe, which accepts Credit Cards. If you would like to donate using a different method, please <Link href="/policy#contact" className="text-primary underline">contact us</Link>.
+                        </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="2">
+                        <AccordionTrigger>Are My Donations Tax-Deductible?</AccordionTrigger>
+                        <AccordionContent>
+                            As a 501(c)(3) non-profit in the United States, are donations are tax-deductible in accordance to the law. Our tax identification number/EIN is <strong>92-3500587 .</strong>
+                        </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="3">
+                        <AccordionTrigger>What is your Tax ID number?</AccordionTrigger>
+                        <AccordionContent>
+                            Our tax identification number/EIN is <strong>92-3500587.</strong>
+                        </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="4">
+                        <AccordionTrigger>Where can I manage, update or cancel my recurring donation?</AccordionTrigger>
+                        <AccordionContent>
+                            To manage, update or cancel your recurring donation, please <Link href="/policy#contact" className="text-primary underline">contact us</Link>.
+                        </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="5">
+                        <AccordionTrigger>Can I sponsor Financedu?</AccordionTrigger>
+                        <AccordionContent>
+                            Yes! Please <Link href="/policy#contact" className="text-primary underline">contact us</Link> for more information.
+                        </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
             </div>
         </main>
     );
