@@ -11,12 +11,12 @@ import { ChevronLeft } from "lucide-react";
 type getCourseWithModulesAndLessonsReturnType = Awaited<ReturnType<typeof getCourseWithModulesAndLessons>>;
 
 export function CourseHeader({ course }: { course: getCourseWithModulesAndLessonsReturnType }) {
-    const params = useParams<{ moduleId: string, courseId: string }>();
-    const isOnModulePage = !!params?.moduleId;
+    const params = useParams<{ moduleSlug: string, courseSlug: string }>();
+    const isOnModulePage = !!params?.moduleSlug;
     return (
         <>
             <Link
-                href={`/courses/${course.id}`}
+                href={`/courses/${course.slug}`}
                 className={cn(buttonVariants({ variant: "ghost" }), "w-full h-auto rounded-none py-4 border-l-4 border-l-transparent sm:flex flex-row justify-start items-center gap-4 px-2 sm:px-6 border-b", isOnModulePage ? "border-l-transparent hidden" : "sm:border-l-primary")}
             >
                 <div className="relative">
@@ -32,7 +32,7 @@ export function CourseHeader({ course }: { course: getCourseWithModulesAndLesson
                 href={`/courses/${course.id}`}
                 className={cn(buttonVariants({ variant: "link" }), "my-2 hidden text-secondary justify-start mx-3 px-0 text-base", isOnModulePage && "inline-flex sm:hidden")}
             >
-                <ChevronLeft/>
+                <ChevronLeft />
                 Back to Course: {course.title}
             </Link>
         </>
