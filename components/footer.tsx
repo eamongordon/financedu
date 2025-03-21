@@ -65,19 +65,11 @@ export default function Footer() {
 
                             <ul className="mt-6 space-y-4 text-sm">
                                 <li>
-                                    <Link href="/minerals" className="text-accent-foreground transition hover:opacity-75"> Minerals </Link>
+                                    <Link href="/courses" className="text-accent-foreground transition hover:opacity-75"> Courses </Link>
                                 </li>
 
                                 <li>
-                                    <Link href="/localities" className="text-accent-foreground transition hover:opacity-75"> Localities </Link>
-                                </li>
-
-                                <li>
-                                    <Link href="/photos" className="text-accent-foreground transition hover:opacity-75"> Photos </Link>
-                                </li>
-
-                                <li>
-                                    <Link href="/articles" className="text-accent-foreground transition hover:opacity-75"> Articles </Link>
+                                    <Link href="/resources" className="text-accent-foreground transition hover:opacity-75"> Resources </Link>
                                 </li>
                             </ul>
                         </div>
