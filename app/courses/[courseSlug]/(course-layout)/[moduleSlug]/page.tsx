@@ -52,7 +52,7 @@ export default async function CourseLayout({
                                 {lesson.activities.map((activity) => (
                                     <Link
                                         key={activity.id}
-                                        href={`/courses/${moduleObj.slug}/${moduleObj.slug}/${lesson.slug}/${activity.slug}`}
+                                        href={`/courses/${moduleObj.course.slug}/${moduleObj.slug}/${lesson.slug}/${activity.slug}`}
                                         className={cn(
                                             buttonVariants({ variant: "link" }),
                                             "py-8 text-base text-foreground [&_svg]:size-4 whitespace-normal justify-start gap-6",

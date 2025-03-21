@@ -85,6 +85,11 @@ export async function getModuleWithLessonsAndActivities(moduleSlug: string) {
     const moduleObj = await db.query.modules.findFirst({
         where: eq(modules.slug, moduleSlug),
         with: {
+            course: {
+                columns: {
+                    slug: true
+                }
+            },
             lessons: {
                 with: {
                     activities: {
@@ -486,6 +491,11 @@ export async function getModuleWithLessonsAndActivitiesAndUserCompletion(moduleS
     const moduleObj = await db.query.modules.findFirst({
         where: eq(modules.slug, moduleSlug),
         with: {
+            course: {
+                columns: {
+                    slug: true
+                }
+            },
             lessons: {
                 with: {
                     activities: {
