@@ -21,7 +21,8 @@ const resources = [
         image: "/resources/simple-interest-calculator.png",
         type: "Calculator",
         cta: "Calculate Interest"
-    }, {
+    },
+    {
         title: "Glossary",
         description: "A comprehensive dictionary of financial terms at your fingertips.",
         href: "/glossary",
@@ -35,6 +36,21 @@ const resources = [
         type: "Database",
         cta: "View Standards",
         href: "https://www.financedu.org/standards"
+    },
+    {
+        title: "Savings Calculator",
+        description: "Calculate how much you need to save to reach your financial goals.",
+        href: "/tools/savings-calculator",
+        image: "/resources/savings-calculator.png",
+        type: "Calculator",
+        cta: "Try it Out"
+    }, {
+        title: "Four Function Calculator",
+        description: "A simple calculator to perform arithmetic operations for our courses.",
+        href: "/tools/four-function-calculator",
+        image: "/resources/four-function-calculator.png",
+        type: "Calculator",
+        cta: "Use Calculator"
     }
 ];
 
