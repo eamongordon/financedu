@@ -6,7 +6,7 @@ import { toPostDateString } from "@/lib/utils";
 export default async function PostsPage() {
     const posts = await getPosts();
     return (
-        <section className='flex-col justify-center items-center py-4 px-6 w-full max-w-screen-xl'>
+        <section className='flex-col justify-center items-center py-4 px-6 w-full'>
             <ul
                 role='list'
                 className='w-full flex flex-col gap-8'
