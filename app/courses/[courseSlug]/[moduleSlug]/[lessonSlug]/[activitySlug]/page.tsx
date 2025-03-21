@@ -7,6 +7,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { getNextActivityLink } from "@/lib/utils";
 import { auth } from "@/lib/auth";
 import { SessionProvider } from "next-auth/react";
+import { NotFoundError } from "@/lib/errors";
+import { notFound } from "next/navigation";
 
 type Props = {
     params: Promise<{ activitySlug: string, lessonSlug: string, moduleSlug: string, courseSlug: string }>,
@@ -27,7 +29,16 @@ export default async function LessonPage({
     params,
 }: Props) {
     const { activitySlug, lessonSlug, moduleSlug, courseSlug } = await params;
-    const activity = await getActivity(activitySlug);
+    let activity;
+    try {
+        activity = await getActivity(activitySlug);
+    } catch (error) {
+        if (error instanceof NotFoundError) {
+            return notFound();
+        }
+        throw error;
+    }
+
     const nextActivity = await getNextActivity(activitySlug);
     const { href, label } = getNextActivityLink(courseSlug, moduleSlug, lessonSlug, nextActivity);
 

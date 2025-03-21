@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link"
 import { FileText, CircleHelp } from "lucide-react";
 import { CompletionIcon } from "@/components/ui/completion-icon";
+import { NotFoundError } from "@/lib/errors";
+import { notFound } from "next/navigation";
 
 type LessonWithActivitiesAndUserProgress = Awaited<ReturnType<typeof getLessonWithActivitiesAndUserProgress>>;
 
@@ -32,9 +34,18 @@ export default async function LessonPage({
     const lessonId = (await params).lessonSlug;
     const session = await auth();
     const isLoggedIn = session && session.user && session.user.id;
-    const lesson = isLoggedIn ?
-        await getLessonWithActivitiesAndUserProgress(lessonId) :
-        await getLessonWithActivities(lessonId);
+
+    let lesson;
+    try {
+        lesson = isLoggedIn ?
+            await getLessonWithActivitiesAndUserProgress(lessonId) :
+            await getLessonWithActivities(lessonId);
+    } catch (error) {
+        if (error instanceof NotFoundError) {
+            return notFound();
+        }
+        throw error;
+    }
 
     console.log("lesson", lesson)
     return (

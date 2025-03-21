@@ -5,6 +5,7 @@ import { assignments, classes, classStudents, classTeachers, classTeacherInvite 
 import { db } from "../db";
 import { auth } from "../auth";
 import { sendClassTeacherInviteEmail } from "./emails";
+import { NotFoundError } from "../errors";
 
 export async function createClass(name: string) {
     const session = await auth();
@@ -101,7 +102,7 @@ export async function getClassStudent(classId: string) {
     });
 
     if (!classDetails) {
-        throw new Error("Class not found");
+        throw new NotFoundError("Class not found");
     }
 
     return classDetails;
@@ -130,7 +131,7 @@ export async function getClassTeacher(classId: string) {
     });
 
     if (!classDetails) {
-        throw new Error("Class not found");
+        throw new NotFoundError("Class not found");
     }
 
     return classDetails;
@@ -208,7 +209,7 @@ export async function getClassTeacherWithAssignments(classId: string) {
     });
 
     if (!classDetails) {
-        throw new Error("Class not found");
+        throw new NotFoundError("Class not found");
     }
 
     return classDetails;
@@ -257,7 +258,7 @@ export async function getClassTeacherWithRoster(classId: string) {
     const isTeacherInClass = classDetails?.classTeachers.some(ct => ct.teacherId === userId);
 
     if (!classDetails || !isTeacherInClass) {
-        throw new Error("Class not found or permission denied");
+        throw new NotFoundError("Class not found or permission denied");
     }
 
     return classDetails;
@@ -461,7 +462,7 @@ export async function getClassTeacherWithCompletion(classId: string) {
     });
 
     if (!classActivitiesCompletion) {
-        throw new Error("Class not found or permission denied");
+        throw new NotFoundError("Class not found or permission denied");
     }
 
     return classActivitiesCompletion;
@@ -626,7 +627,7 @@ export async function getClassTeacherInvite(inviteId: string) {
     });
 
     if (!invite) {
-        throw new Error("Invite not found");
+        throw new NotFoundError("Invite not found");
     }
 
     return invite;

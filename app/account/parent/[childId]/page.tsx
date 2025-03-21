@@ -1,5 +1,7 @@
 import { UserProgress } from "@/components/account/learner-progress";
 import { getChildCompletedActivities } from "@/lib/actions";
+import { NotFoundError } from "@/lib/errors";
+import { notFound } from "next/navigation";
 
 export default async function Page({
     params,
@@ -7,7 +9,16 @@ export default async function Page({
     params: Promise<{ childId: string }>
 }) {
     const childId = (await params).childId;
-    const completedActivities = await getChildCompletedActivities(childId);
+    let completedActivities;
+    try {
+        completedActivities = await getChildCompletedActivities(childId);
+    } catch (error) {
+        if (error instanceof NotFoundError) {
+            return notFound();
+        }
+        throw error;
+    }
+
     const completedActivitiesTableData = completedActivities.map((completedActivityObj) => ({
         activitySlug: completedActivityObj.activity.slug,
         activityTitle: completedActivityObj.activity.title,

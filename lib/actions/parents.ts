@@ -5,6 +5,7 @@ import { userCompletion, parentChild, parentChildInvite } from "../db/schema";
 import { db } from "../db";
 import { auth } from "../auth";
 import { sendChildParentInviteEmail } from "./emails";
+import { NotFoundError } from "../errors";
 
 export async function createParentChildInvite(childEmail: string) {
     const session = await auth();
@@ -93,7 +94,7 @@ export async function getParentChildInvite(inviteId: string) {
         }
     });
     if (!invite) {
-        throw new Error("Invite not found or you are not authorized to view this invite");
+        throw new NotFoundError("Invite not found or you are not authorized to view this invite");
     }
     return invite;
 }
@@ -110,7 +111,7 @@ export async function acceptParentChildInvite(inviteId: string) {
     });
 
     if (!invite) {
-        throw new Error("Invite not found");
+        throw new NotFoundError("Invite not found");
     }
 
     await db.insert(parentChild).values({ parentId: invite.parentId, childId }).onConflictDoNothing(
@@ -204,7 +205,7 @@ export async function getParentChildApproved(childId: string) {
     });
 
     if (!relationship) {
-        throw new Error("No approved relationship found between parent and child");
+        throw new NotFoundError("No approved relationship found between parent and child");
     }
 
     return relationship;
@@ -224,7 +225,7 @@ export async function getChildCompletedActivities(childId: string) {
     });
 
     if (!relationship) {
-        throw new Error("No relationship found between parent and child");
+        throw new NotFoundError("No relationship found between parent and child");
     }
 
     return await db.query.userCompletion.findMany({

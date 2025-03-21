@@ -2,6 +2,8 @@ import { Gradebook } from "@/components/account/gradebook";
 import { InviteStudents } from "@/components/account/invite-students";
 import { getClassTeacherWithCompletion } from "@/lib/actions";
 import { getDisplayName } from "@/lib/utils";
+import { NotFoundError } from "@/lib/errors";
+import { notFound } from "next/navigation";
 
 export default async function Page({
     params,
@@ -9,7 +11,16 @@ export default async function Page({
     params: Promise<{ classId: string }>
 }) {
     const classId = (await params).classId;
-    const classItem = await getClassTeacherWithCompletion(classId);
+    let classItem;
+    try {
+        classItem = await getClassTeacherWithCompletion(classId);
+    } catch (error) {
+        if (error instanceof NotFoundError) {
+            return notFound();
+        }
+        throw error;
+    }
+
     const tableStudents = classItem.classStudents.map((classStudentsObj) => ({
         studentName: getDisplayName(classStudentsObj.student.firstName, classStudentsObj.student.lastName, classStudentsObj.student.email!),
         assignments: classStudentsObj.student.userCompletion.map((userCompletionObj) => ({

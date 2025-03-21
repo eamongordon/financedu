@@ -1,6 +1,8 @@
 import { AssignmentsStudentList } from "@/components/account/assignments-student-list";
 import { LeaveClassButton } from "@/components/account/leave-class";
 import { getClassStudent } from "@/lib/actions";
+import { NotFoundError } from "@/lib/errors";
+import { notFound } from "next/navigation";
 
 export default async function Page({
     params,
@@ -8,7 +10,16 @@ export default async function Page({
     params: Promise<{ classId: string }>
 }) {
     const childId = (await params).classId;
-    const classItem = await getClassStudent(childId);
+    let classItem;
+    try {
+        classItem = await getClassStudent(childId);
+    } catch (error) {
+        if (error instanceof NotFoundError) {
+            return notFound();
+        }
+        throw error;
+    }
+
     return (
         <main>
             <div className="space-y-0.5 border-b pb-6">

@@ -8,6 +8,8 @@ import { DeleteClassButton } from "@/components/account/delete-class";
 import { InviteStudents } from "@/components/account/invite-students";
 import { InviteTeacher } from "@/components/account/invite-teacher";
 import { TeacherList } from "@/components/account/teacher-list";
+import { NotFoundError } from "@/lib/errors";
+import { notFound } from "next/navigation";
 
 export default async function Page({
     params,
@@ -15,7 +17,16 @@ export default async function Page({
     params: Promise<{ classId: string }>
 }) {
     const classId = (await params).classId;
-    const classItem = await getClassTeacherWithRoster(classId);
+    let classItem;
+    try {
+        classItem = await getClassTeacherWithRoster(classId);
+    } catch (error) {
+        if (error instanceof NotFoundError) {
+            return notFound();
+        }
+        throw error;
+    }
+
     const session = await auth();
     if (!session || !session.user) {
         throw new Error("Unauthorized");

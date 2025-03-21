@@ -1,6 +1,8 @@
 import { AssignmentsTeacherList } from "@/components/account/assignments-teacher-list";
 import { CreateAssignments } from "@/components/account/create-assigments";
 import { getClassTeacherWithAssignments, getCoursesWithModulesAndLessonsAndActivities } from "@/lib/actions";
+import { NotFoundError } from "@/lib/errors";
+import { notFound } from "next/navigation";
 
 export default async function Page({
     params,
@@ -8,7 +10,16 @@ export default async function Page({
     params: Promise<{ classId: string }>
 }) {
     const classId = (await params).classId;
-    const classItem = await getClassTeacherWithAssignments(classId);
+    let classItem;
+    try {
+        classItem = await getClassTeacherWithAssignments(classId);
+    } catch (error) {
+        if (error instanceof NotFoundError) {
+            return notFound();
+        }
+        throw error;
+    }
+
     const courses = await getCoursesWithModulesAndLessonsAndActivities();
 
     const assignmentsTableData = classItem.assignments.map((assignmentObj) => ({

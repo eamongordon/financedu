@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 import { GraduationCap } from "lucide-react";
 import { DynamicIcon, dynamicIconImports } from "lucide-react/dynamic";
 import Link from "next/link";
+import { NotFoundError } from "@/lib/errors";
+import { notFound } from "next/navigation";
 
 type CourseWithModulesAndLessonsAndUserCompletion = Awaited<ReturnType<typeof getCourseWithModulesAndLessonsAndUserCompletion>>;
 
@@ -31,9 +33,19 @@ export default async function Page({
     const slug = (await params).courseSlug;
     const session = await auth();
     const isLoggedIn = session && session.user && session.user.id;
-    const course = isLoggedIn
-        ? await getCourseWithModulesAndLessonsAndUserCompletion(slug)
-        : await getCourseWithModulesAndLessons(slug);
+
+    let course;
+    try {
+        course = isLoggedIn
+            ? await getCourseWithModulesAndLessonsAndUserCompletion(slug)
+            : await getCourseWithModulesAndLessons(slug);
+    } catch (error) {
+        if (error instanceof NotFoundError) {
+            return notFound();
+        }
+        throw error;
+    }
+
     return (
         <main>
             <section className="flex flex-col gap-2 md:gap-6 pt-4 pb-6 border-b px-4 sm:px-0">
