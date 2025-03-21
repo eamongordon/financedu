@@ -19,19 +19,19 @@ type ChartData = {
   contributions: number,
 }[];
 
-export function InterestChart({ chartData, type }: { chartData: ChartData, type: "simple" | "compound" }) {
+export function InterestChart({ chartData, type }: { chartData: ChartData, type: "simple" | "compound" | "savings" }) {
   const chartConfig = {
     principal: {
       label: "Principal",
-      color: type === "compound" ? "hsl(var(--chart-1))" : "hsl(var(--chart-3))"
+      color: type === "compound" ? "hsl(var(--chart-1))" : type === "savings" ? "hsl(var(--chart-6))" : "hsl(var(--chart-3))"
     },
     interest: {
       label: "Interest",
-      color: type === "compound" ? "hsl(var(--primary))" : "hsl(var(--chart-4))"
+      color: type === "compound" ? "hsl(var(--primary))" : type === "savings" ? "hsl(var(--chart-7))" : "hsl(var(--chart-4))"
     },
     contributions: {
       label: "Contributions",
-      color: type === "compound" ? "hsl(var(--chart-2))" : "hsl(var(--chart-5))"
+      color: type === "compound" ? "hsl(var(--chart-2))" : type === "savings" ? "hsl(var(--chart-8))" : "hsl(var(--chart-5))"
     }
   } satisfies ChartConfig
   return (
