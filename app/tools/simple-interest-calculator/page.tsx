@@ -3,7 +3,7 @@ import Banner from "@/components/banner";
 import { SimpleInterestForm } from "@/components/tools/simple-interest-form";
 
 const breadcrumbs = [
-    { href: "/tools", label: "Tools" },
+    { href: "/resources", label: "Resources" },
     { href: "/tools/simple-interest-calculator", label: "Simple Interest Calculator" },
 ];
 

@@ -4,7 +4,7 @@ import { SavingsForm } from "@/components/tools/savings-form";
 
 const breadcrumbs = [
     { href: "/resources", label: "Resources" },
-    { href: "/resources/savings-calculator", label: "Savings Calculator" },
+    { href: "/tools/savings-calculator", label: "Savings Calculator" },
 ];
 
 export const metadata: Metadata = {
