@@ -49,6 +49,8 @@ export function LessonSidebar({ lesson, lessonSlug, moduleSlug, courseSlug, isLo
         setIsDrawerOpen(false);
     }, [pathname]);
 
+    if (!lesson) return null;
+
     return (
         <>
             <div className="sm:hidden">
@@ -137,7 +139,7 @@ export function LessonSidebar({ lesson, lessonSlug, moduleSlug, courseSlug, isLo
 }
 
 interface NavigationButtonsProps {
-    lesson: LessonWithActivities | LessonWithActivitiesAndUserProgress;
+    lesson: NonNullable<LessonWithActivities | LessonWithActivitiesAndUserProgress>;
     previousLesson: PreviousLesson;
     nextLesson: NextLesson;
     isLoggedIn: boolean;
@@ -178,7 +180,7 @@ function NavigationButtons({ lesson, previousLesson, nextLesson, moduleSlug, cou
 }
 
 interface ActivityLinkProps {
-    activities: (LessonWithActivities | LessonWithActivitiesAndUserProgress)["activities"];
+    activities: NonNullable<(LessonWithActivities | LessonWithActivitiesAndUserProgress)>["activities"];
     courseSlug: string;
     moduleSlug: string;
     lessonSlug: string;
@@ -205,7 +207,7 @@ function ActivityNav({ activities, courseSlug, moduleSlug, lessonSlug, activityS
                     onClick={() => activitySlug === activity.slug && setIsDrawerOpen(false)}
                 >
                     <CompletionIcon
-                        isComplete={isLoggedIn ? ((activitySlug === activity.slug && activity.type === "Article") || (activity as LessonWithActivitiesAndUserProgress["activities"][number]).userCompletion.some(userProgress => userProgress.activityId === activity.id)) : false}
+                        isComplete={isLoggedIn ? ((activitySlug === activity.slug && activity.type === "Article") || (activity as NonNullable<LessonWithActivitiesAndUserProgress>["activities"][number]).userCompletion.some(userProgress => userProgress.activityId === activity.id)) : false}
                         icon={activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
                         isCurrent={activitySlug === activity.slug}
                     />

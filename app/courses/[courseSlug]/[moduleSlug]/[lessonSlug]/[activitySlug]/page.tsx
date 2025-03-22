@@ -7,6 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { getNextActivityLink } from "@/lib/utils";
 import { auth } from "@/lib/auth";
 import { SessionProvider } from "next-auth/react";
+import { notFound } from 'next/navigation';
 
 type Props = {
     params: Promise<{ activitySlug: string, lessonSlug: string, moduleSlug: string, courseSlug: string }>,
@@ -28,10 +29,13 @@ export default async function LessonPage({
 }: Props) {
     const { activitySlug, lessonSlug, moduleSlug, courseSlug } = await params;
     const activity = await getActivity(activitySlug);
-    const nextActivity = await getNextActivity(activitySlug);
-    const { href, label } = getNextActivityLink(courseSlug, moduleSlug, lessonSlug, nextActivity);
 
     const session = await auth();
+
+    if (!activity) return notFound();
+
+    const nextActivity = await getNextActivity(activitySlug);
+    const { href, label } = getNextActivityLink(courseSlug, moduleSlug, lessonSlug, nextActivity);
 
     if (session && session.user && session.user.id && activity.type === "Article") {
         await markActivityComplete(activity.id);

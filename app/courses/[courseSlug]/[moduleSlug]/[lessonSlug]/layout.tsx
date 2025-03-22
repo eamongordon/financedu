@@ -1,6 +1,7 @@
 import { getLessonWithActivities, getLessonWithActivitiesAndUserProgress, getNextLesson, getPreviousLesson } from "@/lib/actions"
 import { auth } from "@/lib/auth";
 import { LessonSidebar } from "@/components/course/lesson-sidebar";
+import { notFound } from "next/navigation";
 
 interface LessonLayoutProps {
     params: Promise<{ courseSlug: string, moduleSlug: string, lessonSlug: string }>,
@@ -12,14 +13,17 @@ type LessonWithActivitiesAndUserProgress = Awaited<ReturnType<typeof getLessonWi
 
 export default async function LessonLayout({ params, children }: LessonLayoutProps) {
     const { lessonSlug, courseSlug, moduleSlug } = await params;
-    const nextLesson = await getNextLesson(lessonSlug);
-    const previousLesson = await getPreviousLesson(lessonSlug);
     const session = await auth();
 
     const isLoggedIn = session && session.user && session.user.id;
     const lesson = isLoggedIn
         ? await getLessonWithActivitiesAndUserProgress(lessonSlug)
         : await getLessonWithActivities(lessonSlug);
+
+    if (!lesson) return notFound();
+
+    const nextLesson = await getNextLesson(lessonSlug);
+    const previousLesson = await getPreviousLesson(lessonSlug);
 
     return (
         <div className="w-full flex flex-col sm:flex-row sm:flex-grow sm:divide-x divide-border">

@@ -2,6 +2,7 @@ import { getCourseWithModulesAndLessons, getCourseWithModulesAndLessonsAndUserCo
 import { ModuleNav } from "@/components/course/module-nav"
 import { CourseHeader } from "@/components/course/course-header";
 import { auth } from "@/lib/auth";
+import { notFound } from "next/navigation";
 
 type courseWithModulesAndLessonsAndUserCompletion = Awaited<ReturnType<typeof getCourseWithModulesAndLessonsAndUserCompletion>>;
 
@@ -21,7 +22,8 @@ export default async function CourseLayout({
         ? await getCourseWithModulesAndLessonsAndUserCompletion(slug)
         : await getCourseWithModulesAndLessons(slug);
 
-        console.log("courseM", course);
+    if (!course) return notFound();
+
     return (
         <div
             className="w-full flex flex-col sm:flex-row sm:flex-grow sm:divide-x divide"
@@ -35,7 +37,7 @@ export default async function CourseLayout({
                     title: module.title,
                     icon: module.icon,
                     href: `/courses/${slug}/${module.slug}`,
-                    isComplete: isLoggedIn ? (module as courseWithModulesAndLessonsAndUserCompletion["modules"][number]).lessons.every(lesson => lesson.activities.every(activity => activity.userCompletion.length > 0)) : false
+                    isComplete: isLoggedIn ? (module as NonNullable<courseWithModulesAndLessonsAndUserCompletion>["modules"][number]).lessons.every(lesson => lesson.activities.every(activity => activity.userCompletion.length > 0)) : false
                 }))} />
             </div>
             <div

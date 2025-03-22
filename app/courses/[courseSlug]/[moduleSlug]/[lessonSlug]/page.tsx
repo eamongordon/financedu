@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link"
 import { FileText, CircleHelp } from "lucide-react";
 import { CompletionIcon } from "@/components/ui/completion-icon";
+import { notFound } from "next/navigation";
 
 type LessonWithActivitiesAndUserProgress = Awaited<ReturnType<typeof getLessonWithActivitiesAndUserProgress>>;
 
@@ -36,7 +37,8 @@ export default async function LessonPage({
         await getLessonWithActivitiesAndUserProgress(lessonId) :
         await getLessonWithActivities(lessonId);
 
-    console.log("lesson", lesson)
+    if (!lesson) return notFound();
+
     return (
         <main className="p-2 sm:p-8">
             <section className="flex justify-between gap-2 md:gap-6 pb-2 md:pb-6 border-b">
@@ -60,7 +62,7 @@ export default async function LessonPage({
                         )}
                     >
                         <CompletionIcon
-                            isComplete={isLoggedIn ? (activity as LessonWithActivitiesAndUserProgress["activities"][number]).userCompletion.length > 0 : false}
+                            isComplete={isLoggedIn ? (activity as NonNullable<LessonWithActivitiesAndUserProgress>["activities"][number]).userCompletion.length > 0 : false}
                             icon={activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
                         />
                         {activity.title}

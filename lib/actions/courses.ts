@@ -74,10 +74,6 @@ export async function getCourseWithModulesAndLessons(courseSlug: string) {
         },
     });
 
-    if (!course) {
-        throw new Error("Course not found");
-    }
-
     return course;
 }
 
@@ -107,10 +103,6 @@ export async function getModuleWithLessonsAndActivities(moduleSlug: string) {
         }
     });
 
-    if (!moduleObj) {
-        throw new Error("Module not found");
-    }
-
     return moduleObj;
 }
 
@@ -128,10 +120,6 @@ export async function getLessonWithActivities(lessonSlug: string) {
             }
         }
     });
-
-    if (!lesson) {
-        throw new Error("Lesson not found");
-    }
 
     return lesson;
 }
@@ -158,10 +146,6 @@ export async function getActivity(activitySlug: string) {
             }
         }
     });
-
-    if (!activity) {
-        throw new Error("Activity not found");
-    }
 
     return activity;
 }
@@ -475,10 +459,6 @@ export async function getLessonWithActivitiesAndUserProgress(lessonSlug: string)
         }
     });
 
-    if (!lesson) {
-        throw new Error("Lesson not found");
-    }
-
     return lesson;
 }
 
@@ -512,10 +492,6 @@ export async function getModuleWithLessonsAndActivitiesAndUserCompletion(moduleS
         }
     });
 
-    if (!moduleObj) {
-        throw new Error("Module not found");
-    }
-
     return moduleObj;
 }
 
@@ -548,10 +524,6 @@ export async function getCourseWithModulesAndLessonsAndUserCompletion(courseSlug
             }
         }
     });
-
-    if (!course) {
-        throw new Error("Course not found");
-    }
 
     return course;
 }

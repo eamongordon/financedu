@@ -13,6 +13,7 @@ type getCourseWithModulesAndLessonsReturnType = Awaited<ReturnType<typeof getCou
 export function CourseHeader({ course }: { course: getCourseWithModulesAndLessonsReturnType }) {
     const params = useParams<{ moduleSlug: string, courseSlug: string }>();
     const isOnModulePage = !!params?.moduleSlug;
+    if (!course) return null;
     return (
         <>
             <Link

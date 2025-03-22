@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { CompletionIcon } from "@/components/ui/completion-icon";
 import { CircleHelp, FileText } from "lucide-react";
+import { notFound } from "next/navigation";
 
 type ModuleWithLessonsAndActivitiesAndUserCompletion = Awaited<ReturnType<typeof getModuleWithLessonsAndActivitiesAndUserCompletion>>;
 
@@ -33,6 +34,9 @@ export default async function CourseLayout({
     const moduleObj = isLoggedIn
         ? await getModuleWithLessonsAndActivitiesAndUserCompletion(moduleSlug)
         : await getModuleWithLessonsAndActivities(moduleSlug);
+
+    if (!moduleObj) return notFound();
+
     return (
         <main className="pb-4 sm:py-4 w-full">
             <section className="flex flex-col gap-2 px-4 sm:px-0 pb-4 border-b">
@@ -60,7 +64,7 @@ export default async function CourseLayout({
                                     >
                                         <div className="relative">
                                             <CompletionIcon
-                                                isComplete={(isLoggedIn && (activity as ModuleWithLessonsAndActivitiesAndUserCompletion["lessons"][number]["activities"][number]).userCompletion.length > 0) || false}
+                                                isComplete={(isLoggedIn && (activity as NonNullable<ModuleWithLessonsAndActivitiesAndUserCompletion>["lessons"][number]["activities"][number]).userCompletion.length > 0) || false}
                                                 icon={activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
                                             />
                                         </div>

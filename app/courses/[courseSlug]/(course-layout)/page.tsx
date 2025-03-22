@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { GraduationCap } from "lucide-react";
 import { DynamicIcon, dynamicIconImports } from "lucide-react/dynamic";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 type CourseWithModulesAndLessonsAndUserCompletion = Awaited<ReturnType<typeof getCourseWithModulesAndLessonsAndUserCompletion>>;
 
@@ -34,6 +35,9 @@ export default async function Page({
     const course = isLoggedIn
         ? await getCourseWithModulesAndLessonsAndUserCompletion(slug)
         : await getCourseWithModulesAndLessons(slug);
+
+    if (!course) return notFound();
+
     return (
         <main>
             <section className="flex flex-col gap-2 md:gap-6 pt-4 pb-6 border-b px-4 sm:px-0">
@@ -52,16 +56,16 @@ export default async function Page({
             <section className="py-6 sm:py-8 px-4 sm:px-0">
                 {course.modules.map(module => (
                     <Card key={module.id}
-                        className={cn("mb-4", isLoggedIn && (module as CourseWithModulesAndLessonsAndUserCompletion["modules"][number]).lessons.every(lesson => lesson.activities.every(activity => activity.userCompletion.length > 0)) && "border-primary")}
+                        className={cn("mb-4", isLoggedIn && (module as NonNullable<CourseWithModulesAndLessonsAndUserCompletion>["modules"][number]).lessons.every(lesson => lesson.activities.every(activity => activity.userCompletion.length > 0)) && "border-primary")}
                     >
                         <CardHeader className="flex flex-row items-center gap-2 space-y-0">
                             <CompletionIcon
-                                isComplete={isLoggedIn ? (module as CourseWithModulesAndLessonsAndUserCompletion["modules"][number]).lessons.every(lesson => lesson.activities.every(activity => activity.userCompletion.length > 0)) : false}
+                                isComplete={isLoggedIn ? (module as NonNullable<CourseWithModulesAndLessonsAndUserCompletion>["modules"][number]).lessons.every(lesson => lesson.activities.every(activity => activity.userCompletion.length > 0)) : false}
                                 icon={module.icon ? <DynamicIcon name={module.icon as keyof typeof dynamicIconImports} strokeWidth={1.5} /> : <GraduationCap strokeWidth={1.5} />}
                             />
                             <Link
                                 href={`/courses/${course.slug}/${module.slug}`}
-                                className={cn(buttonVariants({ variant: "link" }), isLoggedIn && (module as CourseWithModulesAndLessonsAndUserCompletion["modules"][number]).lessons.every(lesson => lesson.activities.every(activity => activity.userCompletion.length > 0)) ? "text-primary" : "text-card-foreground")}
+                                className={cn(buttonVariants({ variant: "link" }), isLoggedIn && (module as NonNullable<CourseWithModulesAndLessonsAndUserCompletion>["modules"][number]).lessons.every(lesson => lesson.activities.every(activity => activity.userCompletion.length > 0)) ? "text-primary" : "text-card-foreground")}
                             >
                                 <CardTitle
                                     className="text-xl font-semibold leading-none"
@@ -79,7 +83,7 @@ export default async function Page({
                                         className={cn(
                                             buttonVariants({ variant: "link" }),
                                             "text-muted-foreground [&_svg]:size-4 whitespace-normal justify-start",
-                                            isLoggedIn && (lesson as CourseWithModulesAndLessonsAndUserCompletion["modules"][number]["lessons"][number]).activities.every(activity => activity.userCompletion.length > 0) && "text-primary"
+                                            isLoggedIn && (lesson as NonNullable<CourseWithModulesAndLessonsAndUserCompletion>["modules"][number]["lessons"][number]).activities.every(activity => activity.userCompletion.length > 0) && "text-primary"
                                         )}
                                     >
                                         {lesson.title}
