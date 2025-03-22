@@ -129,7 +129,7 @@ export default function Footer() {
                         </div>
                     </div>
                 </div>
-                <p className="text-xs text-gray-500 dark:text-gray-200">&copy; {new Date().getFullYear()} Prospector Minerals. All rights reserved.</p>
+                <p className="text-xs text-gray-500 dark:text-gray-200">&copy; {new Date().getFullYear()} Financedu, Inc. All rights reserved.</p>
             </div>
         </footer>
     )
