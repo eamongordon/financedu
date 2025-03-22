@@ -138,14 +138,14 @@ export async function getClassTeacher(classId: string) {
 
 export async function getClassFromClassCode(classCode: string) {
     const classDetails = await db.query.classes.findFirst({
-        where: eq(classes.studentJoinCode, classCode),
+        where: eq(classes.joinCode, classCode),
         with: {
             classStudents: true,
         },
         columns: {
             id: true,
             name: true,
-            studentJoinCode: true
+            joinCode: true
         }
     });
 
@@ -325,7 +325,7 @@ export async function joinClass(joinCode: string) {
     const classDetails = await db.query.classes.findFirst({
         where: or(
             eq(classes.teacherJoinCode, joinCode),
-            eq(classes.studentJoinCode, joinCode)
+            eq(classes.joinCode, joinCode)
         ),
     });
 
@@ -337,7 +337,7 @@ export async function joinClass(joinCode: string) {
         // Join as a teacher
         await db.insert(classTeachers).values({ classId: classDetails.id, teacherId: userId });
         return { role: "teacher", class: classDetails };
-    } else if (classDetails.studentJoinCode === joinCode) {
+    } else if (classDetails.joinCode === joinCode) {
         // Join as a student
         await db.insert(classStudents).values({ classId: classDetails.id, studentId: userId });
         return { role: "student", class: classDetails };

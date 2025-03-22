@@ -40,13 +40,13 @@ export default async function Page({
                                 name: getDisplayName(cs.student.firstName, cs.student.lastName, cs.student.email!),
                                 email: cs.student.email!,
                             }))}
-                            inviteButtonElem={<InviteStudents classCode={classItem.studentJoinCode} />}
+                            inviteButtonElem={<InviteStudents classCode={classItem.joinCode} />}
                         />) : (
                         <div className="flex flex-col items-center justify-center gap-4">
                             <p className="text-lg font-semibold mt-6">
                                 No Students are in this class yet.
                             </p>
-                            <InviteStudents isNoStudents classCode={classItem.studentJoinCode} />
+                            <InviteStudents isNoStudents classCode={classItem.joinCode} />
                         </div>
                     )
                 }

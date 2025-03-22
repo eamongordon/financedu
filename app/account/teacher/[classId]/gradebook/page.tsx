@@ -33,7 +33,7 @@ export default async function Page({
                 <p className="text-lg font-semibold mt-6">You haven&apos;t added any students yet.</p>
                 <p>Once you add students and create assignments, their scores will appear here.</p>
             </div>
-            <InviteStudents isNoStudents classCode={classItem.studentJoinCode} />
+            <InviteStudents isNoStudents classCode={classItem.joinCode} />
         </div>
     ) : !tableAssignments.length ? (
         <div className="flex flex-col items-center justify-center mt-6">

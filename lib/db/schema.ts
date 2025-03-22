@@ -304,10 +304,7 @@ export const classes = pgTable("classes", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
-  teacherJoinCode: text("teacherJoinCode")
-    .notNull()
-    .$defaultFn(() => generateJoinCode()),
-  studentJoinCode: text("studentJoinCode")
+  joinCode: text("joinCode")
     .notNull()
     .$defaultFn(() => generateJoinCode()),
   createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).defaultNow(),

@@ -15,7 +15,7 @@ export function ClassJoinConfirm({ classItem }: { classItem: ClassItem }) {
     async function handleJoin() {
         try {
         setLoading(true);
-        const joinedClass = await joinClass(classItem!.studentJoinCode);
+        const joinedClass = await joinClass(classItem!.joinCode);
             toast.success("You have successfully joined the class!");
             router.push(`/account/student/${joinedClass.class.id}`);
             setLoading(false);
