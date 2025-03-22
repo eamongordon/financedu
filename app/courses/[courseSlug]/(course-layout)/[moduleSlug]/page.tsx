@@ -6,7 +6,7 @@ import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { CompletionIcon } from "@/components/ui/completion-icon";
-import { CircleHelp, FileText } from "lucide-react";
+import { BookOpen, CircleHelp, FileText } from "lucide-react";
 import { notFound } from "next/navigation";
 
 type ModuleWithLessonsAndActivitiesAndUserCompletion = Awaited<ReturnType<typeof getModuleWithLessonsAndActivitiesAndUserCompletion>>;
@@ -52,7 +52,7 @@ export default async function CourseLayout({
                         </CardHeader>
                         <CardContent>
                             <p dangerouslySetInnerHTML={{ __html: lesson.objectives ?? "" }} />
-                            <div className="grid grid-cols-1 lg:grid-cols-2">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 mb-6">
                                 {lesson.activities.map((activity) => (
                                     <Link
                                         key={activity.id}
@@ -71,6 +71,15 @@ export default async function CourseLayout({
                                         {activity.title}
                                     </Link>
                                 ))}
+                            </div>
+                            <div>
+                                <Link
+                                    href={`/standards?lessonId=${lesson.id}`}
+                                    className={cn(buttonVariants({ variant: "outline" }), "h-auto py-1 text-xs text-muted-foreground")}
+                                >
+                                    <BookOpen />
+                                    Standards
+                                </Link>
                             </div>
                         </CardContent>
                     </Card>
