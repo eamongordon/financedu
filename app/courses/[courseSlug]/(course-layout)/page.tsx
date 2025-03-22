@@ -82,7 +82,7 @@ export default async function Page({
                                         href={`/courses/${course.slug}/${module.slug}/${lesson.slug}/${lesson.activities.length > 0 ? lesson.activities[0].slug : ""}`}
                                         className={cn(
                                             buttonVariants({ variant: "link" }),
-                                            "text-muted-foreground [&_svg]:size-4 whitespace-normal justify-start",
+                                            "text-muted-foreground [&_svg]:size-4 whitespace-normal justify-start inline h-auto",
                                             isLoggedIn && (lesson as NonNullable<CourseWithModulesAndLessonsAndUserCompletion>["modules"][number]["lessons"][number]).activities.every(activity => activity.userCompletion.length > 0) && "text-primary"
                                         )}
                                     >
