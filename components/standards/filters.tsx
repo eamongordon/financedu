@@ -182,8 +182,8 @@ export function StandardsFilters({ defaultValues, lesson, activity }: ProfileFor
             {lesson && (
                 <div className="mb-8">
                     <Label>Lesson</Label>
-                    <Button variant="outline" onClick={handleRemoveLesson} className="w-full justify-between">
-                        {lesson.title} <X className="ml-2" />
+                    <Button variant="outline" onClick={handleRemoveLesson} className="w-full justify-between overflow-hidden">
+                        <p className="truncate">{lesson.title}</p> <X className="ml-2" />
                     </Button>
                 </div>
             )}
@@ -191,7 +191,7 @@ export function StandardsFilters({ defaultValues, lesson, activity }: ProfileFor
                 <div className="mb-8">
                     <Label>Activity</Label>
                     <Button variant="outline" onClick={handleRemoveActivity} className="w-full justify-between">
-                        <span className="flex flex-row gap-2 items-center">{activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />} {activity.title}</span> <X className="ml-2" />
+                        <span className="flex flex-row gap-2 items-center overflow-hidden">{activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />} <p className="truncate">{activity.title}</p></span> <X className="ml-2" />
                     </Button>
                 </div>
             )}

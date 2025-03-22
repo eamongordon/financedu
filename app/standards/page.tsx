@@ -1,7 +1,10 @@
 import Banner from '@/components/banner';
 import { StandardsFilters } from '@/components/standards/filters';
+import { buttonVariants } from '@/components/ui/button';
 import { getActivityDisplay, getLessonDisplay, getStandards } from '@/lib/actions';
+import { BookOpen } from 'lucide-react';
 import type { Metadata } from 'next'
+import Link from 'next/link';
 
 export const metadata: Metadata = {
     title: 'Standards',
@@ -58,7 +61,7 @@ const Page = async (
                     </div>
                 </section>
                 <section className='w-full md:w-3/4 p-4 lg:p-8'>
-                    {standards ? (
+                    {standards.length ? (
                         <div className='divide-y'>
                             {standards.map((standard, index) => (
                                 <div key={index} className='flex flex-col gap-2 py-4 first-of-type:pt-0'>
@@ -78,7 +81,16 @@ const Page = async (
                             ))}
                         </div>
                     ) : (
-                        <p>No Results</p>
+                        <div className="flex flex-col items-center justify-center h-full text-center gap-6">
+                            <div className="flex flex-col gap-1 items-center justify-center">
+                                <BookOpen className='text-muted-foreground' strokeWidth={1.5} size={36} />
+                                <p className="text-lg font-semibold">No standards found.</p>
+                                <p>Try removing some filters.</p>
+                            </div>
+                            <Link href='/standards' className={buttonVariants({ variant: 'outline' })}>
+                                Clear Filters
+                            </Link>
+                        </div>
                     )}
                 </section>
             </main>
