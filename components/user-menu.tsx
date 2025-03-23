@@ -16,7 +16,7 @@ import Link from "next/link"
 import { signOut } from "next-auth/react"
 import { useTheme } from "next-themes"
 import { type Roles } from "@/lib/db/schema"
-import { getInitials } from "@/lib/utils"
+import { cn, getInitials } from "@/lib/utils"
 
 interface UserMenuProps {
   imageSrc?: string
@@ -41,7 +41,7 @@ export default function UserMenu({ imageSrc, name, email, isMobile, roles }: Use
               {initials || <User className="h-4 w-4" />}
             </AvatarFallback>
           </Avatar>
-          <div className="flex md:hidden flex-col justify-start text-start gap-2">
+          <div className={cn("flex flex-col justify-start text-start gap-2", !isMobile && "hidden")}>
             <p className="text-sm leading-none text-muted-foreground font-semibold">
               Signed in as
             </p>
