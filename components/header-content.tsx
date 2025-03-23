@@ -44,26 +44,26 @@ export default function HeaderComp({
         </Link>
         {/* Menu items and button */}
         <div className="flex-1 flex items-center justify-end">
-          <div className="hidden md:flex space-x-4">
+          <div className="hidden lg:flex space-x-4">
             <Link href="/courses" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Courses</Link>
             <Link href="/resources" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Resources</Link>
             <Link href="/about" className="text-foreground hover:text-primary px-3 py-2 font-semibold">About</Link>
             <Link href="/donate" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Donate</Link>
             <Link href="/blog" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Blog</Link>
-            <div className='ml-4 self-center'>
-              {loggedIn ? (
-                <UserMenu name={userData.name!} email={userData.email!} roles={userData.roles} />
-              ) : (
-                <div className='flex flex-row gap-2'>
-                  <Link href="/login" className={cn(buttonVariants({ variant: "secondary" }), "w-28 text-base")}>Log In</Link>
-                  <Link href="/signup" className={cn(buttonVariants({ variant: "default" }), "w-28 text-base")}>Get Started</Link>
-                </div>
-              )}
-            </div>
+          </div>
+          <div className='ml-4 self-center hidden md:flex'>
+            {loggedIn ? (
+              <UserMenu name={userData.name!} email={userData.email!} roles={userData.roles} />
+            ) : (
+              <div className='flex flex-row gap-2'>
+                <Link href="/login" className={cn(buttonVariants({ variant: "secondary" }), "w-28 text-base")}>Log In</Link>
+                <Link href="/signup" className={cn(buttonVariants({ variant: "default" }), "w-28 text-base")}>Get Started</Link>
+              </div>
+            )}
           </div>
         </div>
         {/* Mobile menu button */}
-        <div className="absolute inset-y-0 right-2 flex items-center md:hidden">
+        <div className="absolute inset-y-0 right-2 md:right-[264px] flex items-center md:flex lg:hidden">
           <Button
             type="button"
             variant="ghost"
@@ -81,7 +81,7 @@ export default function HeaderComp({
         </div>
       </div>
       {/* Mobile menu */}
-      <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden absolute h-screen w-full backdrop-blur-xl bg-background/80`} id="mobile-menu">
+      <div className={`${isMenuOpen ? 'block' : 'hidden'} lg:hidden absolute h-screen w-full backdrop-blur-xl bg-background/80`} id="mobile-menu">
         <div className="p-6 space-y-6">
           <div className='flex flex-col gap-4'>
             <Link href="/courses" className="text-foreground hover:text-primary block text-base font-semibold" onClick={() => handleMobileMenuItemClick('/courses')}>Courses</Link>
