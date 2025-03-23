@@ -1,6 +1,6 @@
 "use server";
 
-import { eq, and, exists, or } from "drizzle-orm";
+import { eq, and, exists } from "drizzle-orm";
 import { assignments, classes, classStudents, classTeachers, classTeacherInvite } from "../db/schema";
 import { db } from "../db";
 import { auth } from "../auth";
@@ -323,21 +323,14 @@ export async function joinClass(joinCode: string) {
     const userId = session.user.id;
 
     const classDetails = await db.query.classes.findFirst({
-        where: or(
-            eq(classes.teacherJoinCode, joinCode),
-            eq(classes.joinCode, joinCode)
-        ),
+        where: eq(classes.joinCode, joinCode)
     });
 
     if (!classDetails) {
         throw new Error("Invalid join code");
     }
 
-    if (classDetails.teacherJoinCode === joinCode) {
-        // Join as a teacher
-        await db.insert(classTeachers).values({ classId: classDetails.id, teacherId: userId });
-        return { role: "teacher", class: classDetails };
-    } else if (classDetails.joinCode === joinCode) {
+    if (classDetails.joinCode === joinCode) {
         // Join as a student
         await db.insert(classStudents).values({ classId: classDetails.id, studentId: userId });
         return { role: "student", class: classDetails };
