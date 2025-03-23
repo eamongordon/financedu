@@ -63,7 +63,7 @@ export default function HeaderComp({
           </div>
         </div>
         {/* Mobile menu button */}
-        <div className="absolute inset-y-0 right-2 md:right-[264px] flex items-center md:flex lg:hidden">
+        <div className={cn("absolute inset-y-0 right-2 flex items-center md:flex lg:hidden", loggedIn ? 'md:right-16' : 'md:right-[264px]')}>
           <Button
             type="button"
             variant="ghost"
