@@ -51,7 +51,7 @@ export default function HeaderComp({
             <Link href="/donate" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Donate</Link>
             <Link href="/blog" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Blog</Link>
           </div>
-          <div className='ml-4 self-center hidden md:flex'>
+          <div className='ml-6 self-center hidden md:flex'>
             {loggedIn ? (
               <UserMenu name={userData.name!} email={userData.email!} roles={userData.roles} />
             ) : (
