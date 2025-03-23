@@ -14,28 +14,28 @@ export function Explore() {
             <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-7 sm:gap-12">
                 <Link href="/courses" className="flex flex-col justify-start gap-4">
                     <h3 className="text-2xl font-semibold">Courses</h3>
-                    <div className="bg-accent p-4 rounded-lg mb-2 flex items-center justify-center">
+                    <div className="bg-secondary/25 p-4 rounded-lg mb-2 flex items-center justify-center">
                         <Courses height="125" width="125" />
                     </div>
                     <p className="text-left">All of our courses are comprehensive, interactive, and standards-based - and always free of cost.</p>
                 </Link>
                 <Link href="/resources" className="flex flex-col justify-start gap-4">
                     <h3 className="text-2xl font-semibold">Resources</h3>
-                    <div className="bg-accent p-4 rounded-lg mb-2 flex items-center justify-center">
+                    <div className="bg-secondary/25 p-4 rounded-lg mb-2 flex items-center justify-center">
                         <Resources height="125" width="125" />
                     </div>
                     <p className="text-left">Financedu offers interactive resources to provide the best learning experience possible.</p>
                 </Link>
                 <Link href="/about" className="flex flex-col justify-start gap-4">
                     <h3 className="text-2xl font-semibold">About Us</h3>
-                    <div className="bg-accent p-4 rounded-lg mb-2 flex items-center justify-center">
+                    <div className="bg-secondary/25 p-4 rounded-lg mb-2 flex items-center justify-center">
                         <About height="125" width="125" />
                     </div>
                     <p className="text-left">Learn more about us, from our beginnings to our future endeavors.</p>
                 </Link>
                 <Link href="/donate" className="flex flex-col justify-start gap-4">
                     <h3 className="text-2xl font-semibold">Donate</h3>
-                    <div className="bg-accent p-4 rounded-lg flex items-center justify-center">
+                    <div className="bg-secondary/25 p-4 rounded-lg flex items-center justify-center">
                         <Donate height="125" width="125" />
                     </div>
                     <p className="text-left"> Support Us. We are a 501(c)(3) non-profit and rely on your donations to fulfill our mission.</p>
