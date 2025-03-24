@@ -39,7 +39,7 @@ export default function HeaderComp({
     <nav className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 relative flex items-center justify-between h-16">
         {/* Logo */}
-        <Link href="/" className="flex-shrink-0 flex flex-row space-x-2">
+        <Link href="/" className="cursor-pointer flex-shrink-0 flex flex-row space-x-2">
           <Image height={50} width={200} src="/financedu-logo.svg" alt="Logo" />
         </Link>
         {/* Menu items and button */}
