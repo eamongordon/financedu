@@ -71,6 +71,10 @@ export default function Footer() {
                                 <li>
                                     <Link href="/resources" className="text-accent-foreground transition hover:opacity-75"> Resources </Link>
                                 </li>
+
+                                <li>
+                                    <Link href="/volunteer" className="text-accent-foreground transition hover:opacity-75"> Volunteer </Link>
+                                </li>
                             </ul>
                         </div>
 
@@ -97,7 +101,7 @@ export default function Footer() {
 
                             <ul className="mt-6 space-y-4 text-sm">
                                 <li>
-                                    <Link href="/policy" className="text-accent-foreground transition hover:opacity-75"> About </Link>
+                                    <Link href="/policy" className="text-accent-foreground transition hover:opacity-75"> Mission </Link>
                                 </li>
 
                                 <li>
