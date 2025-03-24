@@ -111,6 +111,12 @@ export async function getLessonWithActivities(lessonSlug: string) {
         where: eq(lessons.slug, lessonSlug),
         with: {
             activities: {
+                columns: {
+                    id: true,
+                    slug: true,
+                    title: true,
+                    type: true
+                },
                 orderBy: (activities, { asc }) => [asc(activities.order)]
             },
             module: {
@@ -197,6 +203,9 @@ export async function getNextActivity(activitySlug: string) {
         orderBy: (lessons, { asc }) => [asc(lessons.order)],
         with: {
             activities: {
+                columns: {
+                    slug: true
+                },
                 orderBy: (activities, { asc }) => [asc(activities.order)],
                 limit: 1
             }
@@ -221,6 +230,9 @@ export async function getNextActivity(activitySlug: string) {
                 limit: 1,
                 with: {
                     activities: {
+                        columns: {
+                            slug: true
+                        },
                         orderBy: (activities, { asc }) => [asc(activities.order)],
                         limit: 1
                     }
@@ -444,6 +456,12 @@ export async function getLessonWithActivitiesAndUserProgress(lessonSlug: string)
         where: eq(lessons.slug, lessonSlug),
         with: {
             activities: {
+                columns: {
+                    id: true,
+                    slug: true,
+                    title: true,
+                    type: true
+                },
                 with: {
                     userCompletion: {
                         where: eq(userCompletion.userId, userId)
@@ -484,6 +502,12 @@ export async function getModuleWithLessonsAndActivitiesAndUserCompletion(moduleS
                                 where: eq(userCompletion.userId, userId)
                             }
                         },
+                        columns: {
+                            id: true,
+                            slug: true,
+                            title: true,
+                            type: true
+                        },
                         orderBy: (activities, { asc }) => [asc(activities.order)]
                     }
                 },
@@ -509,6 +533,12 @@ export async function getCourseWithModulesAndLessonsAndUserCompletion(courseSlug
                     lessons: {
                         with: {
                             activities: {
+                                columns: {
+                                    id: true,
+                                    slug: true,
+                                    title: true,
+                                    type: true
+                                },
                                 with: {
                                     userCompletion: {
                                         where: eq(userCompletion.userId, userId)
@@ -541,6 +571,12 @@ export async function getUserCoursesWithProgressAndNextActivity() {
                     lessons: {
                         with: {
                             activities: {
+                                columns: {
+                                    id: true,
+                                    slug: true,
+                                    title: true,
+                                    type: true
+                                },
                                 with: {
                                     userCompletion: {
                                         where: (userCompletion) => eq(userCompletion.userId, userId)
@@ -647,6 +683,12 @@ export async function getUserCompletion() {
                     lessons: {
                         with: {
                             activities: {
+                                columns: {
+                                    id: true,
+                                    slug: true,
+                                    title: true,
+                                    type: true
+                                },
                                 with: {
                                     userCompletion: {
                                         where: eq(userCompletion.userId, userId)
