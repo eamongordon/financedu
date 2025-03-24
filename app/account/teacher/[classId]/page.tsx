@@ -26,13 +26,13 @@ export default async function Page({
     return (
         <section>
             {assignmentsTableData.length > 0 ? (
-                <AssignmentsTeacherList assignments={assignmentsTableData} createAssignmentsElem={<CreateAssignments courses={courses} />} />
+                <AssignmentsTeacherList assignments={assignmentsTableData} createAssignmentsElem={<CreateAssignments type="class" courses={courses} classId={classId} />} />
             ) : (
                 <div className="flex flex-col items-center justify-center gap-6 mt-6">
                     <p className="text-lg font-semibold">
                         You haven&apos;t created any assignments yet.
                     </p>
-                    <CreateAssignments isNone courses={courses} />
+                    <CreateAssignments isNone courses={courses} type="class" classId={classId} />
                 </div>
             )}
         </section>

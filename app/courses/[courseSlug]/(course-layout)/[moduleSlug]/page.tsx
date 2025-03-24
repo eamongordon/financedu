@@ -8,6 +8,7 @@ import Link from "next/link";
 import { CompletionIcon } from "@/components/ui/completion-icon";
 import { BookOpen, CircleHelp, FileText } from "lucide-react";
 import { notFound } from "next/navigation";
+import { CreateAssignments } from "@/components/account/create-assigments";
 
 type ModuleWithLessonsAndActivitiesAndUserCompletion = Awaited<ReturnType<typeof getModuleWithLessonsAndActivitiesAndUserCompletion>>;
 
@@ -36,6 +37,8 @@ export default async function CourseLayout({
         : await getModuleWithLessonsAndActivities(moduleSlug);
 
     if (!moduleObj) return notFound();
+
+    const isTeacher = session?.user?.roles?.includes("teacher");
 
     return (
         <main className="pb-4 sm:py-4 w-full">
@@ -72,7 +75,7 @@ export default async function CourseLayout({
                                     </Link>
                                 ))}
                             </div>
-                            <div>
+                            <div className="flex flex-row gap-2">
                                 <Link
                                     href={`/standards?lessonId=${lesson.id}`}
                                     className={cn(buttonVariants({ variant: "outline" }), "h-auto py-1 text-xs text-muted-foreground")}
@@ -80,6 +83,9 @@ export default async function CourseLayout({
                                     <BookOpen />
                                     Standards
                                 </Link>
+                                {isTeacher && (
+                                    <CreateAssignments type="lesson" defaultSelectedActivities={lesson.activities.map((activity) => activity.id)} />
+                                )}
                             </div>
                         </CardContent>
                     </Card>

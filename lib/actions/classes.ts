@@ -464,9 +464,10 @@ type Assignment = {
     activityId: string;
     startAt: Date;
     dueAt: Date;
+    classId: string;
 };
 
-export async function createAssignments(assignmentsArr: Assignment[], classId: string) {
+export async function createAssignments(assignmentsArr: Assignment[]) {
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
@@ -475,7 +476,7 @@ export async function createAssignments(assignmentsArr: Assignment[], classId: s
 
     const newAssignments = assignmentsArr.map(assignment => ({
         activityId: assignment.activityId,
-        classId: classId,
+        classId: assignment.classId,
         teacherId: userId,
         startAt: assignment.startAt,
         dueAt: assignment.dueAt

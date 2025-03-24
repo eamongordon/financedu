@@ -1,9 +1,9 @@
 "use client";
 
-import * as React from "react"
-
-import { useMediaQuery } from "@/lib/hooks/use-media-query"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react";
+import * as React from "react";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -12,7 +12,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
     Drawer,
     DrawerClose,
@@ -22,42 +22,84 @@ import {
     DrawerHeader,
     DrawerTitle,
     DrawerTrigger,
-} from "@/components/ui/drawer"
-import { CircleHelp, FileText, Plus } from "lucide-react"
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
-import { Checkbox } from "@/components/ui/checkbox"
+} from "@/components/ui/drawer";
+import { CircleHelp, FileText, Plus, Clipboard } from "lucide-react";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { Checkbox } from "@/components/ui/checkbox";
 import { type getCoursesWithModulesAndLessonsAndActivities } from "@/lib/actions";
 import { cn } from "@/lib/utils";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { createAssignments } from "@/lib/actions";
 import { toast } from "sonner";
 import { DueDateSetter, type DueDateSetterData } from "@/components/account/duedate-setter";
+import { getTeacherClasses } from "@/lib/actions/classes";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
-type CoursesWithModulesAndLessonsAndActivities = Awaited<ReturnType<typeof getCoursesWithModulesAndLessonsAndActivities>>
+type CoursesWithModulesAndLessonsAndActivities = Awaited<ReturnType<typeof getCoursesWithModulesAndLessonsAndActivities>>;
+type TeacherClasses = Awaited<ReturnType<typeof getTeacherClasses>>;
 
-export function CreateAssignments({ isNone, courses }: { isNone?: boolean, courses: CoursesWithModulesAndLessonsAndActivities }) {
-    const [open, setOpen] = React.useState(false)
-    const [selectedActivities, setSelectedActivities] = React.useState<string[]>([])
-    const [showDueDateSetter, setShowDueDateSetter] = React.useState(false);
-    const isDesktop = useMediaQuery("(min-width: 768px)")
+type CreateAssignmentsBaseProps = {
+    isNone?: boolean;
+    defaultSelectedActivities?: string[];
+    type: "class" | "activity" | "lesson";
+};
+
+type CreateAssignmentsClassProps = CreateAssignmentsBaseProps & {
+    type: "class";
+    classId: string;
+    courses: CoursesWithModulesAndLessonsAndActivities;
+};
+
+type CreateAssignmentsOtherProps = CreateAssignmentsBaseProps & {
+    type: "activity" | "lesson";
+    classId?: never;
+    courses?: never;
+};
+
+type CreateAssignmentsProps = CreateAssignmentsClassProps | CreateAssignmentsOtherProps;
+
+export function CreateAssignments({ isNone, courses, defaultSelectedActivities = [], type, classId }: CreateAssignmentsProps) {
+    const [open, setOpen] = useState(false);
+    const [selectedActivities, setSelectedActivities] = useState<string[]>(defaultSelectedActivities);
+    const [selectedClasses, setSelectedClasses] = useState<string[]>(type === "class" ? [classId] : []);
+    const [teacherClasses, setTeacherClasses] = useState<TeacherClasses>([]);
+    const [showDueDateSetter, setShowDueDateSetter] = useState(false);
+    const isDesktop = useMediaQuery("(min-width: 768px)");
+
+    useEffect(() => {
+        if (type !== "class") {
+            getTeacherClasses().then(setTeacherClasses);
+        }
+    }, [type]);
 
     const handleActivitySubmit = () => {
+        if (type === "class" || selectedClasses.length > 0) {
+            setShowDueDateSetter(true);
+        } else {
+            setShowDueDateSetter(false);
+        }
+    };
+
+    const handleClassSubmit = (selectedClasses: string[]) => {
+        setSelectedClasses(selectedClasses);
         setShowDueDateSetter(true);
     };
 
-    const params = useParams<{ classId: string }>();
-    const classId = params!.classId;
     const router = useRouter();
 
     const handleDueDateSubmit = async (data: DueDateSetterData) => {
-        const assignments = selectedActivities.map(activityId => {
-            return {
+        const assignments = selectedClasses.flatMap(selectedClass =>
+            selectedActivities.map(activityId => ({
                 activityId,
                 startAt: data.startDate,
-                dueAt: data.dueDate
-            }
-        })
-        await createAssignments(assignments, classId);
+                dueAt: data.dueDate,
+                classId: selectedClass,
+            }))
+        );
+        await createAssignments(assignments);
         toast.success("Assignments created successfully.");
         resetData();
         setOpen(false);
@@ -74,104 +116,114 @@ export function CreateAssignments({ isNone, courses }: { isNone?: boolean, cours
     function resetData() {
         setShowDueDateSetter(false);
         setSelectedActivities([]);
+        setSelectedClasses(type === "class" ? [classId] : []);
     }
 
     function NextButton() {
         return (
-            <Button disabled={selectedActivities.length === 0} onClick={() => handleActivitySubmit()}>
+            <Button disabled={selectedActivities.length === 0 || (type !== "class" && !selectedClasses.length)} onClick={handleActivitySubmit}>
                 {selectedActivities.length > 0 ? `Next (${selectedActivities.length} Selected)` : "Next"}
             </Button>
         );
     }
 
+    const description = showDueDateSetter ? "Set Availability" : type === "class" ? "Select Activities" : "Select Classes";
+
     if (isDesktop) {
         return (
             <Dialog open={open} onOpenChange={handleOpenChange}>
                 <DialogTrigger asChild>
-                    <Button
-                        {...!isNone ? { className: "w-full" } : {}}
-                        {...isNone ? { variant: "outline" } : {}}
-                    >
-                        <Plus />
-                        Create Assignments
+                    <Button className={cn((!isNone && type === "class") && "w-full", type === "lesson" && "h-auto py-1 text-xs text-muted-foreground")} {...(isNone || type !== "class" ? { variant: "outline" } : {})}>
+                        {type === "class" ? <Plus /> : <Clipboard strokeWidth={1.5} />}
+                        {type === "class" ? "Create Assignments" : "Assign"}
                     </Button>
                 </DialogTrigger>
                 <DialogContent className="flex flex-col max-h-[calc(100dvh-64px)]">
                     <DialogHeader className="sticky top-0 bg-background">
                         <DialogTitle>Assign Content</DialogTitle>
                         <DialogDescription>
-                            {showDueDateSetter ? "Set Availability" : "Select Activities"}
+                            {description}
                         </DialogDescription>
                     </DialogHeader>
-                    {showDueDateSetter ? (
+                    {(showDueDateSetter && selectedClasses.length > 0) ? (
                         <DueDateSetter selectedActivities={selectedActivities} setOpen={setOpen} onSubmit={handleDueDateSubmit} />
                     ) : (
                         <>
-                            <ContentSelector courses={courses} selectedActivities={selectedActivities} setSelectedActivities={setSelectedActivities} />
-                            <DialogFooter>
-                                <NextButton />
-                            </DialogFooter>
+                            {type === "class" && courses && (
+                                <>
+                                    <ContentSelector courses={courses} selectedActivities={selectedActivities} setSelectedActivities={setSelectedActivities} />
+                                    <DialogFooter>
+                                        {type === "class" && (
+                                            <NextButton />
+                                        )}
+                                    </DialogFooter>
+                                </>
+                            )}
+                            {type !== "class" && !selectedClasses.length && (
+                                <ClassSelector teacherClasses={teacherClasses} onSubmit={handleClassSubmit} />
+                            )}
                         </>
                     )}
                 </DialogContent>
             </Dialog>
-        )
+        );
     }
 
     return (
         <Drawer open={open} onOpenChange={handleOpenChange}>
             <DrawerTrigger asChild>
-                <Button
-                    {...!isNone ? { className: "w-full" } : {}}
-                    {...isNone ? { variant: "outline" } : {}}
-                >
-                    <Plus />
-                    Create Assignments
+                <Button className={cn(!isNone && "w-full", type === "lesson" && "h-auto py-1 text-xs text-muted-foreground")} {...(isNone || type !== "class" ? { variant: "outline" } : {})}>
+                    {type === "class" ? <Plus /> : <Clipboard strokeWidth={1.5} />}
+                    {type === "class" ? "Create Assignments" : "Assign"}
                 </Button>
             </DrawerTrigger>
             <DrawerContent className="max-h-[calc(100dvh-64px)]">
                 <DrawerHeader className="text-left">
                     <DrawerTitle>Create Assignments</DrawerTitle>
                     <DrawerDescription>
-                        {showDueDateSetter ? "Set Availability" : "Select Activities"}
+                        {description}
                     </DrawerDescription>
                 </DrawerHeader>
                 {showDueDateSetter ? (
                     <DueDateSetter selectedActivities={selectedActivities} isDrawer setOpen={setOpen} onSubmit={handleDueDateSubmit} />
-                ) : (
+                ) : type === "class" ? (
                     <>
                         <ContentSelector className="px-4" courses={courses} selectedActivities={selectedActivities} setSelectedActivities={setSelectedActivities} />
                         <DrawerFooter className="pt-2">
-                            <NextButton />
+                            {type === "class" && (
+                                <NextButton />
+                            )}
                             <DrawerClose asChild>
                                 <Button variant="outline">Cancel</Button>
                             </DrawerClose>
                         </DrawerFooter>
                     </>
+                ) : (
+                    <ClassSelector teacherClasses={teacherClasses} onSubmit={handleClassSubmit} isDrawer />
                 )}
             </DrawerContent>
         </Drawer>
-    )
+    );
 }
 
 function ContentSelector({ className, courses, selectedActivities, setSelectedActivities }: { className?: string, courses: CoursesWithModulesAndLessonsAndActivities, selectedActivities: string[], setSelectedActivities: React.Dispatch<React.SetStateAction<string[]>> }) {
     const handleCheckboxChange = (isChecked: boolean, type: string, id: string) => {
         let scopedActivities = [];
         if (type === 'course') {
-            scopedActivities = courses.find(course => course.id === id)?.modules.flatMap(module => module.lessons.flatMap(lesson => lesson.activities.map(activity => activity.id)) || []) || []
+            scopedActivities = courses.find(course => course.id === id)?.modules.flatMap(module => module.lessons.flatMap(lesson => lesson.activities.map(activity => activity.id)) || []) || [];
         } else if (type === 'module') {
-            scopedActivities = courses.flatMap(course => course.modules.find(module => module.id === id)?.lessons.flatMap(lesson => lesson.activities.map(activity => activity.id)) || []) || []
+            scopedActivities = courses.flatMap(course => course.modules.find(module => module.id === id)?.lessons.flatMap(lesson => lesson.activities.map(activity => activity.id)) || []) || [];
         } else if (type === 'lesson') {
-            scopedActivities = courses.flatMap(course => course.modules.flatMap(module => module.lessons.find(lesson => lesson.id === id)?.activities.map(activity => activity.id) || [])) || []
+            scopedActivities = courses.flatMap(course => course.modules.flatMap(module => module.lessons.find(lesson => lesson.id === id)?.activities.map(activity => activity.id) || [])) || [];
         } else {
-            scopedActivities = [id]
+            scopedActivities = [id];
         }
         if (isChecked) {
-            setSelectedActivities([...selectedActivities].concat(scopedActivities))
+            setSelectedActivities([...selectedActivities].concat(scopedActivities));
         } else {
-            setSelectedActivities(selectedActivities.filter(activityId => !scopedActivities.includes(activityId)))
+            setSelectedActivities(selectedActivities.filter(activityId => !scopedActivities.includes(activityId)));
         }
-    }
+    };
 
     return (
         <div className={cn("flex-1 overflow-y-auto", className)}>
@@ -247,5 +299,91 @@ function ContentSelector({ className, courses, selectedActivities, setSelectedAc
                 ))}
             </Accordion>
         </div>
-    )
+    );
+}
+
+const ClassSchema = z.object({
+    selectedClasses: z.array(z.string()).nonempty("Please select at least one class.")
+});
+
+function ClassSelector({ teacherClasses, onSubmit, isDrawer }: { teacherClasses: TeacherClasses, onSubmit: (selectedClasses: string[]) => void, isDrawer?: boolean }) {
+    const form = useForm({
+        resolver: zodResolver(ClassSchema),
+        defaultValues: {
+            selectedClasses: [] as string[]
+        },
+        mode: "onChange"
+    });
+
+    const handleSubmit = (data: { selectedClasses: string[] }) => {
+        onSubmit(data.selectedClasses);
+    };
+
+    const SubmitButton = () => {
+        const selectedClasses = form.watch("selectedClasses");
+        return (
+            <Button type="submit" disabled={!form.formState.isValid || form.formState.isSubmitting}>
+                {selectedClasses.length > 0 ? `Next (${selectedClasses.length} Selected)` : "Next"}
+            </Button>
+        );
+    };
+
+    return (
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+                <FormField
+                    control={form.control}
+                    name="selectedClasses"
+                    render={({ field }) => (
+                        <FormItem className={cn(isDrawer && "px-4")}>
+                            <div className="flex flex-col gap-4">
+                                {teacherClasses.map(teacherClass => (
+                                    <FormControl key={teacherClass.id}>
+                                        <div className="flex gap-2 items-center space-x-4">
+                                            <Checkbox
+                                                checked={field.value.includes(teacherClass.id)}
+                                                onCheckedChange={(checked) => {
+                                                    return checked
+                                                        ? field.onChange([...field.value, teacherClass.id])
+                                                        : field.onChange(
+                                                            field.value?.filter(
+                                                                (value) => value !== teacherClass.id
+                                                            )
+                                                        )
+                                                }}
+                                                id={teacherClass.id}
+                                            />
+                                            <FormLabel htmlFor={teacherClass.id} className="space-y-1">
+                                                <h4>{teacherClass.name}</h4>
+                                                <p className="text-muted-foreground text-sm">{teacherClass.classStudents.length} Student{teacherClass.classStudents.length !== 1 && "s"}</p>
+                                            </FormLabel>
+                                        </div>
+                                    </FormControl>
+                                ))}
+                            </div>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                {isDrawer ?
+                    (
+                        <DrawerFooter className="pt-2">
+                            <SubmitButton />
+                            <DrawerClose asChild>
+                                <Button
+                                    variant="outline"
+                                    disabled={!form.formState.isValid || form.formState.isSubmitting}
+                                >
+                                    Cancel
+                                </Button>
+                            </DrawerClose>
+                        </DrawerFooter>
+                    ) : (
+                        <DialogFooter>
+                            <SubmitButton />
+                        </DialogFooter>
+                    )}
+            </form>
+        </Form>
+    );
 }
