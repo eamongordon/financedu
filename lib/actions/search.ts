@@ -66,7 +66,8 @@ export async function getSearchResults(filters: { title?: string, categories: Ca
         columns: {
             id: true,
             title: true,
-            slug: true
+            slug: true,
+            type: true
         },
         with: {
             lesson: {
@@ -96,7 +97,7 @@ export async function getSearchResults(filters: { title?: string, categories: Ca
         ...courseResults.map(result => ({ ...result, category: 'Course', link: `/courses/${result.slug}` })),
         ...moduleResults.map(result => ({ ...result, category: 'Module', link: `/courses/${result.course.slug}/${result.slug}` })),
         ...lessonResults.map(result => ({ ...result, category: 'Lesson', link: `/courses/${result.module.course.slug}/${result.module.slug}/${result.slug}` })),
-        ...activityResults.map(result => ({ ...result, category: 'Activity', link: `/courses/${result.lesson.module.course.slug}/${result.lesson.module.slug}/${result.lesson.slug}/${result.slug}` }))
+        ...activityResults.map(result => ({ ...result, category: 'Activity', activityType: result.type, link: `/courses/${result.lesson.module.course.slug}/${result.lesson.module.slug}/${result.lesson.slug}/${result.slug}` }))
     ];
 
     const orderedResults = allResults.sort((a, b) => {

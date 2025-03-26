@@ -63,7 +63,7 @@ const Page = async (
                                         </div>
                                         <div>
                                             <p className='text-lg font-semibold'>{result.title}</p>
-                                            <p className='text-muted-foreground'>{result.category}</p>
+                                            <p className='text-muted-foreground'>{result.category === "Activity" ? result.activityType : result.category}</p>
                                         </div>
                                     </Link>
                                 ))}
