@@ -69,7 +69,7 @@ const Page = async (
                                 ))}
                             </div>
                         ) : (
-                            <div className="flex flex-col items-center justify-center h-full text-center gap-6">
+                            <div className="flex flex-col items-center justify-center h-full text-center gap-6 pt-4 md:pt-8">
                                 <div className="flex flex-col gap-1 items-center justify-center">
                                     <Search className='text-muted-foreground' size={36} />
                                     <p className="text-lg font-semibold">No results found.</p>

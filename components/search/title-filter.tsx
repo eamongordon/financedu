@@ -79,7 +79,7 @@ export function TitleFilter({ defaultTitle }: FormProps) {
                     )}
                 />
                 <Button type="submit" className="sm:grow-[0.2]">
-                    <Search strokeWidth={1.5} />
+                    <Search />
                     Search
                 </Button>
             </form>
