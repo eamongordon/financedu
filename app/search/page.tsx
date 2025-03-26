@@ -52,7 +52,7 @@ const Page = async (
                                                 <GraduationCap strokeWidth={1.5} />
                                             }
                                             {result.category === 'Module' &&
-                                                <DynamicIcon name={(result as ModuleResult).moduleIcon as keyof typeof dynamicIconImports} strokeWidth={1.5} />
+                                                <DynamicIcon name={(result as ModuleResult).icon as keyof typeof dynamicIconImports ?? "piggy-bank"} strokeWidth={1.5} />
                                             }
                                             {result.category === 'Lesson' &&
                                                 <BookOpen strokeWidth={1.5} />

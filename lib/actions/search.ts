@@ -13,7 +13,7 @@ type BaseResult = {
 };
 
 export type ModuleResult = BaseResult & {
-    moduleIcon: string;
+    icon: string;
 };
 
 export type ActivityResult = BaseResult & {
