@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "../ui/button";
+import { useEffect } from "react";
 
 const formSchema = z.object({
     title: z.string(),
@@ -41,6 +42,15 @@ export function TitleFilter({ defaultTitle, isModal, onSubmit }: FormProps) {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
+
+    useEffect(() => {
+        if (!defaultTitle) {
+            // clear the form when filters are reset
+            form.reset({
+                title: defaultTitle
+            });
+        }
+    }, [form, defaultTitle]);
 
     async function onFormSubmit(data: FormValues) {
         try {
