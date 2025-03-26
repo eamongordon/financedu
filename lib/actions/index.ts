@@ -4,3 +4,4 @@ export * from "./parents";
 export * from "./users";
 export * from "./payments";
 export * from "./blog";
+export * from "./search";

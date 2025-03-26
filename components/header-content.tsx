@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, buttonVariants } from './ui/button';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { Menu, Search, X } from 'lucide-react';
 import UserMenu from './user-menu';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
@@ -44,6 +44,9 @@ export default function HeaderComp({
         </Link>
         {/* Menu items and button */}
         <div className="flex-1 flex items-center justify-end">
+          <Link href="/search" className={cn(buttonVariants({ variant: "ghost" }), "[&_svg]:size-auto text-primary hover:text-chart-1 hidden lg:block")}>
+            <Search strokeWidth={1.5} />
+          </Link>
           <div className="hidden lg:flex space-x-4">
             <Link href="/courses" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Courses</Link>
             <Link href="/resources" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Resources</Link>
@@ -64,6 +67,9 @@ export default function HeaderComp({
         </div>
         {/* Mobile menu button */}
         <div className={cn("absolute inset-y-0 right-2 flex items-center md:flex lg:hidden", loggedIn ? 'md:right-16' : 'md:right-[264px]')}>
+          <Link href="/search" className={cn(buttonVariants({ variant: "ghost" }), "[&_svg]:size-auto")}>
+            <Search size={24} strokeWidth={1.5} />
+          </Link>
           <Button
             type="button"
             variant="ghost"
@@ -74,9 +80,9 @@ export default function HeaderComp({
           >
             <span className="sr-only">Open main menu</span>
             {/* Icon when menu is closed. */}
-            <Menu size={24} className={isMenuOpen ? 'hidden' : 'block'} />
+            <Menu strokeWidth={1.5} size={24} className={isMenuOpen ? 'hidden' : 'block'} />
             {/* Icon when menu is open. */}
-            <X size={24} className={isMenuOpen ? 'block' : 'hidden'} />
+            <X strokeWidth={1.5} size={24} className={isMenuOpen ? 'block' : 'hidden'} />
           </Button>
         </div>
       </div>
