@@ -3,13 +3,14 @@
 import React, { useEffect, useState } from 'react';
 import { Button, buttonVariants } from './ui/button';
 import Link from 'next/link';
-import { Menu, Search, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import UserMenu from './user-menu';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { Separator } from './ui/separator';
 import { type Roles } from '@/lib/db/schema';
 import { usePathname } from 'next/navigation';
+import { SearchModal } from './search/modal';
 
 export default function HeaderComp({
   userData
@@ -44,9 +45,7 @@ export default function HeaderComp({
         </Link>
         {/* Menu items and button */}
         <div className="flex-1 flex items-center justify-end">
-          <Link href="/search" className={cn(buttonVariants({ variant: "ghost" }), "[&_svg]:size-auto text-primary hover:text-chart-1 hidden lg:block")}>
-            <Search strokeWidth={1.5} />
-          </Link>
+          <SearchModal />
           <div className="hidden lg:flex space-x-4">
             <Link href="/courses" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Courses</Link>
             <Link href="/resources" className="text-foreground hover:text-primary px-3 py-2 font-semibold">Resources</Link>
@@ -67,9 +66,7 @@ export default function HeaderComp({
         </div>
         {/* Mobile menu button */}
         <div className={cn("absolute inset-y-0 right-2 flex items-center md:flex lg:hidden", loggedIn ? 'md:right-16' : 'md:right-[264px]')}>
-          <Link href="/search" className={cn(buttonVariants({ variant: "ghost" }), "[&_svg]:size-auto")}>
-            <Search size={24} strokeWidth={1.5} />
-          </Link>
+          <SearchModal isMobile />
           <Button
             type="button"
             variant="ghost"

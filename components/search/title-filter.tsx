@@ -25,9 +25,11 @@ export type FormValues = z.infer<typeof formSchema>
 
 interface FormProps {
     defaultTitle?: string;
+    isModal?: boolean;
+    onSubmit?: (data: FormValues) => void;
 }
 
-export function TitleFilter({ defaultTitle }: FormProps) {
+export function TitleFilter({ defaultTitle, isModal, onSubmit }: FormProps) {
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -40,20 +42,26 @@ export function TitleFilter({ defaultTitle }: FormProps) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    async function onSubmit(data: FormValues) {
+    async function onFormSubmit(data: FormValues) {
         try {
             form.reset(data);
-            const current = new URLSearchParams(Array.from(searchParams!.entries()));
-
-            if (data.title) {
-                current.set("q", data.title);
-            } else {
-                current.delete("q");
+            if (onSubmit) {
+                onSubmit(data);
             }
+            if (isModal) {
+                router.push(`/search?q=${data.title}`);
+            } else {
+                const current = new URLSearchParams(Array.from(searchParams!.entries()));
+                if (data.title) {
+                    current.set("q", data.title);
+                } else {
+                    current.delete("q");
+                }
 
-            const search = current.toString();
-            const queryParam = search ? `?${search}` : "";
-            router.push(`${pathname}${queryParam}`);
+                const search = current.toString();
+                const queryParam = search ? `?${search}` : "";
+                router.push(`${pathname}${queryParam}`);
+            }
         } catch (error) {
             console.error(error);
             toast.error("Something went wrong.");
@@ -62,7 +70,7 @@ export function TitleFilter({ defaultTitle }: FormProps) {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-row gap-2">
+            <form onSubmit={form.handleSubmit(onFormSubmit)} className="flex flex-row gap-2">
                 <FormField
                     control={form.control}
                     name="title"
