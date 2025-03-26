@@ -44,13 +44,13 @@ export function TitleFilter({ defaultTitle, isModal, onSubmit }: FormProps) {
     const searchParams = useSearchParams();
 
     useEffect(() => {
-        if (!defaultTitle) {
+        if (!defaultTitle && !isModal) {
             // clear the form when filters are reset
             form.reset({
                 title: defaultTitle
             });
         }
-    }, [form, defaultTitle]);
+    }, [form, defaultTitle, isModal]);
 
     async function onFormSubmit(data: FormValues) {
         try {
