@@ -4,6 +4,24 @@ import { db } from '../db';
 
 export type Category = 'Course' | 'Module' | 'Lesson' | 'Activity';
 
+type BaseResult = {
+    id: string;
+    title: string;
+    slug: string;
+    category: Category;
+    link: string;
+};
+
+export type ModuleResult = BaseResult & {
+    moduleIcon: string;
+};
+
+export type ActivityResult = BaseResult & {
+    activityType: string;
+};
+
+type Result = BaseResult | ModuleResult | ActivityResult;
+
 export async function getSearchResults(filters: { title?: string, categories: Category[] }) {
     const searchQuery = filters.title && `%${filters.title}%`;
 
@@ -12,8 +30,7 @@ export async function getSearchResults(filters: { title?: string, categories: Ca
         columns: {
             id: true,
             title: true,
-            slug: true,
-            image: true
+            slug: true
         },
         limit: 3
     }) : [];
@@ -105,17 +122,6 @@ export async function getSearchResults(filters: { title?: string, categories: Ca
         const bIndex = b.title.toLowerCase().indexOf(filters.title?.toLowerCase() || '');
         return aIndex - bIndex;
     });
-
-    type Result = {
-        id: string;
-        title: string;
-        slug: string;
-        category: Category;
-        image?: string;
-        icon?: string;
-        activityType?: string;
-        link: string;
-    }
 
     return orderedResults as Result[];
 }

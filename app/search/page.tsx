@@ -1,7 +1,7 @@
 import { CategoryFilter } from '@/components/search/category-filter';
 import { TitleFilter } from '@/components/search/title-filter';
 import { buttonVariants } from '@/components/ui/button';
-import { getSearchResults, type Category } from '@/lib/actions';
+import { getSearchResults, type ActivityResult, type ModuleResult, type Category } from '@/lib/actions';
 import { BookOpen, CircleHelp, FileText, GraduationCap, Search } from 'lucide-react';
 import { DynamicIcon, dynamicIconImports } from 'lucide-react/dynamic';
 import type { Metadata } from 'next'
@@ -52,18 +52,18 @@ const Page = async (
                                                 <GraduationCap strokeWidth={1.5} />
                                             }
                                             {result.category === 'Module' &&
-                                                <DynamicIcon name={result.icon as keyof typeof dynamicIconImports} strokeWidth={1.5} />
+                                                <DynamicIcon name={(result as ModuleResult).moduleIcon as keyof typeof dynamicIconImports} strokeWidth={1.5} />
                                             }
                                             {result.category === 'Lesson' &&
                                                 <BookOpen strokeWidth={1.5} />
                                             }
                                             {result.category === 'Activity' &&
-                                                (result.activityType === 'Quiz' ? <CircleHelp strokeWidth={1.5} /> : <FileText strokeWidth={1.5} />)
+                                                ((result as ActivityResult).activityType === 'Quiz' ? <CircleHelp strokeWidth={1.5} /> : <FileText strokeWidth={1.5} />)
                                             }
                                         </div>
                                         <div>
                                             <p className='text-lg font-semibold'>{result.title}</p>
-                                            <p className='text-muted-foreground'>{result.category === "Activity" ? result.activityType : result.category}</p>
+                                            <p className='text-muted-foreground'>{result.category === "Activity" ? (result as ActivityResult).activityType : result.category}</p>
                                         </div>
                                     </Link>
                                 ))}
