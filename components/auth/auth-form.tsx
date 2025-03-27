@@ -153,12 +153,12 @@ export default function AuthForm() {
       if (signInRes?.error) {
         setLoading(false);
       } else {
-        router.refresh();
         if (redirectUri) {
           router.push(decodeURIComponent(redirectUri));
         } else {
           router.push("/");
         }
+        router.refresh();
       }
     } catch (error) {
       console.log(error);
