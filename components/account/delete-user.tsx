@@ -2,12 +2,10 @@
 
 import { Button } from "../ui/button";
 import { deleteUser } from "@/lib/actions";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { signOut } from "next-auth/react";
 
 export function DeleteUserButton() {
-    const router = useRouter();
     const [loading, setLoading] = useState(false);
 
     async function handleSubmit() {
@@ -16,8 +14,7 @@ export function DeleteUserButton() {
         setLoading(true);
         await deleteUser();
         setLoading(false);
-        toast.success("Successfully deleted account.");
-        router.push("/");
+        signOut({ callbackUrl: "/" });
     }
 
     return (
