@@ -16,7 +16,7 @@ export default auth((req) => {
         }
     } else {
         // Redirect to login page if user not logged in and trying to access protected page
-        if (pathname !== '/login') {
+        if (pathname !== '/login' && pathname !== '/signup') {
             const redirectUrl = req.url.replace(pathname, `/login?redirect=${encodeURIComponent(req.url)}`);
             return Response.redirect(redirectUrl);
         }
