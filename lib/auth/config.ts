@@ -1,5 +1,6 @@
 import { NextAuthConfig } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import Facebook from "next-auth/providers/facebook"
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { JWT } from "next-auth/jwt"; //import is used in module declaration
@@ -45,7 +46,8 @@ export default {
                     image: profile.picture,
                 }
             }
-        })
+        }),
+        Facebook
     ],
     pages: {
         signIn: `/login`,
