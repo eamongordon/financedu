@@ -16,7 +16,8 @@ export default function HeaderComp({
   userData
 }: {
   userData?: {
-    name?: string | null,
+    firstName?: string | null,
+    lastName?: string | null,
     image?: string | null,
     email?: string | null
     roles?: Roles
@@ -55,7 +56,7 @@ export default function HeaderComp({
           </div>
           <div className='ml-6 self-center hidden md:flex'>
             {loggedIn ? (
-              <UserMenu name={userData.name!} email={userData.email!} roles={userData.roles} />
+              <UserMenu firstName={userData.firstName ?? undefined} lastName={userData.lastName ?? undefined} email={userData.email!} roles={userData.roles} />
             ) : (
               <div className='flex flex-row gap-2'>
                 <Link href="/login" className={cn(buttonVariants({ variant: "secondary" }), "w-28 text-base")}>Log In</Link>
@@ -96,7 +97,7 @@ export default function HeaderComp({
           <Separator />
           <div className='flex flex-col gap-2'>
             {loggedIn ? (
-              <UserMenu isMobile name={userData.name!} email={userData.email!} roles={userData.roles} />
+              <UserMenu isMobile firstName={userData.firstName ?? undefined} lastName={userData.lastName ?? undefined} email={userData.email!} roles={userData.roles} />
             ) : (
               <div className='flex flex-col md:flex-row gap-2'>
                 <Link href="/login" className={cn(buttonVariants({ variant: "secondary" }), "w-full")}>Log In</Link>

@@ -16,18 +16,21 @@ import Link from "next/link"
 import { signOut } from "next-auth/react"
 import { useTheme } from "next-themes"
 import { type Roles } from "@/lib/db/schema"
-import { cn, getInitials } from "@/lib/utils"
+import { cn, getDisplayName, getInitials } from "@/lib/utils"
 
 interface UserMenuProps {
   imageSrc?: string
-  name?: string
+  firstName?: string
+  lastName?: string
   email?: string
   isMobile?: boolean
   roles?: Roles
 }
 
-export default function UserMenu({ imageSrc, name, email, isMobile, roles }: UserMenuProps) {
-  const initials = name ? getInitials(name) : undefined;
+export default function UserMenu({ imageSrc, firstName, lastName, email, isMobile, roles }: UserMenuProps) {
+  const nameStr = getDisplayName(firstName, lastName, email);
+  const hasName = firstName || lastName;
+  const initials = hasName ? getInitials(nameStr) : undefined;
   const { theme, setTheme } = useTheme();
   return (
     <DropdownMenu>
@@ -35,7 +38,7 @@ export default function UserMenu({ imageSrc, name, email, isMobile, roles }: Use
         <Button variant="ghost" className="relative rounded-full justify-start p-0 hover:bg-inherit gap-5 h-auto">
           <Avatar className="size-10 md:size-8">
             {imageSrc ? (
-              <AvatarImage src={imageSrc} alt={name || "User avatar"} />
+              <AvatarImage src={imageSrc} alt={nameStr || "User avatar"} />
             ) : null}
             <AvatarFallback>
               {initials || <User className="h-4 w-4" />}
@@ -45,20 +48,16 @@ export default function UserMenu({ imageSrc, name, email, isMobile, roles }: Use
             <p className="text-sm leading-none text-muted-foreground font-semibold">
               Signed in as
             </p>
-            {name && (
-              <p className="text-base font-semibold leading-none">{name || "Guest User"}</p>
-            )}
+            <p className="text-base font-semibold leading-none">{nameStr}</p>
           </div>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align={isMobile ? "start" : "end"} forceMount>
         <DropdownMenuItem className="flex items-center">
           <div className="flex flex-col space-y-1">
-            {name && (
-              <p className="text-sm font-semibold leading-none">{name || "Guest User"}</p>
-            )}
-            {email && (
-              <p className={name ? `text-xs leading-none text-muted-foreground` : `text-sm font-medium leading-none`}>
+            <p className="text-sm font-semibold leading-none">{nameStr}</p>
+            {hasName && (
+              <p className="text-xs leading-none text-muted-foreground">
                 {email}
               </p>
             )}
