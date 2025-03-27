@@ -34,8 +34,6 @@ declare module "next-auth/jwt" {
 export default {
     providers: [
         GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID as string,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
             profile(profile) {
                 return {
                     id: profile.sub,
