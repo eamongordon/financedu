@@ -35,7 +35,7 @@ const Page = async (
                     <TitleFilter defaultTitle={query ?? ""} />
                 </section>
                 <div className='flex flex-col md:flex-row'>
-                    <section className='pt-2 md:pl-4 md:pr-12'>
+                    <section className='pt-2 pb-2 sm:pb-0 md:pl-4 md:pr-12'>
                         <CategoryFilter defaultCategories={categories ?? ["Course", "Module", "Lesson", "Activity"]} />
                     </section>
                     <section className='flex-1'>
