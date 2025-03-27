@@ -1,4 +1,3 @@
-import { CreateClass } from "@/components/account/create-class";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getStudentClasses } from "@/lib/actions";
@@ -17,7 +16,13 @@ export default async function StudentPage() {
                         Your current classes and assignments.
                     </p>
                 </div>
-                <CreateClass />
+                <Link
+                    className={buttonVariants()}
+                    href="/join"
+                >
+                    <Plus />
+                    Join Class
+                </Link>
             </div>
             <div>
                 {classes.length === 0 ? (
