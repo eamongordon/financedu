@@ -297,16 +297,23 @@ export async function getStudentClasses() {
     const studentClasses = await db.query.classes.findMany({
         where: (classes, { exists }) => exists(
             db.select()
-                .from(classTeachers)
+                .from(classStudents)
                 .where(and(
-                    eq(classTeachers.classId, classes.id),
-                    eq(classTeachers.teacherId, userId)
+                    eq(classStudents.classId, classes.id),
+                    eq(classStudents.studentId, userId)
                 ))
         ),
         with: {
             classTeachers: {
                 with: {
-                    teacher: true
+                    teacher: {
+                        columns: {
+                            id: true,
+                            firstName: true,
+                            lastName: true,
+                            email: true
+                        }
+                    }
                 },
             }
         }
