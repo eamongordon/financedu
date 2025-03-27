@@ -43,11 +43,11 @@ const Page = async (
                             <div className='divide-y'>
                                 {results.map((result) => (
                                     <Link
-                                        className='flex flex-row items-center gap-4 py-2'
+                                        className='flex flex-row items-center gap-4 sm:py-2'
                                         key={result.id}
                                         href={result.link}
                                     >
-                                        <div className='size-12 m-4 flex justify-center items-center border rounded-lg'>
+                                        <div className='size-10 sm:size-12 m-4 flex justify-center items-center border rounded-lg'>
                                             {result.category === 'Course' &&
                                                 <GraduationCap strokeWidth={1.5} />
                                             }
@@ -62,7 +62,7 @@ const Page = async (
                                             }
                                         </div>
                                         <div>
-                                            <p className='text-lg font-semibold'>{result.title}</p>
+                                            <p className='text-base sm:text-lg font-semibold'>{result.title}</p>
                                             <p className='text-muted-foreground'>{result.category === "Activity" ? (result as ActivityResult).activityType : result.category}</p>
                                         </div>
                                     </Link>
