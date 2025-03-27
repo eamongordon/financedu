@@ -47,7 +47,18 @@ export default {
                 }
             }
         }),
-        Facebook
+        Facebook({
+            profile(profile) {
+                return {
+                    id: profile.id,
+                    name: profile.name,
+                    firstName: profile.first_name,
+                    lastName: profile.last_name,
+                    email: profile.email,
+                    image: profile.picture.data.url,
+                }
+            }
+        })
     ],
     pages: {
         signIn: `/login`,
