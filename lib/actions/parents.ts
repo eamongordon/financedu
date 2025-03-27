@@ -5,6 +5,7 @@ import { userCompletion, parentChild, parentChildInvite } from "../db/schema";
 import { db } from "../db";
 import { auth } from "../auth";
 import { sendChildParentInviteEmail } from "./emails";
+import { getDisplayName } from "../utils";
 
 export async function createParentChildInvite(childEmail: string) {
     const session = await auth();
@@ -13,18 +14,7 @@ export async function createParentChildInvite(childEmail: string) {
     }
     const parentId = session.user.id;
 
-    const hasFirstName = !!session.user.firstName;
-    const hasLastName = !!session.user.lastName;
-    let nameStr = '';
-    if (hasFirstName) {
-        nameStr += session.user.firstName;
-    }
-    if (hasLastName) {
-        nameStr += ' ' + session.user.lastName;
-    }
-    if (!hasFirstName && !hasLastName) {
-        nameStr = session.user.email!;
-    }
+    const nameStr = getDisplayName(session.user.firstName, session.user.lastName, session.user.email!);
 
     const inviteObj = await db.insert(parentChildInvite).values({ parentId, childEmail }).onConflictDoUpdate({
         target: [parentChildInvite.parentId, parentChildInvite.childEmail],
