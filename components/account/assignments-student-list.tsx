@@ -1,6 +1,6 @@
 import { type getClassStudent } from "@/lib/actions";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
-import { FileText, CircleHelp } from "lucide-react";
+import { FileText, CircleHelp, CircleCheckBig } from "lucide-react";
 import { CompletionIcon } from "../ui/completion-icon";
 import { Button } from "../ui/button";
 import Link from "next/link";
@@ -81,10 +81,29 @@ export function AssignmentsStudentList({ assignments }: { assignments: Assignmen
                 </TabsTrigger>
             </TabsList>
             <TabsContent value="current" className="py-4">
-                <AssignmentsTable assignments={currentAssignments} />
+                {currentAssignments.length > 0 ? (
+                    <AssignmentsTable assignments={currentAssignments} />
+                ) : (
+                    <div className="flex flex-col items-center justify-center gap-3 my-6">
+                        <CircleCheckBig strokeWidth={1.5} />
+                        <p className="text-lg font-semibold">
+                            You&apos;re all set for now!
+                        </p>
+                        <p className="text-muted-foreground leading-none">Check back later for more assignments.</p>
+                    </div>
+                )}
             </TabsContent>
             <TabsContent value="past" className="py-4">
-                <AssignmentsTable assignments={pastAssignments} />
+                {pastAssignments.length > 0 ? (
+                    <AssignmentsTable assignments={pastAssignments} />
+                ) : (
+                    <div className="flex flex-col items-center justify-center gap-3 my-6">
+                        <p className="text-lg font-semibold">
+                            No assignments found.
+                        </p>
+                        <p className="text-muted-foreground leading-none">They will appear here once you&apos;ve completed them.</p>
+                    </div>
+                )}
             </TabsContent>
         </Tabs>
     )
