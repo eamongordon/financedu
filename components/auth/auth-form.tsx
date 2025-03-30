@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { type Key, Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import { SessionProvider, signIn } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -61,12 +61,11 @@ const FormHeader = ({ title, description }: { title: string, description?: strin
   </>
 );
 
-export default function AuthForm() {
-  const pathname = usePathname();
+export default function AuthForm({ page }: { page: "login" | "signup" }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUri = searchParams!.get('redirect');
-  const [selected, setSelected] = useState<Key>(pathname!);
+  const [forgotPassword, showForgotPassword] = useState(false);
   const [sentForgotPasswordEmail, setSentForgotPasswordEmail] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -173,8 +172,8 @@ export default function AuthForm() {
     <div>
       <div className="sm:mx-auto w-full rounded-xl">
         <div aria-label="Shift between Login and Signup forms">
-          {selected === "/login" && (
-            <div key="/login" title="Log In">
+          {(page === "login" && !forgotPassword) && (
+            <div title="Log In">
               <>
                 <FormHeader title="Welcome Back" />
                 <SessionProvider>
@@ -204,7 +203,7 @@ export default function AuthForm() {
                           </FormItem>
                         )}
                       />
-                      <button type="button" className="hover:opacity-80 transition-opacity tap-highlight-transparent relative inline-flex items-center font-semibold text-sm" onClick={() => setSelected("/forgot-password")}>
+                      <button type="button" className="hover:opacity-80 transition-opacity tap-highlight-transparent relative inline-flex items-center font-semibold text-sm" onClick={() => showForgotPassword(true)}>
                         Forgot Password?
                       </button>
                       <Button isLoading={loading} type="submit">
@@ -216,7 +215,7 @@ export default function AuthForm() {
                 <p className="text-center text-sm pt-8 pb-8 px-16">
                   Don&apos;t have an account?{" "}
                   <Link href={`/signup?${currentParams.toString()}`}>
-                    <button className="hover:opacity-80 transition-opacity tap-highlight-transparent font-semibold text-sm" onClick={() => setSelected("/signup")}>
+                    <button className="hover:opacity-80 transition-opacity tap-highlight-transparent font-semibold text-sm">
                       Sign Up
                     </button>
                   </Link>
@@ -231,8 +230,8 @@ export default function AuthForm() {
               </>
             </div>
           )}
-          {selected === "/forgot-password" && (
-            <div key="/forgot-password" title="Forgot Password">
+          {forgotPassword && (
+            <div title="Forgot Password">
               <FormHeader title="Reset Password" description="Send a login link to your account's email." />
               <SessionProvider>
                 <Form {...resetPasswordForm}>
@@ -256,14 +255,14 @@ export default function AuthForm() {
                 </Form>
               </SessionProvider>
               <p className="text-center text-sm pt-8 pb-8 px-16">
-                <button className="hover:opacity-80 transition-opacity tap-highlight-transparent font-semibold text-sm" onClick={() => setSelected("/login")}>
+                <button className="hover:opacity-80 transition-opacity tap-highlight-transparent font-semibold text-sm">
                   Back to Login
                 </button>
               </p>
             </div>
           )}
-          {selected === "/signup" && (
-            <div key="/signup" title="Sign Up">
+          {(page === "signup" && !forgotPassword) && (
+            <div title="Sign Up">
               <FormHeader title="Get Started" description="Access all we have to offer for free!" />
               <SessionProvider>
                 <Form {...signupForm}>
@@ -396,7 +395,7 @@ export default function AuthForm() {
               <p className="text-center text-sm pt-8 pb-8 px-16">
                 Already have an account?{" "}
                 <Link href={`/login?${currentParams.toString()}`}>
-                  <button className="hover:opacity-80 transition-opacity tap-highlight-transparent font-semibold text-sm" onClick={() => setSelected("/login")}>
+                  <button className="hover:opacity-80 transition-opacity tap-highlight-transparent font-semibold text-sm">
                     Log In
                   </button>
                 </Link>
