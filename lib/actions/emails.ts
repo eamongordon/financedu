@@ -9,8 +9,10 @@ const transport = createTransport({
     }
 })
 
+const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+
 export async function sendChildParentInviteEmail({ childEmail, parentName, inviteId }: { childEmail: string, parentName: string, inviteId: string }) {
-    const url = `https://financedu.vercel.app/parentinvite/${inviteId}`;
+    const url = `${baseUrl}/parentinvite/${inviteId}`;
     const result = await transport.sendMail({
         to: childEmail,
         from: process.env.EMAIL_FROM,
@@ -79,7 +81,7 @@ const parentChildEmailHtml = (url: string, parentName: string): string => {
 };
 
 export async function sendClassTeacherInviteEmail({ teacherEmail, className, inviteId }: { teacherEmail: string, className: string, inviteId: string }) {
-    const url = `https://financedu.vercel.app/teacherinvite/${inviteId}`;
+    const url = `${baseUrl}/teacherinvite/${inviteId}`;
     const result = await transport.sendMail({
         to: teacherEmail,
         from: process.env.EMAIL_FROM,
