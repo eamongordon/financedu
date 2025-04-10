@@ -1,9 +1,14 @@
+import type { Metadata } from 'next';
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getStudentClasses } from "@/lib/actions";
 import { getDisplayName } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+    title: 'My Classes'
+}
 
 export default async function StudentPage() {
     const classes = await getStudentClasses();

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { type ProfileFormValues } from "@/components/account/profile-form";
 import { type RolesFormValues } from "@/components/account/roles-settings-form";
 import { type LoginFormValues } from "@/components/account/login-settings-form";
@@ -5,6 +6,10 @@ import { auth } from "@/lib/auth";
 import { Roles } from "@/lib/db/schema";
 import SettingsTabs from "@/components/account/settings-tabs";
 import { Separator } from "@/components/ui/separator";
+
+export const metadata: Metadata = {
+    title: 'Account Settings'
+}
 
 export default async function SettingsPage() {
     const session = await auth();

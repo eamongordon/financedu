@@ -1,6 +1,11 @@
+import type { Metadata } from 'next';
 import { getParentChildren } from "@/lib/actions";
 import { InviteChild } from "@/components/account/invite-child";
 import { ChildList } from "@/components/account/child-list";
+
+export const metadata: Metadata = {
+    title: 'My Children'
+}
 
 export default async function Parent() {
     const children = await getParentChildren();

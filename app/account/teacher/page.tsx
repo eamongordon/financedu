@@ -1,7 +1,12 @@
+import type { Metadata } from 'next';
 import { CreateClass } from "@/components/account/create-class";
 import { Card } from "@/components/ui/card";
 import { getTeacherClasses } from "@/lib/actions";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+    title: 'My Classes'
+}
 
 export default async function TeacherPage() {
     const classes = await getTeacherClasses();

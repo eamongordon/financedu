@@ -1,9 +1,14 @@
+import type { Metadata } from 'next';
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getUserCoursesWithProgressAndNextActivity } from "@/lib/actions"
 import { cn } from "@/lib/utils";
 import { FileText, CircleHelp } from "lucide-react";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+    title: 'Dashboard'
+}
 
 export default async function MainPage() {
     const currentCourses = await getUserCoursesWithProgressAndNextActivity()

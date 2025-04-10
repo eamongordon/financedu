@@ -1,5 +1,10 @@
+import type { Metadata } from 'next';
 import { UserProgress } from "@/components/account/learner-progress";
 import { getCompletedActivities } from "@/lib/actions";
+
+export const metadata: Metadata = {
+    title: 'My Progress'
+}
 
 export default async function ProgressPage() {
     const completedActivities = await getCompletedActivities();

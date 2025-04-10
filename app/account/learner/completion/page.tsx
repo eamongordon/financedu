@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import { getUserCompletion } from "@/lib/actions";
 import { LearnerCompletion } from "@/components/account/learner-completion";
+
+export const metadata: Metadata = {
+    title: 'Course Completion'
+}
 
 export default async function CompletionPage() {
     const courses = await getUserCompletion();
