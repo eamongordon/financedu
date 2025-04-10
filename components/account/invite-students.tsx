@@ -89,7 +89,9 @@ export function InviteStudents({ classCode, isNoStudents }: { classCode: string;
 
 function InviteBody({ classCode, className }: { classCode: string; className?: string }) {
     const baseUrl = process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL;
+    const baseUrlDisplay = baseUrl?.replace(/^www\./, "");
     const inviteLink = `${baseUrl}/join/${classCode}`;
+    const inviteLinkDisplay = `${baseUrlDisplay}/join/${classCode}`;
     const [copied, setCopied] = React.useState(false);
 
     const copyToClipboard = async () => {
@@ -109,7 +111,7 @@ function InviteBody({ classCode, className }: { classCode: string; className?: s
                 <div className="flex items-center space-x-2">
                     <Input
                         type="text"
-                        value={inviteLink}
+                        value={inviteLinkDisplay}
                         disabled
                     />
                     <Button onClick={copyToClipboard}>{copied ? "Copy Again" : "Copy Link"}</Button>
@@ -121,7 +123,7 @@ function InviteBody({ classCode, className }: { classCode: string; className?: s
                 <div className="flex-grow border-t border-muted"></div>
             </div>
             <p className="text-muted-foreground">
-                Have your students visit <Link href={inviteLink} target="_blank" className="text-secondary font-semibold">{inviteLink}</Link> and enter your class code: <span className="font-semibold text-foreground">{classCode}</span>.
+                Have your students visit <Link href={inviteLink} target="_blank" className="text-secondary font-semibold">{inviteLinkDisplay}</Link> and enter your class code: <span className="font-semibold text-foreground">{classCode}</span>.
             </p>
         </div>
     );
