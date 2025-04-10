@@ -90,8 +90,8 @@ export function InviteStudents({ classCode, isNoStudents }: { classCode: string;
 function InviteBody({ classCode, className }: { classCode: string; className?: string }) {
     const baseUrl = process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL;
     const baseUrlDisplay = baseUrl?.replace(/^www\./, "");
-    const inviteLink = `${baseUrl}/join/${classCode}`;
-    const inviteLinkDisplay = `${baseUrlDisplay}/join/${classCode}`;
+    const inviteLink = `${baseUrl}/join?code=${classCode}`;
+    const inviteLinkDisplay = `${baseUrlDisplay}/join?code=${classCode}`;
     const [copied, setCopied] = React.useState(false);
 
     const copyToClipboard = async () => {
