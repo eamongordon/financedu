@@ -1,7 +1,13 @@
+import type { Metadata } from 'next';
 import { getPosts } from "@/lib/actions";
 import Link from "next/link";
 import Image from "next/image";
 import { toPostDateString } from "@/lib/utils";
+
+export const metadata: Metadata = {
+    title: 'Blog',
+    description: 'Keep up with the latest news and updates from Financedu.',
+}
 
 export default async function PostsPage() {
     const posts = await getPosts();

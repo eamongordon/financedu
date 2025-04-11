@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import Banner from "@/components/banner";
 import { CloudsDarkClass, CloudsLightClass } from "@/components/illustrations/clouds";
 import { DividerWedge } from "@/components/illustrations/divider-wedge";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+    title: 'About',
+    description: 'We are Financedu, a 501(3)(c) non-profit dedicated to providing free financial education for youth of all ages. Learn more about us and our mission.'
+}
 
 export default function EducatorPage() {
     return (
