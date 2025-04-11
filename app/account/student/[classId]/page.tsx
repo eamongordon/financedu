@@ -1,12 +1,25 @@
+import type { Metadata } from "next";
 import { AssignmentsStudentList } from "@/components/account/assignments-student-list";
 import { LeaveClassButton } from "@/components/account/leave-class";
 import { getClassStudent } from "@/lib/actions";
 
+type Props = {
+    params: Promise<{ classId: string }>
+}
+
+export async function generateMetadata(
+    { params }: Props
+): Promise<Metadata> {
+    const { classId } = await params
+    const classItem = await getClassStudent(classId);
+    return {
+        title: classItem.name
+    }
+}
+
 export default async function Page({
     params,
-}: {
-    params: Promise<{ classId: string }>
-}) {
+}: Props) {
     const childId = (await params).classId;
     const classItem = await getClassStudent(childId);
     return (

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { TabsNav } from "@/components/account/tabs-nav";
 import { getParentChildApproved } from "@/lib/actions";
 import { auth } from "@/lib/auth";
@@ -10,6 +11,17 @@ function formatDate(date: Date) {
         year: "numeric"
     };
     return new Intl.DateTimeFormat('en-US', options).format(date);
+}
+
+export async function generateMetadata(
+    { params }: { params: Promise<{ childId: string }> }
+): Promise<Metadata> {
+    const { childId } = await params;
+    const childParentObj = await getParentChildApproved(childId);
+    const nameStr = getDisplayName(childParentObj.child.firstName, childParentObj.child.lastName, childParentObj.child.email!);
+    return {
+        title: nameStr
+    }
 }
 
 export default async function LessonLayout({
@@ -29,7 +41,7 @@ export default async function LessonLayout({
         {
             name: "Progress",
             href: `/account/parent/${childId}`,
-        }, 
+        },
         {
             name: "Completion",
             href: `/account/parent/${childId}/completion`,

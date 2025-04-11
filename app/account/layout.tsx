@@ -1,13 +1,7 @@
-import { Metadata } from "next"
 import { SidebarNav } from "@/components/account/sidebar-nav"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar" // Import Avatar component
 import { auth } from "@/lib/auth"
 import { getDisplayName, getInitials } from "@/lib/utils"
-
-export const metadata: Metadata = {
-  title: "Forms",
-  description: "Advanced form example using react-hook-form and Zod.",
-}
 
 const defaultNavItemsTop = [
   {

@@ -1,6 +1,17 @@
+import type { Metadata } from "next";
 import { TabsNav } from "@/components/account/tabs-nav";
 import { getClassTeacher } from "@/lib/actions";
 import { auth } from "@/lib/auth";
+
+export async function generateMetadata(
+    { params }: { params: Promise<{ classId: string }> }
+): Promise<Metadata> {
+    const { classId } = await params
+    const classItem = await getClassTeacher(classId);
+    return {
+        title: classItem.name
+    }
+}
 
 export default async function ClassLayout({
     children,
@@ -19,7 +30,7 @@ export default async function ClassLayout({
         {
             name: "Assignments",
             href: `/account/teacher/${classId}`,
-        }, 
+        },
         {
             name: "Gradebook",
             href: `/account/teacher/${classId}/gradebook`,
@@ -36,7 +47,7 @@ export default async function ClassLayout({
             <div className="space-y-0.5 border-b pb-6">
                 <h2 className="text-2xl font-bold tracking-tight">{classItem.name}</h2>
                 <p className="text-muted-foreground">
-                   {classItem.classStudents.length} Student{classItem.classStudents.length !== 1 && "s"}
+                    {classItem.classStudents.length} Student{classItem.classStudents.length !== 1 && "s"}
                 </p>
             </div>
             <TabsNav navItems={navItems} />
