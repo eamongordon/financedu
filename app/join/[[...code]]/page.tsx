@@ -3,27 +3,30 @@ import { auth } from "@/lib/auth";
 import { ClassJoinConfirm } from "@/components/account/class-join-confirm";
 import { ClassCodeForm } from "@/components/account/class-code-form";
 import { getClassFromClassCode } from "@/lib/actions";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export const metadata: Metadata = {
     title: 'Join Class',
-    description: 'Join your class and complete assignments on Financedu, a free online financial education platform.'
 }
 
 export default async function Page({
-    searchParams,
+    params,
 }: {
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+    params: Promise<{ code: string[] | undefined }>
 }) {
-    const joinCode = (await searchParams)?.code as string | undefined;
+    const joinCode = (await params).code;
     const session = await auth();
     const isLoggedIn = session && session.user && session.user.id;
     
     if (!isLoggedIn) {
-       return redirect(`/login?redirect=${encodeURIComponent(`/join?code=${joinCode}`)}`);
+       return redirect(`/login?redirect=${encodeURIComponent(`/join/${joinCode}`)}`);
+    }
+    
+    if (joinCode && joinCode.length > 1) {
+        return notFound();
     }
 
-    const classItem = joinCode ? await getClassFromClassCode(joinCode) : undefined;
+    const classItem = joinCode && joinCode.length > 0 ? await getClassFromClassCode(joinCode[0]) : undefined;
 
     return (
         <main className="min-h-[calc(50dvh)] flex flex-col justify-center items-center gap-4">

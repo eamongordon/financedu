@@ -18,7 +18,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner"
 
@@ -39,8 +39,6 @@ export function ClassCodeForm({ isInvalidCode, rerenderKey }: { isInvalidCode?: 
   })
 
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -56,14 +54,7 @@ export function ClassCodeForm({ isInvalidCode, rerenderKey }: { isInvalidCode?: 
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     setLoading(true);
-    const current = new URLSearchParams(Array.from(searchParams!.entries())); // -> has to use this form
-    if (current.has("code")) {
-      current.delete("code");
-    }
-    current.set("code", data.code);
-    const search = current.toString();
-    const queryParam = search ? `?${search}` : "";
-    router.push(`${pathname}${queryParam}`);
+    router.push(`/join/${data.code}`);
   }
 
   return (
