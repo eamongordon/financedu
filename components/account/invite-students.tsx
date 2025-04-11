@@ -123,7 +123,7 @@ function InviteBody({ classCode, className }: { classCode: string; className?: s
                 <div className="flex-grow border-t border-muted"></div>
             </div>
             <p className="text-muted-foreground">
-                Have your students visit <Link href="/join" target="_blank" className="text-secondary font-semibold">{baseUrl + "/join"}</Link> and enter your class code: <span className="font-semibold text-foreground">{classCode}</span>.
+                Have your students visit <Link href="/join" target="_blank" className="text-secondary font-semibold">{baseUrlDisplay + "/join"}</Link> and enter your class code: <span className="font-semibold text-foreground">{classCode}</span>.
             </p>
         </div>
     );
