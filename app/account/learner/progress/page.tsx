@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { UserProgress } from "@/components/account/learner-progress";
-import { getCompletedActivities } from "@/lib/actions";
+import { getCompletedActivities } from "@/lib/fetchers";
 
 export const metadata: Metadata = {
     title: 'My Progress'

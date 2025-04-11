@@ -26,7 +26,7 @@ import {
 import { CircleHelp, FileText, Plus, Clipboard } from "lucide-react";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
-import { type getCoursesWithModulesAndLessonsAndActivities } from "@/lib/actions";
+import { type getCoursesWithModulesAndLessonsAndActivities } from "@/lib/fetchers";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { createAssignments } from "@/lib/actions";

@@ -1,4 +1,4 @@
-import { getCourseWithModulesAndLessons, getCourseWithModulesAndLessonsAndUserCompletion } from "@/lib/actions"
+import { getCourseWithModulesAndLessons, getCourseWithModulesAndLessonsAndUserCompletion } from "@/lib/fetchers"
 import { ModuleNav } from "@/components/course/module-nav"
 import { CourseHeader } from "@/components/course/course-header";
 import { auth } from "@/lib/auth";

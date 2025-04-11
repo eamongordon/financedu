@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { getActivity, getActivityDisplayBySlug, getNextActivity, markActivityComplete } from "@/lib/actions";
+import { getActivity, getActivityDisplayBySlug, getNextActivity } from "@/lib/fetchers";
+import { markActivityComplete } from "@/lib/actions"
 import QuizComponent from "@/components/course/quiz-component";
 import { CircleHelp, FileText } from "lucide-react";
 import Link from "next/link";

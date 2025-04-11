@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getUserCompletion } from "@/lib/actions";
+import { getUserCompletion } from "@/lib/fetchers";
 import { LearnerCompletion } from "@/components/account/learner-completion";
 
 export const metadata: Metadata = {

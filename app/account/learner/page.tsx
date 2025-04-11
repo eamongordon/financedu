@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { getUserCoursesWithProgressAndNextActivity } from "@/lib/actions"
+import { getUserCoursesWithProgressAndNextActivity } from "@/lib/fetchers"
 import { cn } from "@/lib/utils";
 import { FileText, CircleHelp } from "lucide-react";
 import Link from "next/link";

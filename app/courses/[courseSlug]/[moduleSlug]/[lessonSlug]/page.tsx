@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { buttonVariants } from "@/components/ui/button";
-import { getLessonDisplayBySlug, getLessonWithActivities, getLessonWithActivitiesAndUserProgress } from "@/lib/actions";
+import { getLessonWithActivitiesAndUserProgress, getLessonDisplayBySlug, getLessonWithActivities } from "@/lib/fetchers";
 import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import Link from "next/link"

@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CompletionIcon } from "@/components/ui/completion-icon";
-import { getCourseDisplayBySlug, getCourseWithModulesAndLessons, getCourseWithModulesAndLessonsAndUserCompletion } from "@/lib/actions"
+import { getCourseDisplayBySlug, getCourseWithModulesAndLessons, getCourseWithModulesAndLessonsAndUserCompletion } from "@/lib/fetchers"
 import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { GraduationCap } from "lucide-react";

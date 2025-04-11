@@ -1,4 +1,4 @@
-import { getLessonWithActivities, getLessonWithActivitiesAndUserProgress, getNextLesson, getPreviousLesson } from "@/lib/actions"
+import { getLessonWithActivities, getLessonWithActivitiesAndUserProgress, getNextLesson, getPreviousLesson } from "@/lib/fetchers"
 import { auth } from "@/lib/auth";
 import { LessonSidebar } from "@/components/course/lesson-sidebar";
 import { notFound } from "next/navigation";
