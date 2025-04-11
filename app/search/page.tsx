@@ -1,7 +1,7 @@
 import { CategoryFilter } from '@/components/search/category-filter';
 import { TitleFilter } from '@/components/search/title-filter';
 import { buttonVariants } from '@/components/ui/button';
-import { getSearchResults, type ActivityResult, type ModuleResult, type Category } from '@/lib/actions';
+import { getSearchResults, type ActivityResult, type ModuleResult, type Category } from '@/lib/fetchers';
 import { BookOpen, CircleHelp, FileText, GraduationCap, Search } from 'lucide-react';
 import { DynamicIcon, dynamicIconImports } from 'lucide-react/dynamic';
 import type { Metadata } from 'next'

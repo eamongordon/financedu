@@ -1,4 +1,4 @@
-import { getPost } from '@/lib/actions';
+import { getPost } from '@/lib/fetchers';
 import type { Metadata, ResolvingMetadata } from 'next'
 import { notFound } from 'next/navigation';
 import Image from 'next/image';

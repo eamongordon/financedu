@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getPosts } from "@/lib/actions";
+import { getPosts } from "@/lib/fetchers";
 import Link from "next/link";
 import Image from "next/image";
 import { toPostDateString } from "@/lib/utils";
