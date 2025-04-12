@@ -1,6 +1,6 @@
 import Banner from "@/components/banner";
 import { buttonVariants } from "@/components/ui/button";
-import { getGlossary } from "@/lib/actions/courses";
+import { getGlossary } from "@/lib/fetchers";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 

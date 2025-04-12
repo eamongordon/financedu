@@ -1,4 +1,4 @@
-import { getActivity, getNextActivity } from "@/lib/actions";
+import { getActivity, getNextActivity } from "@/lib/fetchers";
 
 export type Activity = NonNullable<Awaited<ReturnType<typeof getActivity>>>;
 export type Question = Activity["activityToQuestions"][0]["question"];

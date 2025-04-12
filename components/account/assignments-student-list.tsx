@@ -1,4 +1,4 @@
-import { type getClassStudent } from "@/lib/actions";
+import { type getClassStudent } from "@/lib/fetchers";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { FileText, CircleHelp, CircleCheckBig } from "lucide-react";
 import { CompletionIcon } from "../ui/completion-icon";

@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Button, buttonVariants } from "./ui/button";
 import Link from "next/link";
-import { acceptClassTeacherInvite, deleteClassTeacherInvite, getClassTeacherInvite } from "@/lib/actions/classes";
+import { acceptClassTeacherInvite, deleteClassTeacherInvite } from "@/lib/actions";
+import { getClassTeacherInvite } from "@/lib/fetchers";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 

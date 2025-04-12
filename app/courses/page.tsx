@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { listCourses } from "@/lib/actions";
+import { listCourses } from "@/lib/fetchers";
 import Banner from "@/components/banner";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import Image from "next/image";

@@ -32,7 +32,7 @@ import { useRouter } from "next/navigation";
 import { createAssignments } from "@/lib/actions";
 import { toast } from "sonner";
 import { DueDateSetter, type DueDateSetterData } from "@/components/account/duedate-setter";
-import { getTeacherClasses } from "@/lib/actions";
+import { getTeacherClasses } from "@/lib/fetchers";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";

@@ -1,7 +1,8 @@
 "use client";
 
 import { Button } from "../ui/button"
-import { getClassFromClassCode, joinClass } from "@/lib/actions";
+import { getClassFromClassCode } from "@/lib/fetchers"
+import { joinClass } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useState } from "react";

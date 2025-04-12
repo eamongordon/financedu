@@ -1,6 +1,6 @@
 "use client"
 
-import { getLessonWithActivities, getLessonWithActivitiesAndUserProgress } from "@/lib/actions";
+import { getLessonWithActivities, getLessonWithActivitiesAndUserProgress, getNextLesson, getPreviousLesson } from "@/lib/fetchers";
 import { cn } from "@/lib/utils";
 import { Menu, GraduationCap, ChevronLeft, ChevronRight, FileText, CircleHelp } from "lucide-react";
 import Link from "next/link";
@@ -8,7 +8,6 @@ import { DynamicIcon, dynamicIconImports } from "lucide-react/dynamic";
 import { Button, buttonVariants } from "../ui/button";
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle } from "../ui/drawer";
 import { useParams } from "next/navigation";
-import { getNextLesson, getPreviousLesson } from "@/lib/actions";
 import { useEffect, useState } from "react";
 import { usePathname } from 'next/navigation'
 import { CompletionIcon } from "../ui/completion-icon";

@@ -1,6 +1,6 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { buttonVariants } from "@/components/ui/button";
-import { getGlossaryTerm } from "@/lib/actions/courses";
+import { getGlossaryTerm } from "@/lib/fetchers";
 import { cn } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";

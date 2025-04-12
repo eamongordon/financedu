@@ -1,7 +1,7 @@
 import Banner from '@/components/banner';
 import { StandardsFilters } from '@/components/standards/filters';
 import { buttonVariants } from '@/components/ui/button';
-import { getActivityDisplay, getLessonDisplay, getStandards } from '@/lib/actions';
+import { getActivityDisplay, getLessonDisplay, getStandards } from '@/lib/fetchers';
 import { BookOpen } from 'lucide-react';
 import type { Metadata } from 'next'
 import Link from 'next/link';

@@ -1,6 +1,6 @@
 "use client";
 
-import { getCourseWithModulesAndLessons } from "@/lib/actions";
+import { getCourseWithModulesAndLessons } from "@/lib/fetchers";
 import Link from "next/link";
 import Image from "next/image";
 import { buttonVariants } from "../ui/button";

@@ -21,7 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Checkbox } from "../ui/checkbox";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Label } from "../ui/label";
-import { getActivityDisplay, getLessonDisplay } from "@/lib/actions";
+import { getActivityDisplay, getLessonDisplay } from "@/lib/fetchers";
 
 const states = [
     "National",

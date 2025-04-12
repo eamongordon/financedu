@@ -1,6 +1,7 @@
 "use client";
 
-import { deleteClassTeacherInvite, getClassTeacherWithRoster, resendClassTeacherInvite } from "@/lib/actions";
+import { deleteClassTeacherInvite, resendClassTeacherInvite } from "@/lib/actions";
+import { getClassTeacherWithRoster } from "@/lib/fetchers"
 import { Card } from "../ui/card";
 import { User } from "lucide-react";
 import { Button } from "../ui/button";
