@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { auth } from "@/lib/auth";
-import { getParentChildInvite } from "@/lib/actions";
+import { getParentChildInvite } from "@/lib/fetchers";
 import { ParentInvite } from "@/components/parentinvite";
 import { redirect } from "next/navigation";
 

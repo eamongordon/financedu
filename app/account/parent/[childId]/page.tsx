@@ -1,5 +1,5 @@
 import { UserProgress } from "@/components/account/learner-progress";
-import { getChildCompletedActivities } from "@/lib/actions";
+import { getChildCompletedActivities } from "@/lib/fetchers";
 
 export default async function Page({
     params,

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { TabsNav } from "@/components/account/tabs-nav";
-import { getParentChildApproved } from "@/lib/actions";
+import { getParentChildApproved } from "@/lib/fetchers";
 import { auth } from "@/lib/auth";
 import { getDisplayName } from "@/lib/utils";
 

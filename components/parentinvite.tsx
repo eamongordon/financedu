@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Button, buttonVariants } from "./ui/button";
-import { type getParentChildInvite, acceptParentChildInvite, rejectParentChildInvite } from "@/lib/actions";
+import type { getParentChildInvite } from "@/lib/fetchers";
+import { acceptParentChildInvite, rejectParentChildInvite } from "@/lib/actions";
 import Link from "next/link";
 import { getDisplayName } from "@/lib/utils";
 

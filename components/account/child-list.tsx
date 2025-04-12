@@ -1,6 +1,7 @@
 "use client";
 
-import { getParentChildren, deleteParentChildRelationship, resendParentChildInvite, deleteParentChildInvite } from "@/lib/actions";
+import { getParentChildren } from "@/lib/fetchers"
+import { deleteParentChildRelationship, resendParentChildInvite, deleteParentChildInvite } from "@/lib/actions";
 import { Card } from "../ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { MoreVertical, User } from "lucide-react";

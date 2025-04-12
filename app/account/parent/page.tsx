@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getParentChildren } from "@/lib/actions";
+import { getParentChildren } from "@/lib/fetchers";
 import { InviteChild } from "@/components/account/invite-child";
 import { ChildList } from "@/components/account/child-list";
 

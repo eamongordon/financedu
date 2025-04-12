@@ -1,4 +1,4 @@
-import { getChildCompletion } from "@/lib/actions";
+import { getChildCompletion } from "@/lib/fetchers";
 import { LearnerCompletion } from "@/components/account/learner-completion";
 
 export default async function Page({
