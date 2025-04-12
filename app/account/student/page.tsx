@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { getStudentClasses } from "@/lib/actions";
+import { getStudentClasses } from "@/lib/fetchers";
 import { getDisplayName } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import Link from "next/link";

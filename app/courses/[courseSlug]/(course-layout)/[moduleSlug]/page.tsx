@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { getModuleDisplayBySlug, getModuleWithLessonsAndActivities, getModuleWithLessonsAndActivitiesAndUserCompletion } from "@/lib/fetchers";
+import { getModuleDisplayBySlug, getModuleWithLessonsAndActivities, getModuleWithLessonsAndActivitiesAndUserCompletion, getTeacherClasses } from "@/lib/fetchers";
 import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -39,6 +39,7 @@ export default async function CourseLayout({
     if (!moduleObj) return notFound();
 
     const isTeacher = session?.user?.roles?.includes("teacher");
+    const classes = isTeacher ? await getTeacherClasses() : undefined;
 
     return (
         <main className="pb-4 sm:py-4 w-full">
@@ -84,7 +85,7 @@ export default async function CourseLayout({
                                     Standards
                                 </Link>
                                 {isTeacher && (
-                                    <CreateAssignments type="lesson" defaultSelectedActivities={lesson.activities.map((activity) => activity.id)} />
+                                    <CreateAssignments type="lesson" defaultSelectedActivities={lesson.activities.map((activity) => activity.id)} classes={classes!} />
                                 )}
                             </div>
                         </CardContent>

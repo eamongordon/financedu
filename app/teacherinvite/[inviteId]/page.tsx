@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { auth } from "@/lib/auth";
-import { getClassTeacherInvite } from "@/lib/actions";
+import { getClassTeacherInvite } from "@/lib/fetchers";
 import { TeacherInvite } from "@/components/teacherinvite";
 import { redirect } from "next/navigation";
 

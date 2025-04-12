@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import * as React from "react";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { Button } from "@/components/ui/button";
@@ -32,7 +32,7 @@ import { useRouter } from "next/navigation";
 import { createAssignments } from "@/lib/actions";
 import { toast } from "sonner";
 import { DueDateSetter, type DueDateSetterData } from "@/components/account/duedate-setter";
-import { getTeacherClasses } from "@/lib/actions/classes";
+import { getTeacherClasses } from "@/lib/actions";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -50,30 +50,25 @@ type CreateAssignmentsBaseProps = {
 type CreateAssignmentsClassProps = CreateAssignmentsBaseProps & {
     type: "class";
     classId: string;
+    classes?: never;
     courses: CoursesWithModulesAndLessonsAndActivities;
 };
 
 type CreateAssignmentsOtherProps = CreateAssignmentsBaseProps & {
     type: "activity" | "lesson";
     classId?: never;
+    classes: TeacherClasses;
     courses?: never;
 };
 
 type CreateAssignmentsProps = CreateAssignmentsClassProps | CreateAssignmentsOtherProps;
 
-export function CreateAssignments({ isNone, courses, defaultSelectedActivities = [], type, classId }: CreateAssignmentsProps) {
+export function CreateAssignments({ isNone, courses, defaultSelectedActivities = [], type, classId, classes }: CreateAssignmentsProps) {
     const [open, setOpen] = useState(false);
     const [selectedActivities, setSelectedActivities] = useState<string[]>(defaultSelectedActivities);
     const [selectedClasses, setSelectedClasses] = useState<string[]>(type === "class" ? [classId] : []);
-    const [teacherClasses, setTeacherClasses] = useState<TeacherClasses>([]);
     const [showDueDateSetter, setShowDueDateSetter] = useState(false);
     const isDesktop = useMediaQuery("(min-width: 768px)");
-
-    useEffect(() => {
-        if (type !== "class") {
-            getTeacherClasses().then(setTeacherClasses);
-        }
-    }, [type]);
 
     const handleActivitySubmit = () => {
         if (type === "class" || selectedClasses.length > 0) {
@@ -160,7 +155,7 @@ export function CreateAssignments({ isNone, courses, defaultSelectedActivities =
                                 </>
                             )}
                             {type !== "class" && !selectedClasses.length && (
-                                <ClassSelector teacherClasses={teacherClasses} onSubmit={handleClassSubmit} />
+                                <ClassSelector teacherClasses={classes} onSubmit={handleClassSubmit} />
                             )}
                         </>
                     )}
@@ -199,7 +194,7 @@ export function CreateAssignments({ isNone, courses, defaultSelectedActivities =
                         </DrawerFooter>
                     </>
                 ) : (
-                    <ClassSelector teacherClasses={teacherClasses} onSubmit={handleClassSubmit} isDrawer />
+                    <ClassSelector teacherClasses={classes} onSubmit={handleClassSubmit} isDrawer />
                 )}
             </DrawerContent>
         </Drawer>

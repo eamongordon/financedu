@@ -1,6 +1,6 @@
 import { Gradebook } from "@/components/account/gradebook";
 import { InviteStudents } from "@/components/account/invite-students";
-import { getClassTeacherWithCompletion } from "@/lib/actions";
+import { getClassTeacherWithCompletion } from "@/lib/fetchers";
 import { getDisplayName } from "@/lib/utils";
 
 export default async function Page({

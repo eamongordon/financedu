@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { AssignmentsStudentList } from "@/components/account/assignments-student-list";
 import { LeaveClassButton } from "@/components/account/leave-class";
-import { getClassStudent } from "@/lib/actions";
+import { getClassStudent } from "@/lib/fetchers";
 
 type Props = {
     params: Promise<{ classId: string }>

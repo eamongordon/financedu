@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { TabsNav } from "@/components/account/tabs-nav";
-import { getClassTeacher } from "@/lib/actions";
+import { getClassTeacher } from "@/lib/fetchers";
 import { auth } from "@/lib/auth";
 
 export async function generateMetadata(

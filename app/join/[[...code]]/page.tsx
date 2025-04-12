@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { auth } from "@/lib/auth";
 import { ClassJoinConfirm } from "@/components/account/class-join-confirm";
 import { ClassCodeForm } from "@/components/account/class-code-form";
-import { getClassFromClassCode } from "@/lib/actions";
+import { getClassFromClassCode } from "@/lib/fetchers";
 import { notFound, redirect } from "next/navigation";
 
 export const metadata: Metadata = {

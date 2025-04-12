@@ -1,5 +1,5 @@
 import { SidebarNav } from "@/components/account/sidebar-nav"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar" // Import Avatar component
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { auth } from "@/lib/auth"
 import { getDisplayName, getInitials } from "@/lib/utils"
 

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getActivity, getActivityDisplayBySlug, getNextActivity } from "@/lib/fetchers";
+import { getActivity, getActivityDisplayBySlug, getNextActivity, getTeacherClasses } from "@/lib/fetchers";
 import { markActivityComplete } from "@/lib/actions"
 import QuizComponent from "@/components/course/quiz-component";
 import { CircleHelp, FileText } from "lucide-react";
@@ -44,6 +44,7 @@ export default async function LessonPage({
     }
 
     const isTeacher = session?.user?.roles?.includes("teacher");
+    const classes = isTeacher ? await getTeacherClasses() : undefined;
 
     return (
         <main className="w-full">
@@ -60,7 +61,7 @@ export default async function LessonPage({
                     </div>
                     {isTeacher && (
                         <div>
-                            <CreateAssignments type="activity" defaultSelectedActivities={[activity.id]} />
+                            <CreateAssignments type="activity" defaultSelectedActivities={[activity.id]} classes={classes!} />
                         </div>
                     )}
                 </div>

@@ -1,4 +1,4 @@
-import { getClassTeacherWithRoster } from "@/lib/actions/classes";
+import { getClassTeacherWithRoster } from "@/lib/fetchers";
 import { StudentsList } from "@/components/account/students-list";
 import { getDisplayName } from "@/lib/utils";
 import { ClassSettingsForm } from "@/components/account/class-settings-form";
