@@ -1,5 +1,3 @@
-"use server";
-
 import { db } from '../db';
 
 export type Category = 'Course' | 'Module' | 'Lesson' | 'Activity';
