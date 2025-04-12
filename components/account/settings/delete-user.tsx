@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { deleteUser } from "@/lib/actions";
 import { useState } from "react";
 import { signOut } from "next-auth/react";

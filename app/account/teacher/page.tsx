@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { CreateClass } from "@/components/account/create-class";
+import { CreateClass } from "@/components/account/classes/create-class";
 import { Card } from "@/components/ui/card";
 import { getTeacherClasses } from "@/lib/fetchers";
 import Link from "next/link";

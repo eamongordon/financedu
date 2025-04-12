@@ -6,10 +6,10 @@ import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
-import { DueDateSetter, type DueDateSetterData } from "@/components/account/duedate-setter";
+import { DueDateSetter, type DueDateSetterData } from "@/components/account/classes/duedate-setter";
 import { editAssignment } from "@/lib/actions";
 import { toast } from "sonner";
-import { DropdownMenuItem } from "../ui/dropdown-menu";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
 type EditAssignmentObj = {
     id: string;

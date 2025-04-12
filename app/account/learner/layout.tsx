@@ -1,4 +1,4 @@
-import LearnerHeader from "@/components/account/learner-header";
+import LearnerHeader from "@/components/account/learner/learner-header";
 import { TabsNav } from "@/components/account/tabs-nav";
 import { auth } from "@/lib/auth";
 

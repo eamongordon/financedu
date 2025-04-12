@@ -1,5 +1,5 @@
-import { Gradebook } from "@/components/account/gradebook";
-import { InviteStudents } from "@/components/account/invite-students";
+import { Gradebook } from "@/components/account/classes/gradebook";
+import { InviteStudents } from "@/components/account/classes/invite-students";
 import { getClassTeacherWithCompletion } from "@/lib/fetchers";
 import { getDisplayName } from "@/lib/utils";
 

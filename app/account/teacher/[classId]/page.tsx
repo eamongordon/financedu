@@ -1,5 +1,5 @@
-import { AssignmentsTeacherList } from "@/components/account/assignments-teacher-list";
-import { CreateAssignments } from "@/components/account/create-assigments";
+import { AssignmentsTeacherList } from "@/components/account/classes/assignments-teacher-list";
+import { CreateAssignments } from "@/components/account/classes/create-assigments";
 import { getClassTeacherWithAssignments, getCoursesWithModulesAndLessonsAndActivities } from "@/lib/fetchers";
 
 export default async function Page({

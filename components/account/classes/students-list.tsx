@@ -11,12 +11,12 @@ import {
 } from "@tanstack/react-table"
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 import { removeStudentFromClass } from "@/lib/actions/classes";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { getInitials } from "@/lib/utils";
 import { User } from "lucide-react";
 import { InviteStudents } from "./invite-students";

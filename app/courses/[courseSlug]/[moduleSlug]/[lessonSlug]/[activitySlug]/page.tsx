@@ -9,7 +9,7 @@ import { getNextActivityLink } from "@/lib/utils";
 import { auth } from "@/lib/auth";
 import { SessionProvider } from "next-auth/react";
 import { notFound } from 'next/navigation';
-import { CreateAssignments } from '@/components/account/create-assigments';
+import { CreateAssignments } from '@/components/account/classes/create-assigments';
 
 type Props = {
     params: Promise<{ activitySlug: string, lessonSlug: string, moduleSlug: string, courseSlug: string }>,

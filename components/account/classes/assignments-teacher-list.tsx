@@ -12,15 +12,15 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { CompletionIcon } from "../ui/completion-icon";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
+import { CompletionIcon } from "../../ui/completion-icon";
 import { CircleHelp, FileText, MoreHorizontal } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../../ui/dropdown-menu";
 import { deleteAssignment } from "@/lib/actions/classes";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { type CreateAssignments } from "@/components/account/create-assigments"; // Adjust the import path as necessary
+import { type CreateAssignments } from "@/components/account/classes/create-assigments"; // Adjust the import path as necessary
 import { EditAssignment } from "./edit-assignment";
 
 interface UserProgressProps {

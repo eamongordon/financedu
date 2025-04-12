@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "../ui/button"
+import { Button } from "../../ui/button"
 import { getClassFromClassCode } from "@/lib/fetchers"
 import { joinClass } from "@/lib/actions";
 import { useRouter } from "next/navigation";

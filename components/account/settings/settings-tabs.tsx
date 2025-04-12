@@ -1,9 +1,9 @@
 "use client";
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { ProfileForm, type ProfileFormValues } from "@/components/account/profile-form";
-import { RolesSettingsForm, type RolesFormValues } from "@/components/account/roles-settings-form";
-import { LoginSettingsForm, type LoginFormValues } from "@/components/account/login-settings-form";
+import { ProfileForm, type ProfileFormValues } from "@/components/account/settings/profile-form";
+import { RolesSettingsForm, type RolesFormValues } from "@/components/account/settings/roles-settings-form";
+import { LoginSettingsForm, type LoginFormValues } from "@/components/account/settings/login-settings-form";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { DeleteUserButton } from "./delete-user";
 

@@ -1,5 +1,5 @@
 import { getChildCompletion } from "@/lib/fetchers";
-import { LearnerCompletion } from "@/components/account/learner-completion";
+import { LearnerCompletion } from "@/components/account/learner/learner-completion";
 
 export default async function Page({
     params,

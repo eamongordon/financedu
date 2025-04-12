@@ -1,13 +1,13 @@
 import { getClassTeacherWithRoster } from "@/lib/fetchers";
-import { StudentsList } from "@/components/account/students-list";
+import { StudentsList } from "@/components/account/classes/students-list";
 import { getDisplayName } from "@/lib/utils";
-import { ClassSettingsForm } from "@/components/account/class-settings-form";
+import { ClassSettingsForm } from "@/components/account/classes/class-settings-form";
 import { auth } from "@/lib/auth";
-import { LeaveClassButton } from "@/components/account/leave-class";
-import { DeleteClassButton } from "@/components/account/delete-class";
-import { InviteStudents } from "@/components/account/invite-students";
-import { InviteTeacher } from "@/components/account/invite-teacher";
-import { TeacherList } from "@/components/account/teacher-list";
+import { LeaveClassButton } from "@/components/account/classes/leave-class";
+import { DeleteClassButton } from "@/components/account/classes/delete-class";
+import { InviteStudents } from "@/components/account/classes/invite-students";
+import { InviteTeacher } from "@/components/account/classes/invite-teacher";
+import { TeacherList } from "@/components/account/classes/teacher-list";
 
 export default async function Page({
     params,

@@ -6,8 +6,8 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { FileText, CircleHelp, ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { CompletionIcon } from "../ui/completion-icon";
-import { Progress } from "../ui/progress";
+import { CompletionIcon } from "../../ui/completion-icon";
+import { Progress } from "../../ui/progress";
 import { type getUserCompletion } from "@/lib/fetchers";
 
 type UserCompletion = Awaited<ReturnType<typeof getUserCompletion>>;

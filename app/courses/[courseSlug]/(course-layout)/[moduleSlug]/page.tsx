@@ -8,7 +8,7 @@ import Link from "next/link";
 import { CompletionIcon } from "@/components/ui/completion-icon";
 import { BookOpen, CircleHelp, FileText } from "lucide-react";
 import { notFound } from "next/navigation";
-import { CreateAssignments } from "@/components/account/create-assigments";
+import { CreateAssignments } from "@/components/account/classes/create-assigments";
 
 type ModuleWithLessonsAndActivitiesAndUserCompletion = Awaited<ReturnType<typeof getModuleWithLessonsAndActivitiesAndUserCompletion>>;
 

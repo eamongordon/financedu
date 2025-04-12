@@ -11,8 +11,8 @@ import {
 } from "@tanstack/react-table"
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 import { Check, CircleHelp, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 

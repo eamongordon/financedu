@@ -11,12 +11,12 @@ import {
 } from "@tanstack/react-table"
 import Link from "next/link";
 import { useState } from "react";
-import { CompletionIcon } from "../ui/completion-icon";
+import { CompletionIcon } from "../../ui/completion-icon";
 import { CircleHelp, FileText } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "../ui/button";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { Input } from "../ui/input";
+import { Button } from "../../ui/button";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
+import { Input } from "../../ui/input";
 
 interface UserProgressProps {
     completedActivities: CompletedActivityItem[];

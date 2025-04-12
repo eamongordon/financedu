@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { AssignmentsStudentList } from "@/components/account/assignments-student-list";
-import { LeaveClassButton } from "@/components/account/leave-class";
+import { AssignmentsStudentList } from "@/components/account/classes/assignments-student-list";
+import { LeaveClassButton } from "@/components/account/classes/leave-class";
 import { getClassStudent } from "@/lib/fetchers";
 
 type Props = {

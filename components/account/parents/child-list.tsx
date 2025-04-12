@@ -2,11 +2,11 @@
 
 import { getParentChildren } from "@/lib/fetchers"
 import { deleteParentChildRelationship, resendParentChildInvite, deleteParentChildInvite } from "@/lib/actions";
-import { Card } from "../ui/card";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { Card } from "../../ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../ui/dropdown-menu";
 import { MoreVertical, User } from "lucide-react";
-import { Button } from "../ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useState } from "react";

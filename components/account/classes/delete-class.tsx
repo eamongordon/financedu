@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { deleteClass } from "@/lib/actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";

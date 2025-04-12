@@ -22,8 +22,8 @@ import {
     DrawerTrigger,
 } from "@/components/ui/drawer"
 import { Plus } from "lucide-react"
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
 import { toast } from "sonner";
 import Link from "next/link";
 

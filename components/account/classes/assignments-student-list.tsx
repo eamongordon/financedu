@@ -1,10 +1,10 @@
 import { type getClassStudent } from "@/lib/fetchers";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../ui/table";
 import { FileText, CircleHelp, CircleCheckBig } from "lucide-react";
-import { CompletionIcon } from "../ui/completion-icon";
-import { Button } from "../ui/button";
+import { CompletionIcon } from "../../ui/completion-icon";
+import { Button } from "../../ui/button";
 import Link from "next/link";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
 
 type Assignments = Awaited<ReturnType<typeof getClassStudent>>["assignments"];
 

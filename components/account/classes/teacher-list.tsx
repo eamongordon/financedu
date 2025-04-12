@@ -2,10 +2,10 @@
 
 import { deleteClassTeacherInvite, resendClassTeacherInvite } from "@/lib/actions";
 import { getClassTeacherWithRoster } from "@/lib/fetchers"
-import { Card } from "../ui/card";
+import { Card } from "../../ui/card";
 import { User } from "lucide-react";
-import { Button } from "../ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useState } from "react";
