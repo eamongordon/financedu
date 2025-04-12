@@ -78,7 +78,7 @@ export function ChildList({ parentChildren }: { parentChildren: ParentChildren }
                         </div>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="[&_svg]:size-auto p-0">
+                                <Button variant="ghost" className="[&_svg]:size-auto -mx-4">
                                     <MoreVertical />
                                 </Button>
                             </DropdownMenuTrigger>
