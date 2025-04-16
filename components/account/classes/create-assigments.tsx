@@ -305,7 +305,7 @@ function ClassSelector({ teacherClasses, onSubmit, isDrawer }: { teacherClasses:
     const form = useForm({
         resolver: zodResolver(ClassSchema),
         defaultValues: {
-            selectedClasses: [] as string[]
+            selectedClasses: []
         },
         mode: "onChange"
     });
