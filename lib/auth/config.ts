@@ -5,9 +5,8 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { JWT } from "next-auth/jwt"; //import is used in module declaration
 /* eslint-enable @typescript-eslint/no-unused-vars */
-import { type Roles, users } from "@/lib/db/schema";
+import { type Roles } from "@/lib/db/schema";
 import { db } from "../db";
-import { eq } from "drizzle-orm";
 
 declare module "next-auth" {
     interface User {
@@ -95,21 +94,7 @@ export default {
                 ...(token.sub && { id: token.sub }),
             };
             return session;
-        },
-        signIn: async ({ user, email }) => {
-            if (email?.verificationRequest) {
-                const userExists = await db.query.users.findFirst({
-                    where: eq(users.email, user.email as string),
-                });
-                if (userExists) {
-                    return true;   //if the email exists in the User table, email them a magic login link
-                } else {
-                    return false;
-                }
-            } else {
-                return true;
-            }
-        },
+        }
     }
 
 } satisfies NextAuthConfig

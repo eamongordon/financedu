@@ -10,6 +10,23 @@ import { eq } from "drizzle-orm";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   ...authConfig,
+  callbacks: {
+    ...authConfig.callbacks,
+    signIn: async ({ user, email }) => {
+      if (email?.verificationRequest) {
+        const userExists = await db.query.users.findFirst({
+          where: eq(users.email, user.email as string),
+        });
+        if (userExists) {
+          return true;   //if the email exists in the User table, email them a magic login link
+        } else {
+          return false;
+        }
+      } else {
+        return true;
+      }
+    },
+  },
   providers: [
     ...authConfig.providers,
     CredentialsProvider({
