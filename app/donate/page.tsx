@@ -82,31 +82,31 @@ export default function DonatePage() {
                 <Accordion type="single" collapsible>
                     <AccordionItem value="1">
                         <AccordionTrigger>Which Methods of Payment do you accept?</AccordionTrigger>
-                        <AccordionContent>
+                        <AccordionContent className="text-base text-muted-foreground">
                             Online donations are processed via Stripe, which accepts Credit Cards. If you would like to donate using a different method, please <Link href="/policy#contact" className="text-primary underline">contact us</Link>.
                         </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="2">
                         <AccordionTrigger>Are My Donations Tax-Deductible?</AccordionTrigger>
-                        <AccordionContent>
+                        <AccordionContent className="text-base text-muted-foreground">
                             As a 501(c)(3) non-profit in the United States, are donations are tax-deductible in accordance to the law. Our tax identification number/EIN is <strong>92-3500587 .</strong>
                         </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="3">
                         <AccordionTrigger>What is your Tax ID number?</AccordionTrigger>
-                        <AccordionContent>
+                        <AccordionContent className="text-base text-muted-foreground">
                             Our tax identification number/EIN is <strong>92-3500587.</strong>
                         </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="4">
                         <AccordionTrigger>Where can I manage, update or cancel my recurring donation?</AccordionTrigger>
-                        <AccordionContent>
+                        <AccordionContent className="text-base text-muted-foreground">
                             To manage, update or cancel your recurring donation, please <Link href="/policy#contact" className="text-primary underline">contact us</Link>.
                         </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="5">
                         <AccordionTrigger>Can I sponsor Financedu?</AccordionTrigger>
-                        <AccordionContent>
+                        <AccordionContent className="text-base text-muted-foreground">
                             Yes! Please <Link href="/policy#contact" className="text-primary underline">contact us</Link> for more information.
                         </AccordionContent>
                     </AccordionItem>
