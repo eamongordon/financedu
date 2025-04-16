@@ -32,18 +32,18 @@ export default function DonatePage() {
             <div className="flex flex-col md:flex-row-reverse items-center justify-between p-4 md:p-8 gap-4">
                 <PiggyBank />
                 <div className="md:w-2/3 mt-4 md:mt-0 z-10 space-y-3">
-                    <h3 className="text-2xl md:text-3xl font-bold">Give the Gift that Keeps Giving Back</h3>
+                    <h3 className="text-2xl font-bold">Give the Gift that Keeps Giving Back</h3>
                     <p className="text-lg text-muted-foreground"> Financial education is the gift that keeps giving back. The knowledge and skills instilled by our program empowers youth for lifelong success!</p>
                 </div>
             </div>
             <div className="flex flex-col py-6 md:py-0">
                 <div className="flex flex-col gap-2 md:gap-0 md:flex-row items-center justify-between">
                     <div className="md:w-1/3 flex justify-center items-center">
-                        <div className="h-24 md:h-32 fill-secondary">
+                        <div className="h-24 fill-secondary">
                             <HostingIllustration />
                         </div>
                     </div>
-                    <div className="md:w-2/3 flex items-center justify-center md:bg-muted/60 py-6 md:pt-12 md:pb-8 px-4">
+                    <div className="md:w-2/3 flex items-center justify-center md:bg-muted/60 py-6 md:pt-6 md:pb-6 px-4">
                         <div className="md:w-4/5">
                             <h1 className="text-2xl font-bold mb-4">Hosting</h1>
                             <p className="text-lg text-muted-foreground">Financedu needs robust, but costly cloud hosting to keep us online for the students, teachers, and parents we serve.</p>
@@ -52,11 +52,11 @@ export default function DonatePage() {
                 </div>
                 <div className="flex flex-col gap-2 md:gap-0 md:flex-row items-center justify-between">
                     <div className="md:w-1/3 flex justify-center items-center">
-                        <div className="h-24 md:h-32 fill-secondary">
+                        <div className="h-24 fill-secondary">
                             <TechSupportIllustration />
                         </div>
                     </div>
-                    <div className="md:w-2/3 flex items-center justify-center md:bg-muted/60 py-6 md:pt-12 md:pb-8 px-4">
+                    <div className="md:w-2/3 flex items-center justify-center md:bg-muted/60 py-6 md:pt-6 md:pb-6 px-4">
                         <div className="md:w-4/5">
                             <h1 className="text-2xl font-bold mb-4">Maintenance & Tech Support</h1>
                             <p className="text-lg text-muted-foreground">Your donations are essential in keeping our users supported and platform bug-free.</p>
@@ -65,11 +65,11 @@ export default function DonatePage() {
                 </div>
                 <div className="flex flex-col gap-2 md:gap-0 md:flex-row items-center justify-between">
                     <div className="md:w-1/3 flex justify-center items-center">
-                        <div className="h-20 md:h-28 fill-secondary">
+                        <div className="h-24 fill-secondary">
                             <RocketIllustration />
                         </div>
                     </div>
-                    <div className="md:w-2/3 flex items-center justify-center md:bg-muted/60 py-6 md:pt-12 md:pb-8 px-4">
+                    <div className="md:w-2/3 flex items-center justify-center md:bg-muted/60 py-6 md:pt-6 md:pb-6 px-4">
                         <div className="md:w-4/5">
                             <h1 className="text-2xl font-bold mb-4">Future Improvements</h1>
                             <p className="text-lg text-muted-foreground">Help us continue to develop new features and content, such as <strong><i>an offline-compatible app, a course for middle school students,</i></strong> and <strong><i>lessons on more topics.</i></strong></p>
