@@ -35,7 +35,7 @@ const resources = [
         image: "/resources/financial-education-standards.png",
         type: "Database",
         cta: "View Standards",
-        href: "https://www.financedu.org/standards"
+        href: "/standards"
     },
     {
         title: "Savings Calculator",
