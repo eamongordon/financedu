@@ -22,7 +22,7 @@ const Page = async (
     const state =
         typeof searchParams.state === 'string' ? searchParams.state : undefined
     const categories =
-        Array.isArray(searchParams.categories) && searchParams.categories.every(item => typeof item === 'string') ? searchParams.categories : undefined;
+        typeof searchParams.categories === 'string' ? searchParams.categories.split(',') : undefined;
     const lessonId =
         typeof searchParams.lessonId === 'string' ? searchParams.lessonId : undefined
     const activityId =
@@ -41,6 +41,8 @@ const Page = async (
     const lesson = lessonId ? await getLessonDisplay(lessonId) : undefined;
     const activity = activityId ? await getActivityDisplay(activityId) : undefined;
 
+    console.log("didReload");
+    
     return (
         <>
             <Banner title='Standards' className='from-[#4BDB7B] to-[#00B5EA]' />

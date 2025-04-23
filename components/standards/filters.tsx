@@ -3,11 +3,10 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { X, Search, FileText, CircleHelp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-import { toast } from "sonner";
 import {
     Form,
     FormControl,
@@ -117,18 +116,6 @@ export function StandardsFilters({ defaultValues, lesson, activity }: ProfileFor
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    useEffect(() => {
-        const handler = setTimeout(() => {
-            console.log("Setting title");
-            form.setValue("title", title);
-            form.trigger("title");
-        }, 300);
-
-        return () => {
-            clearTimeout(handler);
-        };
-    }, [title, form]);
-
     const handleRemoveLesson = () => {
         const current = new URLSearchParams(Array.from(searchParams!.entries()));
         current.delete("lessonId");
@@ -145,38 +132,65 @@ export function StandardsFilters({ defaultValues, lesson, activity }: ProfileFor
         router.push(`${pathname}${queryParam}`);
     };
 
-    async function onChange(data: ProfileFormValues) {
-        try {
-            form.reset(data);
-            const current = new URLSearchParams(Array.from(searchParams!.entries()));
+    const handleTitleChange = useCallback(async (value: string) => {
+        form.setValue("title", value);
+        const isValid = await form.trigger("title");
+        if (!isValid) return;
 
-            if (data.title) {
-                current.set("title", data.title);
-            } else {
-                current.delete("title");
-            }
-
-            if (data.state) {
-                current.set("state", data.state);
-            } else {
-                current.delete("state");
-            }
-
-            if (data.categories) {
-                current.set("categories", data.categories.join(","));
-            } else {
-                current.delete("categories");
-            }
-
-            const search = current.toString();
-            const queryParam = search ? `?${search}` : "";
-            router.push(`${pathname}${queryParam}`);
-        } catch (error) {
-            console.error(error);
-            toast.error("Something went wrong.");
+        const current = new URLSearchParams(Array.from(searchParams!.entries()));
+        if (value) {
+            current.set("title", value);
+        } else {
+            current.delete("title");
         }
-    }
+        const search = current.toString();
+        const queryParam = search ? `?${search}` : "";
+        router.push(`${pathname}${queryParam}`);
+    }, [form, router, pathname, searchParams]);
 
+    const handleStateChange = async (value: string) => {
+        form.setValue("state", value);
+        const isValid = await form.trigger("state");
+        if (!isValid) return;
+
+        const current = new URLSearchParams(Array.from(searchParams!.entries()));
+        if (value) {
+            current.set("state", value);
+        } else {
+            current.delete("state");
+        }
+        const search = current.toString();
+        const queryParam = search ? `?${search}` : "";
+        router.push(`${pathname}${queryParam}`);
+    };
+
+    const handleCategoriesChange = async (value: string[]) => {
+        form.setValue("categories", value);
+        const isValid = await form.trigger("categories");
+        if (!isValid) return;
+
+        const current = new URLSearchParams(Array.from(searchParams!.entries()));
+        if (value.length > 0) {
+            console.log("value", value);
+            current.set("categories", value.join(","));
+        } else {
+            current.delete("categories");
+        }
+        const search = current.toString();
+        const queryParam = search ? `?${search}` : "";
+        router.push(`${pathname}${queryParam}`);
+    };
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            handleTitleChange(title);
+        }, 300);
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [title, handleTitleChange]);
+    
     return (
         <>
             {lesson && (
@@ -196,14 +210,16 @@ export function StandardsFilters({ defaultValues, lesson, activity }: ProfileFor
                 </div>
             )}
             <Form {...form}>
-                <form onChange={form.handleSubmit(onChange)} className="space-y-8">
+                <form className="space-y-8">
                     <FormField
                         control={form.control}
                         name="state"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>State</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <Select {...field} onValueChange={async (value) => {
+                                    await handleStateChange(value);
+                                }} defaultValue={field.value}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select a State" />
@@ -231,7 +247,11 @@ export function StandardsFilters({ defaultValues, lesson, activity }: ProfileFor
                                             placeholder="Search by name..."
                                             {...field}
                                             value={title}
-                                            onChange={(e) => setTitle(e.target.value)}
+                                            onChange={async (e) => {
+                                                const value = e.target.value;
+                                                setTitle(value);
+                                                await handleTitleChange(value);
+                                            }}
                                         />
                                         <Search className="absolute right-2.5 top-2.5 h-5 w-5 text-gray-400" />
                                     </div>
@@ -256,14 +276,11 @@ export function StandardsFilters({ defaultValues, lesson, activity }: ProfileFor
                                             <FormControl>
                                                 <Checkbox
                                                     checked={field.value?.includes(category)}
-                                                    onCheckedChange={(checked) => {
-                                                        return checked
-                                                            ? field.onChange([...field.value, category])
-                                                            : field.onChange(
-                                                                field.value?.filter(
-                                                                    (value) => value !== category
-                                                                )
-                                                            )
+                                                    onCheckedChange={async (checked) => {
+                                                        const updatedCategories = checked
+                                                            ? [...field.value, category]
+                                                            : field.value?.filter((value) => value !== category);
+                                                        await handleCategoriesChange(updatedCategories);
                                                     }}
                                                 />
                                             </FormControl>
@@ -271,7 +288,7 @@ export function StandardsFilters({ defaultValues, lesson, activity }: ProfileFor
                                                 {category}
                                             </FormLabel>
                                         </FormItem>
-                                    )
+                                    );
                                 }}
                             />
                         ))}
