@@ -253,6 +253,7 @@ export const standards = pgTable("standard", {
   state: text("state").notNull(),
   description: text("description"),
   objectives: text("objectives"),
+  gradeLevel: integer("gradeLevel").notNull(),
 })
 
 export const userCompletion = pgTable("userCompletion", {
