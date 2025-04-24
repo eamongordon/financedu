@@ -1,4 +1,4 @@
-import { eq, gt, and, lt, inArray, ilike, SQL } from "drizzle-orm";
+import { eq, gt, and, lt, inArray, ilike, SQL, gte, lte } from "drizzle-orm";
 import { courses, modules, lessons, activities, userCompletion, standards, activityToStandards, glossary } from "../db/schema";
 import { db } from "../db";
 import { auth } from "../auth";
@@ -683,7 +683,7 @@ export async function getUserCompletion() {
     return courses;
 }
 
-export async function getStandards(filters: { title?: string, state?: string, categories?: string[], activityId?: string, lessonId?: string }) {
+export async function getStandards(filters: { title?: string, state?: string, categories?: string[], activityId?: string, lessonId?: string, gradeLevel?: number }) {
     const conditions: SQL<unknown>[] = [];
     if (filters.title) {
         conditions.push(ilike(standards.title, `%${filters.title}%`));
@@ -693,6 +693,9 @@ export async function getStandards(filters: { title?: string, state?: string, ca
     }
     if (filters.categories && filters.categories.length > 0) {
         conditions.push(inArray(standards.category, filters.categories));
+    }
+    if (filters.gradeLevel) {
+        conditions.push(gte(standards.minGradeLevel, filters.gradeLevel), lte(standards.maxGradeLevel, filters.gradeLevel));
     }
 
     const standardsList = await db.query.standards.findMany({

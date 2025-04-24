@@ -27,14 +27,16 @@ const Page = async (
         typeof searchParams.lessonId === 'string' ? searchParams.lessonId : undefined
     const activityId =
         typeof searchParams.activityId === 'string' ? searchParams.activityId : undefined
-
+    const gradeLevel =
+        typeof searchParams.gradeLevel === 'string' ? parseInt(searchParams.gradeLevel, 10) : undefined;
 
     const filterObj = {
         title,
         state,
         categories,
         lessonId,
-        activityId
+        activityId,
+        gradeLevel
     };
 
     const standards = await getStandards(filterObj);
@@ -54,6 +56,7 @@ const Page = async (
                                 {
                                     title: title ?? "",
                                     state: state ?? "",
+                                    gradeLevel: gradeLevel?.toString() ?? "",
                                     categories: categories ?? ["Credit", "Risk", "Saving", "Investment", "Earning", "Spending", "Career Technical (CTE)"],
                                 }
                             }
