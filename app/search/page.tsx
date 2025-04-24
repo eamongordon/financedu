@@ -2,6 +2,7 @@ import { CategoryFilter } from '@/components/search/category-filter';
 import { TitleFilter } from '@/components/search/title-filter';
 import { buttonVariants } from '@/components/ui/button';
 import { getSearchResults, type ActivityResult, type ModuleResult, type Category } from '@/lib/fetchers';
+import { cn } from '@/lib/utils';
 import { BookOpen, CircleHelp, FileText, GraduationCap, Search } from 'lucide-react';
 import { DynamicIcon, dynamicIconImports } from 'lucide-react/dynamic';
 import type { Metadata } from 'next'
@@ -35,8 +36,25 @@ const Page = async (
                     <TitleFilter defaultTitle={query ?? ""} />
                 </section>
                 <div className='flex flex-col md:flex-row'>
-                    <section className='pt-2 pb-2 sm:pb-0 md:pl-4 md:pr-12'>
+                    <section className='pt-2 pb-2 sm:pb-0 md:pl-4 md:pr-8 space-y-2 md:space-y-6'>
                         <CategoryFilter defaultCategories={categories ?? ["Course", "Module", "Lesson", "Activity"]} />
+                        <div className='flex flex-col gap-2 md:hidden'>
+                            <hr className='md:hidden border-dashed' />
+                            <Link href="/standards" target="_blank" className={cn(buttonVariants({ variant: 'link' }), "md:hidden p-0 h-auto text-secondary")}>
+                                <BookOpen />
+                                Browse Content by Standards
+                            </Link>
+                            <hr className='md:hidden border-dashed' />
+                        </div>
+                        <hr className='hidden md:block border-dashed' />
+                        <div className='hidden md:flex flex-col gap-4 w-40'>
+                            <p className='leading-none font-semibold'>Standards</p>
+                            <p>Search content by your state&apos;s standards</p>
+                            <Link href="/standards" target="_blank" className={buttonVariants({ variant: 'secondary' })}>
+                                <BookOpen />
+                                Browse Standards
+                            </Link>
+                        </div>
                     </section>
                     <section className='flex-1'>
                         {results.length > 0 ? (
