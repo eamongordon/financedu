@@ -724,7 +724,21 @@ export async function getStandards(filters: { title?: string, state?: string, ca
                         )
                     ))
             ) : undefined
-        )
+        ),
+        with: {
+            activityToStandards: {
+                with: {
+                    activity: {
+                        columns: {
+                            id: true,
+                            title: true,
+                            type: true,
+                            slug: true
+                        }
+                    }
+                }
+            }
+        }
     });
 
     return standardsList;
