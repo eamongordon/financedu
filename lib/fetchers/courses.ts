@@ -695,7 +695,7 @@ export async function getStandards(filters: { title?: string, state?: string, ca
         conditions.push(inArray(standards.category, filters.categories));
     }
     if (filters.gradeLevel) {
-        conditions.push(gte(standards.minGradeLevel, filters.gradeLevel), lte(standards.maxGradeLevel, filters.gradeLevel));
+        conditions.push(lte(standards.minGradeLevel, filters.gradeLevel), gte(standards.maxGradeLevel, filters.gradeLevel));
     }
 
     const standardsList = await db.query.standards.findMany({
