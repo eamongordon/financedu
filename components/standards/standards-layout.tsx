@@ -262,7 +262,7 @@ export function StandardsLayout({ standards, defaultValues, lesson, activity, is
                                             <h4 className='font-semibold text-secondary'>Content</h4>
                                             <div className='divide-y'>
                                                 {standard.activityToStandards.map(({ activity }) => (
-                                                    <div className='flex flex-row items-center justify-between gap-2 py-2'>
+                                                    <div key={activity.id} className='flex flex-row items-center justify-between gap-2 py-2'>
                                                         <Link
                                                             key={activity.id}
                                                             href={`/activities/${activity.slug}`}
