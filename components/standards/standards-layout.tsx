@@ -8,7 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Checkbox } from "../ui/checkbox";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Label } from "../ui/label";
-import { getActivityDisplay, getLessonDisplay, getStandards } from "@/lib/fetchers";
+import { getActivityDisplay, getLessonDisplay, getStandards, getTeacherClasses } from "@/lib/fetchers";
+import { CreateAssignments } from "../account/classes/create-assigments";
+import Link from "next/link";
 
 const states = [
     "National",
@@ -79,8 +81,9 @@ const grades = Array.from({ length: 13 }, (_, i) => (i === 0 ? "K" : i.toString(
 type Lesson = Awaited<ReturnType<typeof getLessonDisplay>>;
 type Activity = Awaited<ReturnType<typeof getActivityDisplay>>;
 type Standards = Awaited<ReturnType<typeof getStandards>>;
+type Classes = Awaited<ReturnType<typeof getTeacherClasses>>;
 
-interface StandardsFiltersProps {
+type StandardsFiltersProps = {
     standards: Standards;
     defaultValues: {
         title: string;
@@ -90,9 +93,15 @@ interface StandardsFiltersProps {
     };
     lesson?: Lesson;
     activity?: Activity;
-}
+} & ({
+    isTeacher: true;
+    classes: Classes;
+} | {
+    isTeacher?: false;
+    classes?: never;
+});
 
-export function StandardsLayout({ standards, defaultValues, lesson, activity }: StandardsFiltersProps) {
+export function StandardsLayout({ standards, defaultValues, lesson, activity, isTeacher, classes }: StandardsFiltersProps) {
     const [title, setTitle] = useState(defaultValues.title);
     const [state, setState] = useState(defaultValues.state);
     const [gradeLevel, setGradeLevel] = useState(defaultValues.gradeLevel);
@@ -253,19 +262,26 @@ export function StandardsLayout({ standards, defaultValues, lesson, activity }: 
                                             <h4 className='font-semibold text-secondary'>Content</h4>
                                             <div className='divide-y'>
                                                 {standard.activityToStandards.map(({ activity }) => (
-                                                    <a
-                                                        key={activity.id}
-                                                        href={`/activities/${activity.slug}`}
-                                                        className='flex flex-row items-center gap-4 py-2'
-                                                    >
-                                                        <div className='size-10 sm:size-12 flex justify-center items-center border rounded-lg'>
-                                                            {activity.type === 'Quiz' ? <CircleHelp strokeWidth={1.5} /> : <FileText strokeWidth={1.5} />}
-                                                        </div>
-                                                        <div>
-                                                            <p className='text-base font-semibold'>{activity.title}</p>
-                                                            <p className='text-sm text-muted-foreground'>{activity.type}</p>
-                                                        </div>
-                                                    </a>
+                                                    <div className='flex flex-row items-center justify-between gap-2 py-2'>
+                                                        <Link
+                                                            key={activity.id}
+                                                            href={`/activities/${activity.slug}`}
+                                                            className="flex flex-row items-center gap-4"
+                                                        >
+                                                            <div className='size-10 sm:size-12 flex justify-center items-center border rounded-lg'>
+                                                                {activity.type === 'Quiz' ? <CircleHelp strokeWidth={1.5} /> : <FileText strokeWidth={1.5} />}
+                                                            </div>
+                                                            <div>
+                                                                <p className='text-base font-semibold'>{activity.title}</p>
+                                                                <p className='text-sm text-muted-foreground'>{activity.type}</p>
+                                                            </div>
+                                                        </Link>
+                                                        {isTeacher && (
+                                                            <div>
+                                                                <CreateAssignments type="activity" defaultSelectedActivities={[activity.id]} classes={classes} />
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 ))}
                                             </div>
                                         </div>

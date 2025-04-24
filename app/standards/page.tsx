@@ -1,6 +1,7 @@
 import Banner from '@/components/banner';
 import { StandardsLayout } from '@/components/standards/standards-layout';
-import { getActivityDisplay, getLessonDisplay, getStandards } from '@/lib/fetchers';
+import { auth } from '@/lib/auth';
+import { getActivityDisplay, getLessonDisplay, getStandards, getTeacherClasses } from '@/lib/fetchers';
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -40,7 +41,9 @@ const Page = async (
     const lesson = lessonId ? await getLessonDisplay(lessonId) : undefined;
     const activity = activityId ? await getActivityDisplay(activityId) : undefined;
 
-    console.log("didReload");
+    const session = await auth();
+    const isTeacher = !!session?.user?.roles?.includes("teacher");
+    const classes = isTeacher ? await getTeacherClasses() : undefined;
 
     return (
         <>
@@ -55,6 +58,10 @@ const Page = async (
                 standards={standards}
                 lesson={lesson}
                 activity={activity}
+                {...(isTeacher
+                    ? { isTeacher, classes: classes! }
+                    : { isTeacher }
+                )} //todo: revisit types
             />
         </>
     )
