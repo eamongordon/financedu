@@ -1,10 +1,7 @@
 import Banner from '@/components/banner';
-import { StandardsFilters } from '@/components/standards/filters';
-import { buttonVariants } from '@/components/ui/button';
+import { StandardsLayout } from '@/components/standards/standards-layout';
 import { getActivityDisplay, getLessonDisplay, getStandards } from '@/lib/fetchers';
-import { BookOpen } from 'lucide-react';
 import type { Metadata } from 'next'
-import Link from 'next/link';
 
 export const metadata: Metadata = {
     title: 'Standards',
@@ -44,61 +41,21 @@ const Page = async (
     const activity = activityId ? await getActivityDisplay(activityId) : undefined;
 
     console.log("didReload");
-    
+
     return (
         <>
             <Banner title='Standards' className='from-[#4BDB7B] to-[#00B5EA]' />
-            <main className='flex flex-col md:flex-row'>
-                <section className='w-full md:w-1/3 min-w-[350px] bg-muted p-4 lg:p-8'>
-                    <div className='md:min-w-72 mx-auto'>
-                        <StandardsFilters
-                            defaultValues={
-                                {
-                                    title: title ?? "",
-                                    state: state ?? "",
-                                    gradeLevel: gradeLevel?.toString() ?? "",
-                                    categories: categories ?? ["Credit", "Risk", "Saving", "Investment", "Earning", "Spending", "Career Technical (CTE)"],
-                                }
-                            }
-                            lesson={lesson}
-                            activity={activity}
-                        />
-                    </div>
-                </section>
-                <section className='w-full md:w-3/4 p-4 lg:p-8'>
-                    {standards.length ? (
-                        <div className='divide-y'>
-                            {standards.map((standard, index) => (
-                                <div key={index} className='flex flex-col gap-2 py-4 first-of-type:pt-0'>
-                                    <div>
-                                        <h2 className='text-lg font-semibold text-chart-1'>{standard.title}</h2>
-                                        <h4 className='font-semibold text-muted-foreground'>{standard.category}</h4>
-                                    </div>
-                                    <div>
-                                        <h4 className='font-semibold text-secondary'>Description</h4>
-                                        <p>{standard.description}</p>
-                                    </div>
-                                    <div>
-                                        <h4 className='font-semibold text-secondary'>Objectives</h4>
-                                        <p dangerouslySetInnerHTML={{ __html: standard.objectives ?? "" }}></p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="flex flex-col items-center justify-center h-full text-center gap-6">
-                            <div className="flex flex-col gap-1 items-center justify-center">
-                                <BookOpen className='text-muted-foreground' strokeWidth={1.5} size={36} />
-                                <p className="text-lg font-semibold">No standards found.</p>
-                                <p>Try removing some filters.</p>
-                            </div>
-                            <Link href='/standards' className={buttonVariants({ variant: 'outline' })}>
-                                Clear Filters
-                            </Link>
-                        </div>
-                    )}
-                </section>
-            </main>
+            <StandardsLayout
+                defaultValues={{
+                    title: title ?? "",
+                    state: state ?? "",
+                    gradeLevel: gradeLevel?.toString() ?? "",
+                    categories: categories ?? ["Credit", "Risk", "Saving", "Investment", "Earning", "Spending", "Career Technical (CTE)"],
+                }}
+                standards={standards}
+                lesson={lesson}
+                activity={activity}
+            />
         </>
     )
 }
