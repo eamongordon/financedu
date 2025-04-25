@@ -6,7 +6,8 @@ import {
   primaryKey,
   integer,
   decimal,
-  unique
+  unique,
+  vector
 } from "drizzle-orm/pg-core"
 import { sql } from 'drizzle-orm'
 import type { AdapterAccountType } from "next-auth/adapters"
@@ -164,6 +165,7 @@ export const activities = pgTable("activity", {
   topics: text("topics").array(),
   order: integer("order").notNull(),
   slug: text("slug").notNull().unique(),
+  embedding: vector("embedding", { dimensions: 1536 })
 })
 
 export const activityToQuestions = pgTable("activityToQuestion", {
