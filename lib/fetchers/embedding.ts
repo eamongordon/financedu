@@ -1,4 +1,4 @@
-import { embed, embedMany } from 'ai';
+import { embed } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { db } from '../db';
 import { activities } from '../db/schema';
@@ -6,17 +6,7 @@ import { cosineDistance, desc, gt, sql } from 'drizzle-orm';
 
 const embeddingModel = openai.embedding('text-embedding-3-small');
 
-export const generateEmbeddings = async (
-  values: string[],
-) => {
-  const { embeddings } = await embedMany({
-    model: embeddingModel,
-    values: values,
-  });
-  return embeddings;
-};
-
-export const generateEmbedding = async (
+const generateEmbedding = async (
   value: string,
 ) => {
   const embedding = await embed({
