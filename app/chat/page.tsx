@@ -1,5 +1,6 @@
 'use client';
 
+import { MemoizedMarkdown } from '@/components/chat/memoized-markdown';
 import { Input } from '@/components/ui/input';
 import { useChat } from '@ai-sdk/react';
 
@@ -21,7 +22,11 @@ export default function Page() {
       />
 
       {messages.map((message, index) => (
-        <div key={index}>{message.content}</div>
+        <div key={index}>
+          <div className="prose">
+            <MemoizedMarkdown id={message.id} content={message.content} />
+          </div>
+        </div>
       ))}
     </div>
   );
