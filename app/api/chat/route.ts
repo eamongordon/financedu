@@ -24,7 +24,8 @@ export async function POST(req: Request) {
         execute: async ({ question }) => findRelevantActivities(question),
       }),
     },
+    maxSteps: 2
   });
-
+  
   return result.toDataStreamResponse();
 }
