@@ -7,7 +7,8 @@ import {
   integer,
   decimal,
   unique,
-  vector
+  vector,
+  index
 } from "drizzle-orm/pg-core"
 import { sql } from 'drizzle-orm'
 import type { AdapterAccountType } from "next-auth/adapters"
@@ -166,7 +167,14 @@ export const activities = pgTable("activity", {
   order: integer("order").notNull(),
   slug: text("slug").notNull().unique(),
   embedding: vector("embedding", { dimensions: 1536 })
-})
+}, (activities) => [
+  {
+    embeddingIndex: index('embeddingIndex').using(
+      'hnsw',
+      activities.embedding.op('vector_cosine_ops'),
+    ),
+  },
+])
 
 export const activityToQuestions = pgTable("activityToQuestion", {
   activityId: text("activityId")
