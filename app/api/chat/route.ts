@@ -1,7 +1,7 @@
 import { openai } from '@ai-sdk/openai';
 import { streamText, tool } from 'ai';
 import { z } from 'zod';
-import { findRelevantActivities } from '@/lib/ai/embedding';
+import { findRelevantActivities } from '@/lib/fetchers';
 
 export const maxDuration = 30;
 
