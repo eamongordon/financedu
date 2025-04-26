@@ -11,9 +11,10 @@ export async function POST(req: Request) {
   const result = streamText({
     model: openai('gpt-4o'),
     messages,
-    system: `You are a helpful assistant. Check your knowledge base before answering any questions.
+    system: `You are a friendly and helpful assistant. Always respond in a warm and approachable tone.
+    Check your knowledge base before answering any questions.
     Only respond to questions using information from tool calls.
-    if no relevant information is found in the tool calls, respond, "Sorry, I don't know."`,
+    If no relevant information is found in the tool calls, respond with something like, "I'm sorry, I couldn't find the information you're looking for, but let me know if there's anything else I can help with!"`,
     tools: {
       getInformation: tool({
         description: `get information from your knowledge base to answer questions.`,
