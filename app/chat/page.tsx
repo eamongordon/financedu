@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useChat } from '@ai-sdk/react';
-import { CircleStop, FileText, Send } from 'lucide-react';
+import { CircleAlert, CircleStop, FileText, Send } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 
@@ -25,56 +25,68 @@ export default function Page() {
             <div
               key={index}
               className={cn(
-                "flex max-w-screen-md mb-4 mx-auto",
+                "flex max-w-screen-md mx-auto",
                 message.role === 'user' ? 'justify-end' : 'justify-start'
               )}
             >
-              <div
-                className={cn(
-                  message.role === 'user'
-                    ? 'rounded-xl py-3 px-5 bg-primary text-primary-foreground font-semibold'
-                    : 'bg-muted rounded-2xl p-5 my-8'
-                )}
-              >
-                {message.content.length > 0 ? (
-                  <>
-                    <div className={cn('prose', message.role === 'user' && 'text-primary-foreground')}>
-                      <MemoizedMarkdown id={message.id} content={message.content} />
+              {message.content.length > 0 ? (
+                <div
+                  className={cn(
+                    "mb-4",
+                    message.role === 'user'
+                      ? 'rounded-xl py-3 px-5 bg-primary text-primary-foreground font-semibold'
+                      : 'bg-muted rounded-2xl p-5 my-8'
+                  )}
+                >
+                  <div className={cn('prose', message.role === 'user' && 'text-primary-foreground')}>
+                    <MemoizedMarkdown id={message.id} content={message.content} />
+                  </div>
+                  {message.role === 'assistant' && message.parts.filter((part) => part.type === "tool-invocation" && part.toolInvocation.state === 'result').length > 0 && (
+                    <div className="mt-2 space-y-2">
+                      <hr />
+                      <p className='font-semibold text-sm text-muted-foreground'>Related Articles</p>
+                      {message.parts.map(part => {
+                        if (part.type === "tool-invocation" && part.toolInvocation.state === 'result' && part.toolInvocation.result.length > 0) {
+                          const { title, slug } = part.toolInvocation.result[0];
+                          return (
+                            <Link
+                              key={part.toolInvocation.toolCallId}
+                              href={`/activities/${slug}`}
+                              className="flex flex-row items-center gap-4"
+                            >
+                              <div className='size-10 sm:size-12 flex justify-center items-center border rounded-lg'>
+                                <FileText strokeWidth={1.5} />
+                              </div>
+                              <div>
+                                <p className='text-base font-semibold'>{title}</p>
+                                <p className='text-sm text-muted-foreground'>Article</p>
+                              </div>
+                            </Link>
+                          );
+                        }
+                        return null;
+                      })}
                     </div>
-                    {message.role === 'assistant' && message.parts.filter((part) => part.type === "tool-invocation" && part.toolInvocation.state === 'result').length > 0 && (
-                      <div className="mt-2 space-y-2">
-                        <hr />
-                        <p className='font-semibold text-sm text-muted-foreground'>Related Articles</p>
-                        {message.parts.map(part => {
-                          if (part.type === "tool-invocation" && part.toolInvocation.state === 'result' && part.toolInvocation.result.length > 0) {
-                            const { title, slug } = part.toolInvocation.result[0];
-                            return (
-                              <Link
-                                key={part.toolInvocation.toolCallId}
-                                href={`/activities/${slug}`}
-                                className="flex flex-row items-center gap-4"
-                              >
-                                <div className='size-10 sm:size-12 flex justify-center items-center border rounded-lg'>
-                                  <FileText strokeWidth={1.5} />
-                                </div>
-                                <div>
-                                  <p className='text-base font-semibold'>{title}</p>
-                                  <p className='text-sm text-muted-foreground'>Article</p>
-                                </div>
-                              </Link>
-                            );
-                          }
-                          return null;
-                        })}
-                      </div>
-                    )}
-                  </>
-                ) : (
+                  )}
+                </div>
+              ) : status === "submitted" || status === "streaming" ? (
+                <div className='bg-muted rounded-2xl p-5 my-8 mb-4'>
                   <BouncingDots />
-                )}
-              </div>
+                </div>
+              ) : null}
             </div>
           ))}
+          {status === "error" && (
+            <div className='flex max-w-screen-md mb-4 mx-auto justify-start'>
+              <div className='bg-muted rounded-2xl p-5 my-8'>
+                <div className='flex flex-row items-center gap-3 text-red-500 mx-auto max-w-screen-md'>
+                  <CircleAlert />
+                  Something went wrong. Please try again.
+                </div>
+              </div>
+            </div>
+          )}
+          {/* Scroll to the bottom of the messages */}
           <div ref={messagesEndRef} />
         </div>
       ) : (
