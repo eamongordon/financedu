@@ -7,13 +7,20 @@ import { cn } from '@/lib/utils';
 import { useChat } from '@ai-sdk/react';
 import { CircleStop, FileText, Send } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect, useRef } from 'react';
 
 export default function Page() {
   const { messages, input, setInput, append, stop, status } = useChat();
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: 'nearest' });
+  }, [messages]);
+
   return (
-    <main className="h-full p-4 min-h-[calc(50dvh)] flex flex-col items-center justify-center">
+    <main className="min-h-[calc(50dvh)] px-4 max-h-[calc(100dvh-64px)] flex flex-col items-center justify-center">
       {messages.length > 0 ? (
-        <div className="flex-1 w-full overflow-y-auto mt-4">
+        <div className="flex-1 w-full overflow-y-auto pt-8">
           {messages.map((message, index) => (
             <div
               key={index}
@@ -68,6 +75,7 @@ export default function Page() {
               </div>
             </div>
           ))}
+          <div ref={messagesEndRef} />
         </div>
       ) : (
         <div className="mx-auto max-w-screen-md flex flex-col items-center justify-center gap-4 text-center mb-6">
@@ -83,7 +91,7 @@ export default function Page() {
       {/* Centered input container initially, sticky when content grows */}
       <div className={cn(
         "mx-auto bg-background max-w-screen-md flex flex-row gap-2 transition-all w-full",
-        messages.length > 0 && "sticky bottom-0 pb-8"
+        messages.length > 0 && "pb-8 z-10"
       )}>
         <Input
           value={input}
