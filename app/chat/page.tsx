@@ -39,7 +39,7 @@ export default function Page() {
                         <hr />
                         <p className='font-semibold text-sm text-muted-foreground'>Related Articles</p>
                         {message.parts.map(part => {
-                          if (part.type === "tool-invocation" && part.toolInvocation.state === 'result') {
+                          if (part.type === "tool-invocation" && part.toolInvocation.state === 'result' && part.toolInvocation.result.length > 0) {
                             const { title, slug } = part.toolInvocation.result[0];
                             return (
                               <Link
