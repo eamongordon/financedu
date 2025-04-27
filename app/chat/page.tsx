@@ -38,7 +38,7 @@ export default function Page() {
                       : 'bg-muted rounded-2xl p-5 my-8'
                   )}
                 >
-                  <div className={cn('prose', message.role === 'user' && 'text-primary-foreground')}>
+                  <div className={cn('prose dark:prose-invert', message.role === 'user' && 'text-primary-foreground')}>
                     <MemoizedMarkdown id={message.id} content={message.content} />
                   </div>
                   {message.role === 'assistant' && message.parts.filter((part) => part.type === "tool-invocation" && part.toolInvocation.state === 'result').length > 0 && (
