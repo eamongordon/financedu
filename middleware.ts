@@ -24,5 +24,5 @@ export default auth((req) => {
 })
 
 export const config = {
-    matcher: ["/manage", "/account/:path*", "/login", "/signup"]
+    matcher: ["/manage", "/account/:path*", "/login", "/signup", "/chat"]
 }
