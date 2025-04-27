@@ -10,69 +10,81 @@ import Link from 'next/link';
 
 export default function Page() {
   const { messages, input, setInput, append, stop, status } = useChat();
-
   return (
-    <main className="h-full">
-      {/* Scrollable chat container */}
-      <div className="flex-1 overflow-y-auto p-4">
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={cn(
-              "flex max-w-screen-md mb-4 mx-auto",
-              message.role === 'user' ? 'justify-end' : 'justify-start'
-            )}
-          >
+    <main className="h-full p-4 min-h-[calc(50dvh)] flex flex-col items-center justify-center">
+      {messages.length > 0 ? (
+        <div className="flex-1 w-full overflow-y-auto mt-4">
+          {messages.map((message, index) => (
             <div
+              key={index}
               className={cn(
-                message.role === 'user'
-                  ? 'rounded-xl py-3 px-5 bg-primary text-primary-foreground font-semibold'
-                  : 'bg-muted rounded-2xl p-5 my-8'
+                "flex max-w-screen-md mb-4 mx-auto",
+                message.role === 'user' ? 'justify-end' : 'justify-start'
               )}
             >
-              {message.content.length > 0 ? (
-                <>
-                  <div className={cn('prose', message.role === 'user' && 'text-primary-foreground')}>
-                    <MemoizedMarkdown id={message.id} content={message.content} />
-                  </div>
-                  {message.role === 'assistant' && message.parts.filter((part) => part.type === "tool-invocation" && part.toolInvocation.state === 'result').length > 0 && (
-                    <div className="mt-2 space-y-2">
-                      <hr/>
-                      <p className='font-semibold text-sm text-muted-foreground'>Related Articles</p>
-                      {message.parts.map(part => {
-                        if (part.type === "tool-invocation" && part.toolInvocation.state === 'result') {
-                          const { title, slug } = part.toolInvocation.result[0];
-                          return (
-                            <Link
-                              key={part.toolInvocation.toolCallId}
-                              href={`/activities/${slug}`}
-                              className="flex flex-row items-center gap-4"
-                            >
-                              <div className='size-10 sm:size-12 flex justify-center items-center border rounded-lg'>
-                                <FileText strokeWidth={1.5} />
-                              </div>
-                              <div>
-                                <p className='text-base font-semibold'>{title}</p>
-                                <p className='text-sm text-muted-foreground'>Article</p>
-                              </div>
-                            </Link>
-                          );
-                        }
-                        return null;
-                      })}
+              <div
+                className={cn(
+                  message.role === 'user'
+                    ? 'rounded-xl py-3 px-5 bg-primary text-primary-foreground font-semibold'
+                    : 'bg-muted rounded-2xl p-5 my-8'
+                )}
+              >
+                {message.content.length > 0 ? (
+                  <>
+                    <div className={cn('prose', message.role === 'user' && 'text-primary-foreground')}>
+                      <MemoizedMarkdown id={message.id} content={message.content} />
                     </div>
-                  )}
-                </>
-              ) : (
-                <BouncingDots />
-              )}  
+                    {message.role === 'assistant' && message.parts.filter((part) => part.type === "tool-invocation" && part.toolInvocation.state === 'result').length > 0 && (
+                      <div className="mt-2 space-y-2">
+                        <hr />
+                        <p className='font-semibold text-sm text-muted-foreground'>Related Articles</p>
+                        {message.parts.map(part => {
+                          if (part.type === "tool-invocation" && part.toolInvocation.state === 'result') {
+                            const { title, slug } = part.toolInvocation.result[0];
+                            return (
+                              <Link
+                                key={part.toolInvocation.toolCallId}
+                                href={`/activities/${slug}`}
+                                className="flex flex-row items-center gap-4"
+                              >
+                                <div className='size-10 sm:size-12 flex justify-center items-center border rounded-lg'>
+                                  <FileText strokeWidth={1.5} />
+                                </div>
+                                <div>
+                                  <p className='text-base font-semibold'>{title}</p>
+                                  <p className='text-sm text-muted-foreground'>Article</p>
+                                </div>
+                              </Link>
+                            );
+                          }
+                          return null;
+                        })}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <BouncingDots />
+                )}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Fixed input container */}
-      <div className="sticky bottom-0 mx-auto bg-background max-w-screen-md pb-8 flex flex-row gap-2">
+          ))}
+        </div>
+      ) : (
+        <div className="mx-auto max-w-screen-md flex flex-col items-center justify-center gap-4 text-center mb-6">
+          <h2 className='text-2xl md:text-3xl font-semibold'>Welcome!</h2>
+          <p className='text-muted-foreground'>
+            I&apos;m Fin, your financial education wizard.
+            Ask me anything about personal finance, and I&apos;ll do my best to respond.
+            <br />
+            <i>Remember, I&apos;m an AI, and still make mistakes!</i>
+          </p>
+        </div>
+      )}
+      {/* Centered input container initially, sticky when content grows */}
+      <div className={cn(
+        "mx-auto bg-background max-w-screen-md flex flex-row gap-2 transition-all w-full",
+        messages.length > 0 && "sticky bottom-0 pb-8"
+      )}>
         <Input
           value={input}
           onChange={event => {
