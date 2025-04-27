@@ -124,6 +124,7 @@ export default function Page() {
             else append({ content: input, role: 'user' });
           }}
           className='h-12 [&_svg]:h-5 [&_svg]:w-5'
+          disabled={input.length === 0}
         >
           {status === 'submitted' || status === 'streaming' ? <CircleStop /> : <Send />}
         </Button>
