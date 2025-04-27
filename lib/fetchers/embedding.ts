@@ -26,14 +26,19 @@ export async function findRelevantActivities(query: string) {
       userQueryEmbedded,
     )})`;
 
-    const similarGuides = await db
-      .select({ name: activities.content, similarity })
+    const similarActivities = await db
+      .select({
+        content: activities.content,
+        title: activities.title,
+        slug: activities.slug,
+        similarity
+      })
       .from(activities)
       .where(gt(similarity, 0.5))
       .orderBy(t => desc(t.similarity))
       .limit(4);
 
-    return similarGuides;
+    return similarActivities;
 
   } catch (error) {
     console.error("Error fetching relevant documents:", error);
