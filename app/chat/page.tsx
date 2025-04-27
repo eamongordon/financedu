@@ -41,7 +41,7 @@ export default function Page() {
                   <div className={cn('prose dark:prose-invert', message.role === 'user' && 'text-primary-foreground')}>
                     <MemoizedMarkdown id={message.id} content={message.content} />
                   </div>
-                  {message.role === 'assistant' && message.parts.filter((part) => part.type === "tool-invocation" && part.toolInvocation.state === 'result').length > 0 && (
+                  {message.role === 'assistant' && message.parts.some((part) => part.type === "tool-invocation" && part.toolInvocation.state === 'result' && part.toolInvocation.result.length > 0) && (
                     <div className="mt-2 space-y-2">
                       <hr />
                       <p className='font-semibold text-sm text-muted-foreground'>Related Articles</p>
