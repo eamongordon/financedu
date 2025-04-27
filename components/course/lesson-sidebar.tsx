@@ -43,10 +43,17 @@ export function LessonSidebar({ lesson, lessonSlug, moduleSlug, courseSlug, isLo
     const activitySlug = params?.activitySlug;
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const pathname = usePathname();
+    const [completedActivities, setCompletedActivities] = useState<Set<string>>(new Set());
 
     useEffect(() => {
+        if (isLoggedIn && activitySlug && lesson ) {
+            const activity = lesson.activities.find((activity) => activity.slug === activitySlug);
+            if (activity?.type === "Article") {
+                setCompletedActivities((prev) => new Set(prev).add(activitySlug));
+            }
+        }
         setIsDrawerOpen(false);
-    }, [pathname]);
+    }, [pathname, activitySlug, lesson, isLoggedIn]);
 
     if (!lesson) return null;
 
@@ -95,6 +102,7 @@ export function LessonSidebar({ lesson, lessonSlug, moduleSlug, courseSlug, isLo
                                 activitySlug={activitySlug}
                                 isLoggedIn={isLoggedIn}
                                 setIsDrawerOpen={setIsDrawerOpen}
+                                completedActivities={completedActivities}
                             />
                         </div>
                     </DrawerContent>
@@ -131,6 +139,7 @@ export function LessonSidebar({ lesson, lessonSlug, moduleSlug, courseSlug, isLo
                     activitySlug={activitySlug}
                     isLoggedIn={isLoggedIn}
                     setIsDrawerOpen={setIsDrawerOpen}
+                    completedActivities={completedActivities}
                 />
             </div>
         </>
@@ -186,9 +195,10 @@ interface ActivityLinkProps {
     activitySlug: string | undefined;
     isLoggedIn: boolean;
     setIsDrawerOpen: (isOpen: boolean) => void;
+    completedActivities: Set<string>;
 }
 
-function ActivityNav({ activities, courseSlug, moduleSlug, lessonSlug, activitySlug, isLoggedIn, setIsDrawerOpen }: ActivityLinkProps) {
+function ActivityNav({ activities, courseSlug, moduleSlug, lessonSlug, activitySlug, isLoggedIn, setIsDrawerOpen, completedActivities }: ActivityLinkProps) {
     return (
         <nav className="flex flex-col divide-y border-t border-b w-full">
             {activities.map((activity) => (
@@ -206,7 +216,12 @@ function ActivityNav({ activities, courseSlug, moduleSlug, lessonSlug, activityS
                     onClick={() => activitySlug === activity.slug && setIsDrawerOpen(false)}
                 >
                     <CompletionIcon
-                        isComplete={isLoggedIn ? ((activitySlug === activity.slug && activity.type === "Article") || (activity as NonNullable<LessonWithActivitiesAndUserProgress>["activities"][number]).userCompletion.some(userProgress => userProgress.activityId === activity.id)) : false}
+                        isComplete={
+                            completedActivities.has(activity.slug) || (
+                                isLoggedIn ? (
+                                    (activitySlug === activity.slug && activity.type === "Article") || (activity as NonNullable<LessonWithActivitiesAndUserProgress>["activities"][number]).userCompletion.some(userProgress => userProgress.activityId === activity.id)) :
+                                    false)
+                        }
                         icon={activity.type === "Article" ? <FileText strokeWidth={1.5} /> : <CircleHelp strokeWidth={1.5} />}
                         isCurrent={activitySlug === activity.slug}
                     />
