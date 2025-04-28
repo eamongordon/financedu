@@ -108,7 +108,7 @@ export function LessonSidebar({ lesson, lessonSlug, moduleSlug, courseSlug, isLo
                     </DrawerContent>
                 </Drawer>
             </div>
-            <div className="hidden sm:flex sm:w-1/3 flex-col gap-4 items-start text-left sm:sticky top-[64px] mb-4 sm:mb-0 sm:h-[calc(100vh-64px)] overflow-auto">
+            <div className="hidden sm:flex sm:w-1/3 flex-col gap-4 items-start text-left sm:sticky top-[64px] mb-4 sm:mb-0 overflow-auto">
                 {/* Desktop content */}
                 <div className="py-4 w-full border-b flex flex-row items-center gap-4 px-2 md:px-8">
                     <div className="size-12 aspect-square bg-gradient-to-br from-[#00B5EA] to-[#02CF46] dark:from-[#00B5EA]/60 dark:to-[#02CF46]/60 rounded-lg flex justify-center items-center text-background">
