@@ -1,8 +1,8 @@
 import { embed } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { db } from '../db';
-import { activities } from '../db/schema';
-import { cosineDistance, desc, gt, sql } from 'drizzle-orm';
+import { activities, courses, lessons, modules } from '../db/schema';
+import { cosineDistance, desc, gt, sql, eq } from 'drizzle-orm';
 
 const embeddingModel = openai.embedding('text-embedding-3-small');
 
@@ -31,9 +31,15 @@ export async function findRelevantActivities(query: string) {
         content: activities.content,
         title: activities.title,
         slug: activities.slug,
+        lessonSlug: lessons.slug,
+        moduleSlug: modules.slug,
+        courseSlug: courses.slug,
         similarity
       })
       .from(activities)
+      .leftJoin(lessons, eq(lessons.id, activities.lessonId))
+      .leftJoin(modules, eq(modules.id, lessons.moduleId))
+      .leftJoin(courses, eq(courses.id, modules.courseId))
       .where(gt(similarity, 0.5))
       .orderBy(t => desc(t.similarity))
       .limit(4);

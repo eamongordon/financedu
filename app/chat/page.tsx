@@ -47,11 +47,12 @@ export default function Page() {
                       <p className='font-semibold text-sm text-muted-foreground'>Related Articles</p>
                       {message.parts.map(part => {
                         if (part.type === "tool-invocation" && part.toolInvocation.state === 'result' && part.toolInvocation.result.length > 0) {
-                          const { title, slug } = part.toolInvocation.result[0];
+                          const { title, slug, lessonSlug, moduleSlug, courseSlug } = part.toolInvocation.result[0];
                           return (
                             <Link
                               key={part.toolInvocation.toolCallId}
-                              href={`/activities/${slug}`}
+                              href={`/courses/${courseSlug}/${moduleSlug}/${lessonSlug}/${slug}`}
+                              target="_blank"
                               className="flex flex-row items-center gap-4"
                             >
                               <div className='size-10 sm:size-12 flex justify-center items-center border rounded-lg'>
