@@ -26,7 +26,7 @@ export default async function LessonLayout({ params, children }: LessonLayoutPro
     const previousLesson = await getPreviousLesson(lessonSlug);
 
     return (
-        <div className="w-full flex flex-col sm:flex-row sm:flex-grow sm:divide-x divide-border">
+        <div className="w-full flex flex-col sm:flex-row sm:flex-grow sm:divide-x divide-border h-[calc(100dvh-64px)]">
             {isLoggedIn ? (
                 <LessonSidebar
                     lesson={lesson as LessonWithActivitiesAndUserProgress}
@@ -48,7 +48,7 @@ export default async function LessonLayout({ params, children }: LessonLayoutPro
                     lessonSlug={lessonSlug}
                 />
             )}
-            <div className="sm:w-2/3 flex flex-col items-center overflow-auto">
+            <div className="sm:w-2/3 flex-1 flex flex-col items-center overflow-auto">
                 {children}
             </div>
         </div>

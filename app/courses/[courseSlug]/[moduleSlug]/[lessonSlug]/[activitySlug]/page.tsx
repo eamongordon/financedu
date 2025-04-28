@@ -47,7 +47,7 @@ export default async function LessonPage({
     const classes = isTeacher ? await getTeacherClasses() : undefined;
 
     return (
-        <main className="w-full">
+        <main className="w-full flex-1 flex flex-col overflow-auto">
             <section className="border-b flex justify-center">
                 <div className="px-4 md:px-8 lg:px-0 w-full lg:w-4/5 py-4 sm:py-8 flex flex-row items-center justify-between gap-4">
                     <div className='[&_svg]:size-8 sm:[&_svg]:size-auto flex items-center justify-center gap-4'>
@@ -68,11 +68,11 @@ export default async function LessonPage({
                 <p>{activity.description}</p>
             </section>
             {activity.type === "Article" && (
-                <div className="flex flex-col items-center h-[calc(100dvh-202px)] sm:min-h-[calc(100vh-196px)] relative">
-                    <div className="py-8 px-4 w-full flex justify-center h-[calc(100vh-274px)] sm:h-[calc(100vh-268px)] overflow-scroll">
+                <div className="flex-1 flex flex-col items-center overflow-auto">
+                    <div className="flex-1 py-8 px-4 w-full flex justify-center overflow-auto">
                         <article className="prose dark:prose-invert" dangerouslySetInnerHTML={{ __html: activity.content! }} />
                     </div>
-                    <div className="border-t w-full p-4 flex justify-end items-center absolute bottom-0 bg-background">
+                    <div className="border-t w-full p-4 flex justify-end items-center bg-background">
                         <Link href={href} className={buttonVariants()}>
                             {label}
                         </Link>

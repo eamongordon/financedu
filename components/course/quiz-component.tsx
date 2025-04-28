@@ -171,8 +171,8 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
     const { href, label } = getNextActivityLink(currentCourseSlug, currentModuleSlug, currentLessonSlug, nextActivity);
 
     return (
-        <div className="flex flex-col items-center h-[calc(100dvh-202px)] sm:min-h-[calc(100vh-196px)] relative">
-            <div className="py-8 w-full flex justify-center h-[calc(100vh-274px)] sm:h-[calc(100vh-268px)] overflow-scroll">
+        <div className="flex-1 flex flex-col items-center overflow-auto">
+            <div className="flex-1 py-8 w-full flex justify-center overflow-auto">
                 {isQuizFinished ? (
                     <div className="h-full justify-center items-center flex flex-col gap-4">
                         <div className="flex flex-col gap-2 items-center">
@@ -230,7 +230,7 @@ export default function QuizComponent({ activity, nextActivity }: { activity: Ac
                     <InfoQuestion question={currentQuestion} />
                 ) : null}
             </div>
-            <div className="border-t w-full p-4 flex justify-end items-center absolute bottom-0 bg-background">
+            <div className="border-t w-full p-4 flex justify-end items-center bg-background">
                 <div className="w-full text-center flex flex-row gap-4 justify-center items-center space-x-2">
                     <p className="font-semibold text-muted-foreground">{questionResponses.length ? `${questionResponses.length} / ${activity.activityToQuestions.length} Done` : `${activity.activityToQuestions.length} Question${activity.activityToQuestions.length === 1 ? "" : "s"}`}</p>
                     <div className="flex flex-row gap-2">
