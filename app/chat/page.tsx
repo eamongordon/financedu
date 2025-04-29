@@ -32,10 +32,10 @@ export default function Page() {
               {message.content.length > 0 ? (
                 <div
                   className={cn(
-                    "mb-4",
+                    "mb-8",
                     message.role === 'user'
                       ? 'rounded-xl py-3 px-5 bg-primary text-primary-foreground font-semibold'
-                      : 'bg-muted rounded-2xl p-5 my-8'
+                      : 'bg-muted rounded-2xl p-5'
                   )}
                 >
                   <div className={cn('prose dark:prose-invert', message.role === 'user' && 'text-primary-foreground')}>
