@@ -253,10 +253,12 @@ export function StandardsLayout({ standards, defaultValues, lesson, activity, is
                                         <h4 className='font-semibold text-secondary'>Description</h4>
                                         <p>{standard.description}</p>
                                     </div>
-                                    <div>
-                                        <h4 className='font-semibold text-secondary'>Objectives</h4>
-                                        <p dangerouslySetInnerHTML={{ __html: standard.objectives ?? "" }}></p>
-                                    </div>
+                                    {standard.objectives && (
+                                        <div>
+                                            <h4 className='font-semibold text-secondary'>Objectives</h4>
+                                            <p dangerouslySetInnerHTML={{ __html: standard.objectives ?? "" }}></p>
+                                        </div>
+                                    )}
                                     {standard.activityToStandards?.length > 0 && (
                                         <div>
                                             <h4 className='font-semibold text-secondary'>Content</h4>
