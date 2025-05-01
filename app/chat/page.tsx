@@ -16,7 +16,7 @@ export default function Page() {
   const prompts = [
     { icon: <PiggyBank />, text: "What are some strategies for saving money?" },
     { icon: <ChartLine />, text: "Why does the stock market go up and down?" },
-    { icon: <House />, text: "What is a mortgage and how does it work?" }
+    { icon: <House />, text: "How do mortgages and down payments work?" }
   ];
 
   useEffect(() => {
