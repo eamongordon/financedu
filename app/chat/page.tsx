@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useChat } from '@ai-sdk/react';
-import { CircleAlert, CircleStop, FileText, Send } from 'lucide-react';
+import { ChartLine, CircleAlert, CircleStop, FileText, House, PiggyBank, Send } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 
@@ -13,12 +13,18 @@ export default function Page() {
   const { messages, input, setInput, append, stop, status } = useChat();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
+  const prompts = [
+    { icon: <PiggyBank />, text: "What are some strategies for saving money?" },
+    { icon: <ChartLine />, text: "Why does the stock market go up and down?" },
+    { icon: <House />, text: "What is a mortgage and how does it work?" }
+  ];
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: 'nearest' });
   }, [messages]);
 
   return (
-    <main className="min-h-[calc(50dvh)] px-4 max-h-[calc(100dvh-64px)] flex flex-col items-center justify-center">
+    <main className="h-[calc(100dvh-64px)] px-4 flex flex-col items-center justify-center">
       {messages.length > 0 ? (
         <div className="flex-1 w-full overflow-y-auto pt-8">
           {messages.map((message, index) => (
@@ -99,6 +105,20 @@ export default function Page() {
             <br />
             <i>Remember, I&apos;m an AI, and still make mistakes!</i>
           </p>
+          {/* Prompt containers */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-4 w-full">
+            {prompts.map((prompt, index) => (
+              <Button
+                key={index}
+                variant="outline"
+                className="gap-4 md:gap-2 justify-start md:flex md:flex-col md:h-auto md:whitespace-normal md:[&_svg]:size-5 md:py-4"
+                onClick={() => append({ content: prompt.text, role: 'user' })}
+              >
+                {prompt.icon}
+                {prompt.text}
+              </Button>
+            ))}
+          </div>
         </div>
       )}
       {/* Centered input container initially, sticky when content grows */}
