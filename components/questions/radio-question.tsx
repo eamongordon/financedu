@@ -90,6 +90,10 @@ export function RadioQuestion({ question, onResponseChange, onValidChange, showA
                                                                 isSelected ? (isCorrect ? "text-primary" : "text-destructive") : "text-muted-foreground"
                                                             )}>{isCorrect ? "CORRECT" : "INCORRECT"} {isSelected && "(SELECTED)"}:</div>}
                                                             <h1 className="text-base">{questionOption.value}</h1>
+                                                            {(showAnswer && questionOption.feedback) && <div className={cn(
+                                                                "text-sm leading-none",
+                                                                isSelected ? (isCorrect ? "text-primary" : "text-destructive") : "text-muted-foreground"
+                                                            )}>{questionOption.feedback}</div>}
                                                         </div>
                                                     </span>
                                                 </Label>

@@ -111,6 +111,10 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange,
                                                                     "text-muted-foreground"
                                                         )}>{isCorrect ? (isSelected ? "CORRECT (SELECTED)" : "CORRECT (NOT SELECTED)") : isSelected ? "INCORRECT (SELECTED)" : "INCORRECT"}:</div>}
                                                         <h1 className="text-base">{questionOption.value}</h1>
+                                                        {(showAnswer && questionOption.feedback) && <div className={cn(
+                                                            "text-sm leading-none",
+                                                            isSelected ? (isCorrect ? "text-primary" : "text-destructive") : "text-muted-foreground"
+                                                        )}>{questionOption.feedback}</div>}
                                                     </FormLabel>
                                                 </FormItem>
                                             )}
