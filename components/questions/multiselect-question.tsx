@@ -35,7 +35,13 @@ export function MultiselectQuestion({ question, onResponseChange, onValidChange,
             items: [],
         },
         mode: "onChange"
-    })
+    });
+
+    useEffect(() => {
+        form.reset({
+            items: [],
+        });
+    }, [question, form]);
 
     function onChange(data: z.infer<typeof FormSchema>) {
         onResponseChange(data.items);
