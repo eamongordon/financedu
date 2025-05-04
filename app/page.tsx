@@ -18,7 +18,7 @@ export default function Home() {
             Read the announcement
             <ArrowRight
               size={16}
-              className="inline ml-1"
+              className="ml-1"
             />
           </Link>
         </div>
