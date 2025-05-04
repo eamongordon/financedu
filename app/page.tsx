@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 export default function Home() {
   return (
     <>
-      <Notice persistent>
+      <Notice persistent storageKey="fin-ai-announcement">
         <div className="h-full flex flex-row items-center px-4 md:justify-center text-sm gap-2 text-muted-foreground">
           Introducing Fin, Our AI assistant!
           <Link

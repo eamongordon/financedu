@@ -4,22 +4,26 @@ import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { X } from 'lucide-react';
 
-export function Notice({ children, persistent = false }: { children: React.ReactNode, persistent?: boolean }) {
+type NoticeProps = 
+    | { persistent: true; storageKey: string; children: React.ReactNode }
+    | { persistent?: false; storageKey?: never; children: React.ReactNode };
+
+export function Notice({ children, persistent = false, storageKey }: NoticeProps) {
     const [visible, setVisible] = useState(true);
 
     useEffect(() => {
         if (persistent) {
-            const storedVisibility = localStorage.getItem('noticeVisible');
+            const storedVisibility = localStorage.getItem(storageKey!);
             if (storedVisibility !== null) {
                 setVisible(storedVisibility === 'true');
             }
         }
-    }, [persistent]);
+    }, [persistent, storageKey]);
 
     const handleClose = () => {
         setVisible(false);
         if (persistent) {
-            localStorage.setItem('noticeVisible', 'false');
+            localStorage.setItem(storageKey!, 'false');
         }
     };
 
