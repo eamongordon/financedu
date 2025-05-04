@@ -214,6 +214,7 @@ export const questionOptions = pgTable("questionOption", {
     .references(() => questions.id, { onDelete: "cascade" }),
   value: text("value").notNull(),
   isCorrect: boolean("isCorrect").notNull(),
+  feedback: text("feedback")
 })
 
 export const matchingSubquestions = pgTable("matchingSubquestion", {
