@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 export function Hero() {
     return (
-        <div className="flex flex-col h-dvh md:h-[550px] md:flex-row">
+        <div className="flex flex-col md:flex-row h-dvh md:h-[calc(100dvh-64px)] md:max-h-[550px] md:min-h-fit">
             <div className="relative h-1/3 md:h-auto md:w-1/2">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#00B5EA] to-[#02CF46] dark:brightness-[0.6]"></div>
                 <Image
