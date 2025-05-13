@@ -7,7 +7,7 @@ export default function AuthLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className="grid min-h-svh lg:grid-cols-2">
+        <div className="grid min-h-[calc(100dvh-64px)] lg:grid-cols-2">
             <div className="relative hidden bg-muted lg:block">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#00B5EA] to-[#02CF46] dark:brightness-[0.6]"></div>
                 <Image
