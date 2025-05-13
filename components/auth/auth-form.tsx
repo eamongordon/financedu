@@ -147,6 +147,7 @@ export default function AuthForm({ page }: { page: "login" | "signup" }) {
       
       if (error) {
         setLoading(false);
+        toast.error("An error occurred. Please try again.");
       } else {
         if (redirectUri) {
           router.push(decodeURIComponent(redirectUri));
