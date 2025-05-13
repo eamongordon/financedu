@@ -6,7 +6,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
     title: 'Standards',
-    description: 'Explore worldwide localities and mines at Prospector Minerals. Find information, photos, and minerals of mineral, rock, and geology localities and mines.',
+    description: 'Explore financial literacy educational standards for your state and find our free, relevant, and interactive content.',
 }
 
 const Page = async (
