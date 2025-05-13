@@ -1,6 +1,6 @@
 import { SidebarNav } from "@/components/account/sidebar-nav"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { auth } from "@/lib/auth"
+import { getSession } from "@/lib/auth"
 import { getDisplayName, getInitials } from "@/lib/utils"
 
 const defaultNavItemsTop = [
@@ -24,7 +24,7 @@ interface SettingsLayoutProps {
 }
 
 export default async function SettingsLayout({ children }: SettingsLayoutProps) {
-  const session = await auth();
+  const session = await getSession();
   if (!session?.user) {
     throw new Error("Not authenticated");
   }

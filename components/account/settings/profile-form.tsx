@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { editUser } from "@/lib/actions"
 import { useRouter } from "next/navigation";
-import { SessionProvider, useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 
 const profileFormSchema = z.object({
     firstName: z.string().optional(),
@@ -32,15 +32,13 @@ interface ProfileFormProps {
 
 export function ProfileForm({ defaultValues }: ProfileFormProps) {
     return (
-        <SessionProvider>
-            <ProfileFormInner defaultValues={defaultValues} />
-        </SessionProvider>
+        <ProfileFormInner defaultValues={defaultValues} />
     )
 }
 
 export function ProfileFormInner({ defaultValues }: ProfileFormProps) {
     const router = useRouter();
-    const { update } = useSession();
+    const { refetch } = useSession();
 
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(profileFormSchema),
@@ -50,7 +48,7 @@ export function ProfileFormInner({ defaultValues }: ProfileFormProps) {
     async function onSubmit(data: ProfileFormValues) {
         try {
             await editUser(data);
-            await update(data);
+            await refetch();
             router.refresh();
             form.reset(data);
             toast.success("Profile updated!");

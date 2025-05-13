@@ -6,8 +6,7 @@ import { CircleHelp, FileText } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { getNextActivityLink } from "@/lib/utils";
-import { auth } from "@/lib/auth";
-import { SessionProvider } from "next-auth/react";
+import { getSession } from "@/lib/auth";
 import { notFound } from 'next/navigation';
 import { CreateAssignments } from '@/components/account/classes/create-assigments';
 
@@ -32,7 +31,7 @@ export default async function LessonPage({
     const { activitySlug, lessonSlug, moduleSlug, courseSlug } = await params;
     const activity = await getActivity(activitySlug);
 
-    const session = await auth();
+    const session = await getSession();
 
     if (!activity) return notFound();
 
@@ -80,9 +79,7 @@ export default async function LessonPage({
                 </div>
             )}
             {activity.type === "Quiz" && (
-                <SessionProvider>
-                    <QuizComponent activity={activity} nextActivity={nextActivity} />
-                </SessionProvider>
+                <QuizComponent activity={activity} nextActivity={nextActivity} />
             )}
         </main>
     );

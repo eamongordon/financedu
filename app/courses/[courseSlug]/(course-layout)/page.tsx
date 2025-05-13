@@ -3,7 +3,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CompletionIcon } from "@/components/ui/completion-icon";
 import { getCourseDisplayBySlug, getCourseWithModulesAndLessons, getCourseWithModulesAndLessonsAndUserCompletion } from "@/lib/fetchers"
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { GraduationCap } from "lucide-react";
 import { DynamicIcon, dynamicIconImports } from "lucide-react/dynamic";
@@ -30,7 +30,7 @@ export default async function Page({
     params,
 }: Props) {
     const slug = (await params).courseSlug;
-    const session = await auth();
+    const session = await getSession();
     const isLoggedIn = session && session.user && session.user.id;
     const course = isLoggedIn
         ? await getCourseWithModulesAndLessonsAndUserCompletion(slug)

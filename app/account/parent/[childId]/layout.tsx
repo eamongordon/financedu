@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { TabsNav } from "@/components/account/tabs-nav";
 import { getParentChildApproved } from "@/lib/fetchers";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import { getDisplayName } from "@/lib/utils";
 
 function formatDate(date: Date) {
@@ -31,7 +31,7 @@ export default async function LessonLayout({
     children: React.ReactNode,
     params: Promise<{ childId: string }>
 }) {
-    const session = await auth();
+    const session = await getSession();
     if (!session?.user) {
         throw new Error("Not authenticated");
     }

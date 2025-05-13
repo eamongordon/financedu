@@ -1,5 +1,5 @@
 import { getLessonWithActivities, getLessonWithActivitiesAndUserProgress, getNextLesson, getPreviousLesson } from "@/lib/fetchers"
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import { LessonSidebar } from "@/components/course/lesson-sidebar";
 import { notFound } from "next/navigation";
 import { Notice } from "@/components/notice";
@@ -16,7 +16,7 @@ type LessonWithActivitiesAndUserProgress = Awaited<ReturnType<typeof getLessonWi
 
 export default async function LessonLayout({ params, children }: LessonLayoutProps) {
     const { lessonSlug, courseSlug, moduleSlug } = await params;
-    const session = await auth();
+    const session = await getSession();
 
     const isLoggedIn = session && session.user && session.user.id;
     const lesson = isLoggedIn

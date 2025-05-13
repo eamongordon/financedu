@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form"
 import { editUser } from "@/lib/actions"
 import { useRouter } from "next/navigation";
-import { SessionProvider, useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Roles } from "@/lib/db/schema";
 import { GraduationCap, Apple } from "lucide-react";
@@ -33,15 +33,13 @@ interface RolesFormProps {
 
 export function RolesSettingsForm({ defaultValues }: RolesFormProps) {
     return (
-        <SessionProvider>
-            <RolesSettingsFormInner defaultValues={defaultValues} />
-        </SessionProvider>
+        <RolesSettingsFormInner defaultValues={defaultValues} />
     )
 }
 
 export function RolesSettingsFormInner({ defaultValues }: RolesFormProps) {
     const router = useRouter();
-    const { update } = useSession();
+    const { refetch } = useSession();
 
     const form = useForm<RolesFormValues>({
         resolver: zodResolver(rolesFormSchema),
@@ -51,7 +49,7 @@ export function RolesSettingsFormInner({ defaultValues }: RolesFormProps) {
     async function onSubmit(data: RolesFormValues) {
         try {
             await editUser({ roles: data.roles });
-            await update({ roles: data.roles });
+            await refetch();
             router.refresh();
             form.reset(data);
             toast.success("Roles updated!");

@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { editUser } from "@/lib/actions"
 import { useRouter } from "next/navigation";
-import { SessionProvider, useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 
 const loginFormSchema = z.object({
     email: z.string().email(),
@@ -33,15 +33,13 @@ interface LoginFormProps {
 
 export function LoginSettingsForm({ defaultValues }: LoginFormProps) {
     return (
-        <SessionProvider>
-            <LoginSettingsFormInner defaultValues={defaultValues} />
-        </SessionProvider>
+        <LoginSettingsFormInner defaultValues={defaultValues} />
     )
 }
 
 export function LoginSettingsFormInner({ defaultValues }: LoginFormProps) {
     const router = useRouter();
-    const { update } = useSession();
+    const { refetch } = useSession();
 
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(loginFormSchema),
@@ -51,7 +49,7 @@ export function LoginSettingsFormInner({ defaultValues }: LoginFormProps) {
     async function onSubmit(data: LoginFormValues) {
         try {
             await editUser(data);
-            await update(data);
+            await refetch();
             router.refresh();
             form.reset(data);
             toast.success("Login information updated!");
@@ -87,7 +85,7 @@ export function LoginSettingsFormInner({ defaultValues }: LoginFormProps) {
                             <FormControl>
                                 <Input type="password" placeholder="Password" {...field} />
                             </FormControl>
-                            <FormDescription>Your new password must be at least 8 characters long.</FormDescription>                            
+                            <FormDescription>Your new password must be at least 8 characters long.</FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}

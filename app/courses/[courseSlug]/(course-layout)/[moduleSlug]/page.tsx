@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { getModuleDisplayBySlug, getModuleWithLessonsAndActivities, getModuleWithLessonsAndActivitiesAndUserCompletion, getTeacherClasses } from "@/lib/fetchers";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { CompletionIcon } from "@/components/ui/completion-icon";
@@ -30,7 +30,7 @@ export default async function CourseLayout({
     params,
 }: Props) {
     const moduleSlug = (await params).moduleSlug;
-    const session = await auth();
+    const session = await getSession();
     const isLoggedIn = session && session.user && session.user.id;
     const moduleObj = isLoggedIn
         ? await getModuleWithLessonsAndActivitiesAndUserCompletion(moduleSlug)

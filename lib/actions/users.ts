@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { users, type Roles } from "../db/schema";
 import { db } from "../db";
 import { hash, compare } from "bcrypt";
-import { auth } from "../auth";
+import { getSession } from "../auth";
 
 export async function createUser({ email, password, firstName, lastName, roles }: { email: string, password: string, firstName?: string, lastName?: string, roles: Roles }) {
     const passwordHash = await hash(password, 10);
@@ -25,7 +25,7 @@ export async function validateUser(email: string, password: string) {
 export const editUser = async (
     updates: { [key: string]: string | Roles }
 ) => {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.email) {
         throw new Error("Not authenticated");
     }
@@ -54,7 +54,7 @@ export const editUser = async (
 };
 
 export const deleteUser = async () => {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.email) {
         throw new Error("Not authenticated");
     }

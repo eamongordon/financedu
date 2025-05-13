@@ -1,27 +1,28 @@
-import NextAuth from "next-auth"
-import authConfig from "@/lib/auth/config"
+import { NextRequest, NextResponse } from "next/server";
+import { getSessionCookie } from "better-auth/cookies";
 
-export const { auth } = NextAuth(authConfig)
-
-export default auth((req) => {
-    const { pathname } = req.nextUrl;
-    const url = new URL(req.url);
+export async function middleware(request: NextRequest) {
+    const sessionCookie = getSessionCookie(request);
+    const { pathname } = request.nextUrl;
+    const url = new URL(request.url);
     const searchParams = url.searchParams;
 
-    if (req.auth) {
+    if (sessionCookie) {
         // Redirect to account settings page if user logged in and trying to access login or signup page
         if ((pathname === '/login' || pathname === '/signup') && !searchParams.has('redirect')) {
-            const redirectUrl = req.url.replace(pathname, '/account/settings');
-            return Response.redirect(redirectUrl);
+            const redirectUrl = request.url.replace(pathname, '/account/settings');
+            return NextResponse.redirect(redirectUrl);
         }
     } else {
         // Redirect to login page if user not logged in and trying to access protected page
         if (pathname !== '/login' && pathname !== '/signup') {
-            const redirectUrl = req.url.replace(pathname, `/login?redirect=${encodeURIComponent(req.url)}`);
+            const redirectUrl = request.url.replace(pathname, `/login?redirect=${encodeURIComponent(request.url)}`);
             return Response.redirect(redirectUrl);
         }
+
     }
-})
+    return NextResponse.next();
+}
 
 export const config = {
     matcher: ["/manage", "/account/:path*", "/login", "/signup", "/chat"]

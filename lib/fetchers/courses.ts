@@ -1,7 +1,7 @@
 import { eq, gt, and, lt, inArray, ilike, SQL, gte, lte } from "drizzle-orm";
 import { courses, modules, lessons, activities, userCompletion, standards, activityToStandards, glossary } from "../db/schema";
 import { db } from "../db";
-import { auth } from "../auth";
+import { getSession } from "../auth";
 
 export async function listCourses() {
     return await db.query.courses.findMany();
@@ -422,7 +422,7 @@ export async function getPreviousLesson(lessonSlug: string) {
 }
 
 export async function getLessonWithActivitiesAndUserProgress(lessonSlug: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -456,7 +456,7 @@ export async function getLessonWithActivitiesAndUserProgress(lessonSlug: string)
 }
 
 export async function getModuleWithLessonsAndActivitiesAndUserCompletion(moduleSlug: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -495,7 +495,7 @@ export async function getModuleWithLessonsAndActivitiesAndUserCompletion(moduleS
 }
 
 export async function getCourseWithModulesAndLessonsAndUserCompletion(courseSlug: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -534,7 +534,7 @@ export async function getCourseWithModulesAndLessonsAndUserCompletion(courseSlug
 }
 
 export async function getUserCoursesWithProgressAndNextActivity() {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -601,7 +601,7 @@ export async function getUserCoursesWithProgressAndNextActivity() {
 }
 
 export async function getCompletedActivities() {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -645,7 +645,7 @@ export async function getCompletedActivities() {
 }
 
 export async function getUserCompletion() {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }

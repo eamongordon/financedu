@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { buttonVariants } from "@/components/ui/button";
 import { getLessonWithActivitiesAndUserProgress, getLessonDisplayBySlug, getLessonWithActivities } from "@/lib/fetchers";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import Link from "next/link"
 import { FileText, CircleHelp } from "lucide-react";
@@ -31,7 +31,7 @@ export default async function LessonPage({
     const courseId = (await params).courseSlug;
     const moduleId = (await params).moduleSlug;
     const lessonId = (await params).lessonSlug;
-    const session = await auth();
+    const session = await getSession();
     const isLoggedIn = session && session.user && session.user.id;
     const lesson = isLoggedIn ?
         await getLessonWithActivitiesAndUserProgress(lessonId) :

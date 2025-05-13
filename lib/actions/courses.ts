@@ -2,10 +2,10 @@
 
 import { userCompletion } from "../db/schema";
 import { db } from "../db";
-import { auth } from "../auth";
+import { getSession } from "../auth";
 
 export async function markActivityComplete(activityId: string, correctAnswers?: number, totalQuestions?: number) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
