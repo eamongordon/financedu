@@ -11,7 +11,6 @@ import {
   index
 } from "drizzle-orm/pg-core"
 import { sql } from 'drizzle-orm'
-import type { AdapterAccountType } from "next-auth/adapters"
 import { relations } from "drizzle-orm"
 
 export type Role = "learner" | "teacher" | "parent";
@@ -43,7 +42,6 @@ export const accounts = pgTable(
     userId: text("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccountType>().notNull(),
     providerId: text("providerId").notNull(),
     id: text("id").$defaultFn(() => crypto.randomUUID()),
     accountId: text("accountId").notNull(),

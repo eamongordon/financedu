@@ -12,18 +12,24 @@ export const auth = betterAuth({
     user: {
         additionalFields: {
             firstName: {
-                type: "string"
+                type: "string",
+                required: false
             },
             lastName: {
-                type: "string"
+                type: "string",
+                required: false
             },
             roles: {
                 type: "string[]",
+                required: false
             }
         },
         deleteUser: {
             enabled: true
         }
+    },
+    session: {
+        freshAge: 0
     },
     emailAndPassword: {
         enabled: true,
