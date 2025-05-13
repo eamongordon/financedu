@@ -17,6 +17,7 @@ import { useTheme } from "next-themes"
 import { type Roles } from "@/lib/db/schema"
 import { cn, getDisplayName, getInitials } from "@/lib/utils"
 import { authClient } from "@/lib/auth-client"
+import { useRouter } from "next/navigation"
 
 interface UserMenuProps {
   imageSrc?: string
@@ -32,6 +33,7 @@ export default function UserMenu({ imageSrc, firstName, lastName, email, isMobil
   const hasName = firstName || lastName;
   const initials = hasName ? getInitials(nameStr) : undefined;
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -111,10 +113,20 @@ export default function UserMenu({ imageSrc, firstName, lastName, email, isMobil
           </DropdownMenuPortal>
         </DropdownMenuSub>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => authClient.signOut()}>
+        <DropdownMenuItem
+          onClick={async () => {
+            await authClient.signOut({
+              fetchOptions: {
+                onSuccess: () => {
+                  router.refresh();
+                }
+              }
+            })
+          }}
+        >
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
-    </DropdownMenu >
+    </DropdownMenu>
   )
 }
