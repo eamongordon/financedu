@@ -46,6 +46,7 @@ export const accounts = pgTable(
     type: text("type").$type<AdapterAccountType>().notNull(),
     providerId: text("providerId").notNull(),
     accountId: text("accountId").notNull(),
+    password: text("password"),
     refreshToken: text("refreshToken"),
     accessToken: text("accessToken"),
     accessTokenExpiresAt: timestamp("createdAt", { mode: "date", withTimezone: true }),
@@ -53,6 +54,8 @@ export const accounts = pgTable(
     scope: text("scope"),
     id_token: text("id_token"),
     session_state: text("session_state"),
+    createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).defaultNow(),
+    updatedAt: timestamp("updatedAt", { mode: "date", withTimezone: true }).defaultNow().$onUpdateFn(() => new Date()),
   },
   (account) => [
     {
@@ -64,6 +67,8 @@ export const accounts = pgTable(
 )
 
 export const sessions = pgTable("session", {
+  id: text("id")
+    .$defaultFn(() => crypto.randomUUID()),
   token: text("token").primaryKey(),
   userId: text("userId")
     .notNull()
@@ -71,23 +76,18 @@ export const sessions = pgTable("session", {
   expiresAt: timestamp("expiresAt", { mode: "date" }).notNull(),
   createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "date", withTimezone: true }).defaultNow().$onUpdateFn(() => new Date()),
+  ipAddress: text('ip_address'),
+  userAgent: text('user_agent'),
 })
 
-export const verificationTokens = pgTable(
-  "verificationToken",
-  {
-    identifier: text("identifier").notNull(),
-    token: text("token").notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (verificationToken) => [
-    {
-      compositePk: primaryKey({
-        columns: [verificationToken.identifier, verificationToken.token],
-      }),
-    },
-  ]
-)
+export const verifications = pgTable("verification", {
+  id: text('id').primaryKey(),
+  identifier: text('identifier').notNull(),
+  value: text('value').notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at'),
+  updatedAt: timestamp('updated_at')
+});
 
 export const authenticators = pgTable(
   "authenticator",
