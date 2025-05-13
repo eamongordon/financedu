@@ -23,10 +23,19 @@ import {
   FormField,
   FormItem,
   FormMessage,
+  FormLabel,
 } from "@/components/ui/form";
 
-const ResetPasswordFormSchema = z.object({
+const ForgotPasswordFormSchema = z.object({
   email: z.string().email()
+});
+
+const ResetPasswordFormSchema = z.object({
+  password: z.string().min(8, "Password must be at least 8 characters long"),
+  confirmPassword: z.string().min(8, "Password must be at least 8 characters long"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords must match",
+  path: ["confirmPassword"],
 });
 
 const LoginFormSchema = z.object({
@@ -60,7 +69,7 @@ const FormHeader = ({ title, description }: { title: string, description?: strin
   </>
 );
 
-export default function AuthForm({ page }: { page: "login" | "signup" }) {
+export default function AuthForm({ page }: { page: "login" | "signup" | "reset-password" }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUri = searchParams!.get('redirect');
@@ -68,10 +77,20 @@ export default function AuthForm({ page }: { page: "login" | "signup" }) {
   const [sentForgotPasswordEmail, setSentForgotPasswordEmail] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Forgot Password Form
+  const forgotPasswordForm = useForm<z.infer<typeof ForgotPasswordFormSchema>>({
+    resolver: zodResolver(ForgotPasswordFormSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
+
+  // Reset Password Form
   const resetPasswordForm = useForm<z.infer<typeof ResetPasswordFormSchema>>({
     resolver: zodResolver(ResetPasswordFormSchema),
     defaultValues: {
-      email: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
@@ -94,7 +113,7 @@ export default function AuthForm({ page }: { page: "login" | "signup" }) {
     },
   });
 
-  async function onResetPasswordFormSubmit(data: z.infer<typeof ResetPasswordFormSchema>) {
+  async function onForgotPasswordFormSubmit(data: z.infer<typeof ForgotPasswordFormSchema>) {
     try {
       setLoading(true);
       await authClient.forgetPassword({
@@ -102,12 +121,32 @@ export default function AuthForm({ page }: { page: "login" | "signup" }) {
         redirectTo: `${window.location.origin}/reset-password`,
       });
       setLoading(false);
-      setSentForgotPasswordEmail(true)
+      setSentForgotPasswordEmail(true);
       toast.success("Email sent! Check your inbox.");
-    } catch (error) {
-      console.log(error);
+    } catch {
       setLoading(false);
       toast.error("An error occurred. Please try again.");
+    }
+  }
+
+  async function onResetPasswordFormSubmit(data: z.infer<typeof ResetPasswordFormSchema>) {
+    try {
+      setLoading(true);
+      const token = searchParams!.get("token") || "";
+      const { error } = await authClient.resetPassword({
+        newPassword: data.password,
+        token,
+      });
+      setLoading(false);
+      if (error) {
+        toast.error("Failed to reset password. Please try again.");
+        return;
+      }
+      toast.success("Password reset successfully!");
+      router.push("/login");
+    } catch {
+      setLoading(false);
+      toast.error("Failed to reset password. Please try again.");
     }
   };
 
@@ -170,6 +209,47 @@ export default function AuthForm({ page }: { page: "login" | "signup" }) {
     <div>
       <div className="sm:mx-auto w-full rounded-xl">
         <div aria-label="Shift between Login and Signup forms">
+          {/* Reset Password Form */}
+          {page === "reset-password" && (
+            <div title="Reset Password">
+              <FormHeader title="Reset Password" description="Enter your new password below." />
+              <Form {...resetPasswordForm}>
+                <form onSubmit={resetPasswordForm.handleSubmit(onResetPasswordFormSubmit)} className="flex flex-col space-y-4 mt-8">
+                  <FormField
+                    control={resetPasswordForm.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>New Password</FormLabel>
+                        <FormControl>
+                          <Input type="password" placeholder="New Password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={resetPasswordForm.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Confirm Password</FormLabel>
+                        <FormControl>
+                          <Input type="password" placeholder="Confirm Password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button isLoading={loading || resetPasswordForm.formState.isSubmitting} disabled={!resetPasswordForm.formState.isDirty} type="submit">
+                    Reset Password
+                  </Button>
+                </form>
+              </Form>
+            </div>
+          )}
+
+          {/* Login Form */}
           {(page === "login" && !forgotPassword) && (
             <div title="Log In">
               <>
@@ -204,7 +284,7 @@ export default function AuthForm({ page }: { page: "login" | "signup" }) {
                       Forgot Password?
                     </button>
                     <Button isLoading={loading} type="submit">
-                      <p>Sign In</p>
+                      <p>Log In</p>
                     </Button>
                   </form>
                 </Form>
@@ -226,13 +306,14 @@ export default function AuthForm({ page }: { page: "login" | "signup" }) {
               </>
             </div>
           )}
-          {forgotPassword && (
+          {/* Forgot Password Form */}
+          {forgotPassword && page === "login" && (
             <div title="Forgot Password">
-              <FormHeader title="Reset Password" description="Send a login link to your account's email." />
-              <Form {...resetPasswordForm}>
-                <form onSubmit={resetPasswordForm.handleSubmit(onResetPasswordFormSubmit)} className="flex flex-col space-y-4 mt-8">
+              <FormHeader title="Forgot Password" description="Send a login link to your account's email." />
+              <Form {...forgotPasswordForm}>
+                <form onSubmit={forgotPasswordForm.handleSubmit(onForgotPasswordFormSubmit)} className="flex flex-col space-y-4 mt-8">
                   <FormField
-                    control={resetPasswordForm.control}
+                    control={forgotPasswordForm.control}
                     name="email"
                     render={({ field }) => (
                       <FormItem>
@@ -249,12 +330,17 @@ export default function AuthForm({ page }: { page: "login" | "signup" }) {
                 </form>
               </Form>
               <p className="text-center text-sm pt-8 pb-8 px-16">
-                <button className="hover:opacity-80 transition-opacity tap-highlight-transparent font-semibold text-sm">
+                <button
+                  className="hover:opacity-80 transition-opacity tap-highlight-transparent font-semibold text-sm"
+                  onClick={() => showForgotPassword(false)}
+                >
                   Back to Login
                 </button>
               </p>
             </div>
           )}
+
+          {/* Signup Form */}
           {(page === "signup" && !forgotPassword) && (
             <div title="Sign Up">
               <FormHeader title="Get Started" description="Access all we have to offer for free!" />

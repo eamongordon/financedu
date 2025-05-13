@@ -1,20 +1,12 @@
 import type { Metadata } from 'next';
-import { ResetPasswordForm } from '@/components/account/reset-password-form';
+import AuthForm from "@/components/auth/auth-form"
 
 export const metadata: Metadata = {
-    title: 'Reset Password'
+  title: 'Reset Password'
 }
 
-export default async function ResetPasswordPage({
-    searchParams,
-}: {
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}) {
-    const token = (await searchParams).token;
-    if (!token) {
-        throw new Error("Token is required");
-    }
-    return (
-        <ResetPasswordForm token={token as string} />
-    )
+export default function LoginPage() {
+  return (
+    <AuthForm page="reset-password" />
+  )
 }
