@@ -8,7 +8,6 @@ import { Suspense, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import SocialLoginButton from "./social-login-buttons";
-import { createUser } from "@/lib/actions";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 import { GraduationCap, Apple } from "lucide-react";
@@ -137,19 +136,15 @@ export default function AuthForm({ page }: { page: "login" | "signup" }) {
   async function onSignupFormSubmit(data: z.infer<typeof SignupFormSchema>) {
     try {
       setLoading(true);
-      await createUser({
+      const { error } = await authClient.signUp.email({
         email: data.email,
         password: data.password,
-        firstName: data.firstName,
-        lastName: data.lastName,
+        name: `${data.firstName} ${data.lastName}`,
+        firstName: data.firstName ?? "",
+        lastName: data.lastName ?? "",
         roles: data.role !== "learner" ? ["learner", data.role as Role] : ["learner"]
       });
-
-      const { error } = await authClient.signIn.email({
-        email: data.email,
-        password: data.password
-      });
-
+      
       if (error) {
         setLoading(false);
       } else {
