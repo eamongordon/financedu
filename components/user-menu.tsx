@@ -13,10 +13,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Check, Laptop2, Moon, Sun, User } from "lucide-react"
 import Link from "next/link"
-import { signOut } from "next-auth/react"
 import { useTheme } from "next-themes"
 import { type Roles } from "@/lib/db/schema"
 import { cn, getDisplayName, getInitials } from "@/lib/utils"
+import { authClient } from "@/lib/auth-client"
 
 interface UserMenuProps {
   imageSrc?: string
@@ -111,7 +111,7 @@ export default function UserMenu({ imageSrc, firstName, lastName, email, isMobil
           </DropdownMenuPortal>
         </DropdownMenuSub>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()}>
+        <DropdownMenuItem onClick={() => authClient.signOut()}>
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
