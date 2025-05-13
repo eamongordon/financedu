@@ -7,7 +7,6 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { getNextActivityLink } from "@/lib/utils";
 import { getSession } from "@/lib/auth";
-import { SessionProvider } from "next-auth/react";
 import { notFound } from 'next/navigation';
 import { CreateAssignments } from '@/components/account/classes/create-assigments';
 
@@ -80,9 +79,7 @@ export default async function LessonPage({
                 </div>
             )}
             {activity.type === "Quiz" && (
-                <SessionProvider>
-                    <QuizComponent activity={activity} nextActivity={nextActivity} />
-                </SessionProvider>
+                <QuizComponent activity={activity} nextActivity={nextActivity} />
             )}
         </main>
     );

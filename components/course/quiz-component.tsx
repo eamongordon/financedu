@@ -12,7 +12,7 @@ import { Button, buttonVariants } from "../ui/button";
 import Link from "next/link";
 import { useParams, useRouter } from 'next/navigation'
 import { getNextActivityLink } from "@/lib/utils";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { markActivityComplete } from "@/lib/actions";
 import { Progress } from "../ui/progress";
 import { RotateCw } from "lucide-react";
