@@ -1,11 +1,11 @@
 "use client";
 
-import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
 
 export default function SocialLoginButton({
   signup
@@ -30,9 +30,11 @@ export default function SocialLoginButton({
     <div className="flex flex-col gap-4">
       <Button
         disabled={isLoadingGoogle}
-        onClick={() => {
+        onClick={async () => {
           setLoadingGoogle(true);
-          signIn("google");
+          await authClient.signIn.social({
+            provider: "google"
+          })
         }}
         isLoading={isLoadingGoogle}
         variant="outline"
@@ -51,9 +53,11 @@ export default function SocialLoginButton({
       </Button>
       <Button
         disabled={isLoadingFacebook}
-        onClick={() => {
+        onClick={async () => {
           setLoadingFacebook(true);
-          signIn("facebook");
+          await authClient.signIn.social({
+            provider: "facebook"
+          })
         }}
         isLoading={isLoadingFacebook}
         variant="outline"
