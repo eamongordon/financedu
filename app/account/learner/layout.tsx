@@ -1,6 +1,6 @@
 import LearnerHeader from "@/components/account/learner/learner-header";
 import { TabsNav } from "@/components/account/tabs-nav";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 
 const navItems = [
     {
@@ -18,7 +18,7 @@ const navItems = [
 ];
 
 export default async function LessonLayout({ children }: { children: React.ReactNode }) {
-    const session = await auth();
+    const session = await getSession();
     if (!session?.user) {
         throw new Error("Not authenticated");
     }

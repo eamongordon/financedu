@@ -2,7 +2,7 @@ import { getClassTeacherWithRoster } from "@/lib/fetchers";
 import { StudentsList } from "@/components/account/classes/students-list";
 import { getDisplayName } from "@/lib/utils";
 import { ClassSettingsForm } from "@/components/account/classes/class-settings-form";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import { LeaveClassButton } from "@/components/account/classes/leave-class";
 import { DeleteClassButton } from "@/components/account/classes/delete-class";
 import { InviteStudents } from "@/components/account/classes/invite-students";
@@ -16,7 +16,7 @@ export default async function Page({
 }) {
     const classId = (await params).classId;
     const classItem = await getClassTeacherWithRoster(classId);
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user) {
         throw new Error("Unauthorized");
     }

@@ -1,7 +1,7 @@
 import { getCourseWithModulesAndLessons, getCourseWithModulesAndLessonsAndUserCompletion } from "@/lib/fetchers"
 import { ModuleNav } from "@/components/course/module-nav"
 import { CourseHeader } from "@/components/course/course-header";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import { notFound } from "next/navigation";
 
 type courseWithModulesAndLessonsAndUserCompletion = Awaited<ReturnType<typeof getCourseWithModulesAndLessonsAndUserCompletion>>;
@@ -15,7 +15,7 @@ export default async function CourseLayout({
 }) {
     const slug = (await params).courseSlug;
 
-    const session = await auth();
+    const session = await getSession();
 
     const isLoggedIn = session && session.user && session.user.id;
     const course = isLoggedIn

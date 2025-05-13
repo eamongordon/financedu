@@ -3,11 +3,11 @@
 import { eq, and, exists } from "drizzle-orm";
 import { assignments, classes, classStudents, classTeachers, classTeacherInvite } from "../db/schema";
 import { db } from "../db";
-import { auth } from "../auth";
+import { getSession } from "../auth";
 import { sendClassTeacherInviteEmail } from "./emails";
 
 export async function createClass(name: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -20,7 +20,7 @@ export async function createClass(name: string) {
 }
 
 export async function updateClass(classId: string, updates: { name?: string }) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -47,7 +47,7 @@ export async function updateClass(classId: string, updates: { name?: string }) {
 }
 
 export async function joinClass(joinCode: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -71,7 +71,7 @@ export async function joinClass(joinCode: string) {
 }
 
 export async function leaveClass(classId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -87,7 +87,7 @@ export async function leaveClass(classId: string) {
 }
 
 export async function deleteAssignment(assignmentId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -109,7 +109,7 @@ export async function deleteAssignment(assignmentId: string) {
 }
 
 export async function removeStudentFromClass(studentId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -137,7 +137,7 @@ type Assignment = {
 };
 
 export async function createAssignments(assignmentsArr: Assignment[]) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -155,7 +155,7 @@ export async function createAssignments(assignmentsArr: Assignment[]) {
 }
 
 export async function deleteClass(classId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -173,7 +173,7 @@ export async function deleteClass(classId: string) {
 }
 
 export async function createClassTeacherInvite(classId: string, teacherEmail: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -208,7 +208,7 @@ export async function createClassTeacherInvite(classId: string, teacherEmail: st
 }
 
 export async function resendClassTeacherInvite(inviteId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -241,7 +241,7 @@ export async function resendClassTeacherInvite(inviteId: string) {
 }
 
 export async function acceptClassTeacherInvite(inviteId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -262,7 +262,7 @@ export async function acceptClassTeacherInvite(inviteId: string) {
 }
 
 export async function deleteClassTeacherInvite(inviteId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -271,7 +271,7 @@ export async function deleteClassTeacherInvite(inviteId: string) {
 }
 
 export async function editAssignment(assignmentId: string, updates: { startAt?: Date, dueAt?: Date }) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }

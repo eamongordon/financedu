@@ -3,12 +3,12 @@
 import { eq, and } from "drizzle-orm";
 import { parentChild, parentChildInvite } from "../db/schema";
 import { db } from "../db";
-import { auth } from "../auth";
+import { getSession } from "../auth";
 import { sendChildParentInviteEmail } from "./emails";
 import { getDisplayName } from "../utils";
 
 export async function createParentChildInvite(childEmail: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -29,7 +29,7 @@ export async function createParentChildInvite(childEmail: string) {
 }
 
 export async function resendParentChildInvite(inviteId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -68,7 +68,7 @@ export async function resendParentChildInvite(inviteId: string) {
 }
 
 export async function acceptParentChildInvite(inviteId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -89,7 +89,7 @@ export async function acceptParentChildInvite(inviteId: string) {
 }
 
 export async function rejectParentChildInvite(inviteId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -98,7 +98,7 @@ export async function rejectParentChildInvite(inviteId: string) {
 }
 
 export async function deleteParentChildInvite(inviteId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -116,7 +116,7 @@ export async function deleteParentChildInvite(inviteId: string) {
 }
 
 export async function deleteParentChildRelationship(childId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }

@@ -1,10 +1,10 @@
 import { eq, and, exists } from "drizzle-orm";
 import { assignments, classes, classStudents, classTeachers, classTeacherInvite } from "../db/schema";
 import { db } from "../db";
-import { auth } from "../auth";
+import { getSession } from "../auth";
 
 export async function getClassStudent(classId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -65,7 +65,7 @@ export async function getClassStudent(classId: string) {
 }
 
 export async function getClassTeacher(classId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -111,7 +111,7 @@ export async function getClassFromClassCode(classCode: string) {
 
 
 export async function getClassTeacherWithAssignments(classId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -172,7 +172,7 @@ export async function getClassTeacherWithAssignments(classId: string) {
 }
 
 export async function getClassTeacherWithRoster(classId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -221,7 +221,7 @@ export async function getClassTeacherWithRoster(classId: string) {
 }
 
 export async function getTeacherClasses() {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -245,7 +245,7 @@ export async function getTeacherClasses() {
 }
 
 export async function getStudentClasses() {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -280,7 +280,7 @@ export async function getStudentClasses() {
 }
 
 export async function getClassTeacherWithCompletion(classId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -342,7 +342,7 @@ export async function getClassTeacherWithCompletion(classId: string) {
 }
 
 export async function getClassTeacherInvite(inviteId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }

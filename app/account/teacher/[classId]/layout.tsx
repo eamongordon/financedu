@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { TabsNav } from "@/components/account/tabs-nav";
 import { getClassTeacher } from "@/lib/fetchers";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 
 export async function generateMetadata(
     { params }: { params: Promise<{ classId: string }> }
@@ -20,7 +20,7 @@ export default async function ClassLayout({
     children: React.ReactNode,
     params: Promise<{ classId: string }>
 }) {
-    const session = await auth();
+    const session = await getSession();
     if (!session?.user) {
         throw new Error("Not authenticated");
     }

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import { ClassJoinConfirm } from "@/components/account/classes/class-join-confirm";
 import { ClassCodeForm } from "@/components/account/classes/class-code-form";
 import { getClassFromClassCode } from "@/lib/fetchers";
@@ -15,7 +15,7 @@ export default async function Page({
     params: Promise<{ code: string[] | undefined }>
 }) {
     const joinCode = (await params).code;
-    const session = await auth();
+    const session = await getSession();
     const isLoggedIn = session && session.user && session.user.id;
     
     if (!isLoggedIn) {

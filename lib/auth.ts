@@ -35,3 +35,8 @@ export const auth = betterAuth({
         }
     },
 });
+
+export async function getSession() {
+    const hdrs = await headers();
+    return auth.api.getSession({ headers: hdrs });
+}

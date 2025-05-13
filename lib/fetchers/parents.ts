@@ -1,7 +1,7 @@
 import { eq, and, exists } from "drizzle-orm";
 import { userCompletion, parentChild, parentChildInvite } from "../db/schema";
 import { db } from "../db";
-import { auth } from "../auth";
+import { getSession } from "../auth";
 
 export async function getParentChildInvite(inviteId: string) {
     const invite = await db.query.parentChildInvite.findFirst({
@@ -25,7 +25,7 @@ export async function getParentChildInvite(inviteId: string) {
 }
 
 export async function getParentChildren() {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -58,7 +58,7 @@ export async function getParentChildren() {
 }
 
 export async function getParentChildApproved(childId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -89,7 +89,7 @@ export async function getParentChildApproved(childId: string) {
 }
 
 export async function getChildCompletedActivities(childId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -142,7 +142,7 @@ export async function getChildCompletedActivities(childId: string) {
 }
 
 export async function deleteParentChildRelationship(childId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }
@@ -153,7 +153,7 @@ export async function deleteParentChildRelationship(childId: string) {
 }
 
 export async function getChildCompletion(childId: string) {
-    const session = await auth();
+    const session = await getSession();
     if (!session || !session.user || !session.user.id) {
         throw new Error("Not authenticated");
     }

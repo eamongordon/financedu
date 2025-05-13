@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { type ProfileFormValues } from "@/components/account/settings/profile-form";
 import { type RolesFormValues } from "@/components/account/settings/roles-settings-form";
 import { type LoginFormValues } from "@/components/account/settings/login-settings-form";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import { Roles } from "@/lib/db/schema";
 import SettingsTabs from "@/components/account/settings/settings-tabs";
 import { Separator } from "@/components/ui/separator";
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 }
 
 export default async function SettingsPage() {
-    const session = await auth();
+    const session = await getSession();
     if (!session?.user) {
         throw new Error("Not authenticated");
     }

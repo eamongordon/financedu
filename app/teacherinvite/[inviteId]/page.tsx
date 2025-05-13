@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import { getClassTeacherInvite } from "@/lib/fetchers";
 import { TeacherInvite } from "@/components/teacherinvite";
 import { redirect } from "next/navigation";
@@ -14,7 +14,7 @@ export default async function Page({
     params: Promise<{ inviteId: string }>
 }) {
     const inviteId = (await params).inviteId;
-    const session = await auth();
+    const session = await getSession();
     const isLoggedIn = session && session.user && session.user.id;
     if (!isLoggedIn) {
         return redirect(`/login?redirect=${encodeURIComponent(`/parentinvite/${inviteId}`)}`);
