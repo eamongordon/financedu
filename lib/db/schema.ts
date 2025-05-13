@@ -51,7 +51,7 @@ export const accounts = pgTable(
     accessTokenExpiresAt: timestamp("accessTokenExpiresAt", { mode: "date", withTimezone: true }),
     token_type: text("token_type"),
     scope: text("scope"),
-    id_token: text("id_token"),
+    idToken: text("id_token"),
     session_state: text("session_state"),
     createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).defaultNow(),
     updatedAt: timestamp("updatedAt", { mode: "date", withTimezone: true }).defaultNow().$onUpdateFn(() => new Date()),
