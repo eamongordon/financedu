@@ -56,6 +56,12 @@ export const auth = betterAuth({
             clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string
         }
     },
+    account: {
+        accountLinking: {
+            enabled: true,
+            trustedProviders: ["google", "facebook"]
+        }
+    }
 });
 
 export async function getSession() {
