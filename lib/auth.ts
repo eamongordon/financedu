@@ -54,6 +54,15 @@ export const auth = betterAuth({
         facebook: {
             clientId: process.env.FACEBOOK_CLIENT_ID as string,
             clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
+            fields: ["id", "name", "email", "picture", "first_name", "last_name"],
+            mapProfileToUser: (profile) => {
+                return {
+                    //@ts-expect-error add first_name to profile mapping
+                    firstName: profile.first_name,
+                    //@ts-expect-error add last_name to profile mapping
+                    lastName: profile.last_name,
+                };
+            },
         }
     },
 });
