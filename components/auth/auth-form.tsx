@@ -136,12 +136,13 @@ export default function AuthForm({ page }: { page: "login" | "signup" }) {
   async function onSignupFormSubmit(data: z.infer<typeof SignupFormSchema>) {
     try {
       setLoading(true);
+      const nameStr = [data.firstName, data.lastName].filter(Boolean).join(" ");
       const { error } = await authClient.signUp.email({
         email: data.email,
         password: data.password,
-        name: `${data.firstName} ${data.lastName}`,
-        firstName: data.firstName ?? "",
-        lastName: data.lastName ?? "",
+        name: nameStr,
+        firstName: data.firstName,
+        lastName: data.lastName,
         roles: data.role !== "learner" ? ["learner", data.role as Role] : ["learner"]
       });
       
