@@ -25,7 +25,7 @@ export const users = pgTable("user", {
   firstName: text("firstName"),
   lastName: text("lastName"),
   email: text("email").unique(),
-  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  emailVerified: boolean("emailVerified"),
   image: text("image"),
   password: text("password"),
   createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).defaultNow(),
@@ -44,11 +44,11 @@ export const accounts = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     type: text("type").$type<AdapterAccountType>().notNull(),
-    provider: text("provider").notNull(),
-    providerAccountId: text("providerAccountId").notNull(),
-    refresh_token: text("refresh_token"),
-    access_token: text("access_token"),
-    expires_at: integer("expires_at"),
+    providerId: text("providerId").notNull(),
+    accountId: text("accountId").notNull(),
+    refreshToken: text("refreshToken"),
+    accessToken: text("accessToken"),
+    accessTokenExpiresAt: timestamp("createdAt", { mode: "date", withTimezone: true }),
     token_type: text("token_type"),
     scope: text("scope"),
     id_token: text("id_token"),
@@ -57,18 +57,20 @@ export const accounts = pgTable(
   (account) => [
     {
       compoundKey: primaryKey({
-        columns: [account.provider, account.providerAccountId],
+        columns: [account.providerId, account.accountId],
       }),
     },
   ]
 )
 
 export const sessions = pgTable("session", {
-  sessionToken: text("sessionToken").primaryKey(),
+  token: text("token").primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
+  expiresAt: timestamp("expiresAt", { mode: "date" }).notNull(),
+  createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date", withTimezone: true }).defaultNow().$onUpdateFn(() => new Date()),
 })
 
 export const verificationTokens = pgTable(
