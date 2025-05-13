@@ -34,7 +34,7 @@ const parentChildEmailHtml = (url: string, parentName: string): string => {
     buttonBorder: "#3bde2c",
     buttonText: "#fff"
   }
-  const logo = `https://www.prospectorminerals.com/_next/image?url=%2FPM-Favicon-New-Square.png&w=128&q=75`;
+  const logo = `https://www.financedu.org/_next/image?url=%2Ffinancedu_icon.png&w=128&q=75`;
   return `
     <html lang="en" style="color-scheme: light dark;">
       <body style="background: light-dark(${color.mainBackground}, ${color.mainBackgroundDark}); color-scheme: light dark;">
@@ -42,7 +42,7 @@ const parentChildEmailHtml = (url: string, parentName: string): string => {
           style="background: light-dark(${color.mainBackground}, ${color.mainBackgroundDark}); color-scheme: light dark; max-width: 600px; margin: auto; border-radius: 10px;">
           <tr>
             <td align="center" style="padding: 10px 0px; font-size: 22px;">
-              <img src=${logo} width="55" height="55" alt="Prospector Minerals Logo">
+              <img src=${logo} width="55" height="55" alt="Financedu Logo">
             </td>
           </tr>
           <tr>
@@ -114,7 +114,7 @@ const resetPasswordEmailHtml = (url: string): string => {
     buttonBorder: "#3bde2c",
     buttonText: "#fff"
   }
-  const logo = `https://www.prospectorminerals.com/_next/image?url=%2FPM-Favicon-New-Square.png&w=128&q=75`;
+  const logo = `https://www.financedu.org/_next/image?url=%2Ffinancedu_icon.png&w=128&q=75`;
   return `
     <html lang="en" style="color-scheme: light dark;">
       <body style="background: light-dark(${color.mainBackground}, ${color.mainBackgroundDark}); color-scheme: light dark;">
@@ -122,7 +122,7 @@ const resetPasswordEmailHtml = (url: string): string => {
           style="background: light-dark(${color.mainBackground}, ${color.mainBackgroundDark}); color-scheme: light dark; max-width: 600px; margin: auto; border-radius: 10px;">
           <tr>
             <td align="center" style="padding: 10px 0px; font-size: 22px;">
-              <img src=${logo} width="55" height="55" alt="Prospector Minerals Logo">       
+              <img src=${logo} width="55" height="55" alt="Financedu Logo">       
             </td>
           </tr>
           <tr>
@@ -171,7 +171,7 @@ const classTeacherInviteEmailHtml = (url: string, className: string): string => 
     buttonBorder: "#3bde2c",
     buttonText: "#fff"
   }
-  const logo = `https://www.prospectorminerals.com/_next/image?url=%2FPM-Favicon-New-Square.png&w=128&q=75`;
+  const logo = `https://www.financedu.org/_next/image?url=%2Ffinancedu_icon.png&w=128&q=75`;
   return `
     <html lang="en" style="color-scheme: light dark;">
       <body style="background: light-dark(${color.mainBackground}, ${color.mainBackgroundDark}); color-scheme: light dark;">
@@ -179,7 +179,7 @@ const classTeacherInviteEmailHtml = (url: string, className: string): string => 
           style="background: light-dark(${color.mainBackground}, ${color.mainBackgroundDark}); color-scheme: light dark; max-width: 600px; margin: auto; border-radius: 10px;">
           <tr>
             <td align="center" style="padding: 10px 0px; font-size: 22px;">
-              <img src=${logo} width="55" height="55" alt="Prospector Minerals Logo">
+              <img src=${logo} width="55" height="55" alt="Financedu Logo">
             </td>
           </tr>
           <tr>
