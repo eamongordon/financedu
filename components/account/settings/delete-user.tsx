@@ -1,20 +1,21 @@
 "use client";
 
 import { Button } from "../../ui/button";
-import { deleteUser } from "@/lib/actions";
 import { useState } from "react";
-import { signOut } from "next-auth/react";
+import { authClient } from "@/lib/auth-client";
 
 export function DeleteUserButton() {
     const [loading, setLoading] = useState(false);
+
 
     async function handleSubmit() {
         const confirmed = window.confirm("Are you sure you want your account? This is irreversible.");
         if (!confirmed) return;
         setLoading(true);
-        await deleteUser();
+        await authClient.deleteUser({
+            callbackURL: "/"
+        });
         setLoading(false);
-        signOut({ callbackUrl: "/" });
     }
 
     return (

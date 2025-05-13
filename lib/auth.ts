@@ -20,6 +20,9 @@ export const auth = betterAuth({
             roles: {
                 type: "string[]",
             }
+        },
+        deleteUser: {
+            enabled: true
         }
     },
     emailAndPassword: {
