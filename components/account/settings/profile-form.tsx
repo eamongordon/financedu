@@ -15,9 +15,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { editUser } from "@/lib/actions"
-import { useRouter } from "next/navigation";
-import { useSession } from "@/lib/auth-client";
+import { authClient, useSession } from "@/lib/auth-client";
 
 const profileFormSchema = z.object({
     firstName: z.string().optional(),
@@ -37,7 +35,6 @@ export function ProfileForm({ defaultValues }: ProfileFormProps) {
 }
 
 export function ProfileFormInner({ defaultValues }: ProfileFormProps) {
-    const router = useRouter();
     const { refetch } = useSession();
 
     const form = useForm<ProfileFormValues>({
@@ -47,9 +44,8 @@ export function ProfileFormInner({ defaultValues }: ProfileFormProps) {
 
     async function onSubmit(data: ProfileFormValues) {
         try {
-            await editUser(data);
+            await authClient.updateUser(data);
             await refetch();
-            router.refresh();
             form.reset(data);
             toast.success("Profile updated!");
         } catch (error) {

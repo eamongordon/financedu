@@ -16,19 +16,26 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { editUser } from "@/lib/actions"
 import { useRouter } from "next/navigation";
-import { useSession } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
+import { updateUserPassword } from "@/lib/actions";
 
-const loginFormSchema = z.object({
+const emailFormSchema = z.object({
     email: z.string().email(),
-    password: z.string().min(8, "Password must be at least 8 characters long"),
-})
+});
 
-export type LoginFormValues = z.infer<typeof loginFormSchema>
+const passwordFormSchema = z.object({
+    password: z.string().min(8, "Password must be at least 8 characters long"),
+});
+
+type EmailFormValues = z.infer<typeof emailFormSchema>;
+type PasswordFormValues = z.infer<typeof passwordFormSchema>;
 
 interface LoginFormProps {
-    defaultValues: LoginFormValues;
+    defaultValues: {
+        email: string;
+        password: string;
+    };
 }
 
 export function LoginSettingsForm({ defaultValues }: LoginFormProps) {
@@ -39,59 +46,90 @@ export function LoginSettingsForm({ defaultValues }: LoginFormProps) {
 
 export function LoginSettingsFormInner({ defaultValues }: LoginFormProps) {
     const router = useRouter();
-    const { refetch } = useSession();
 
-    const form = useForm<LoginFormValues>({
-        resolver: zodResolver(loginFormSchema),
-        defaultValues,
-    })
+    // Email form
+    const emailForm = useForm<EmailFormValues>({
+        resolver: zodResolver(emailFormSchema),
+        defaultValues: { email: defaultValues.email },
+    });
 
-    async function onSubmit(data: LoginFormValues) {
+    // Password form
+    const passwordForm = useForm<PasswordFormValues>({
+        resolver: zodResolver(passwordFormSchema),
+        defaultValues: { password: "" },
+    });
+
+    async function onEmailSubmit(data: EmailFormValues) {
         try {
-            await editUser(data);
-            await refetch();
+            await authClient.changeEmail({ newEmail: data.email });
             router.refresh();
-            form.reset(data);
-            toast.success("Login information updated!");
+            emailForm.reset(data);
+            toast.success("Email updated!");
         } catch (error) {
             console.error(error);
-            toast.error("Something went wrong.");
+            toast.error("Something went wrong updating email.");
+        }
+    }
+
+    async function onPasswordSubmit(data: PasswordFormValues) {
+        try {
+            await updateUserPassword(data.password);
+            router.refresh();
+            passwordForm.reset({ password: "" });
+            toast.success("Password updated!");
+        } catch (error) {
+            console.error(error);
+            toast.error("Something went wrong updating password.");
         }
     }
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Email" {...field} />
-                            </FormControl>
-                            <FormDescription>This email is used for both login and contact.</FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Reset Password</FormLabel>
-                            <FormControl>
-                                <Input type="password" placeholder="Password" {...field} />
-                            </FormControl>
-                            <FormDescription>Your new password must be at least 8 characters long.</FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <Button isLoading={form.formState.isSubmitting} disabled={!form.formState.isDirty} type="submit">Update Login Info</Button>
-            </form>
-        </Form>
+        <div className="space-y-12">
+            {/* Email Form */}
+            <Form {...emailForm}>
+                <form onSubmit={emailForm.handleSubmit(onEmailSubmit)} className="space-y-8">
+                    <FormField
+                        control={emailForm.control}
+                        name="email"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Email" {...field} />
+                                </FormControl>
+                                <FormDescription>This email is used for both login and contact.</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button isLoading={emailForm.formState.isSubmitting} disabled={!emailForm.formState.isDirty} type="submit">
+                        Update Email
+                    </Button>
+                </form>
+            </Form>
+
+            {/* Password Form */}
+            <Form {...passwordForm}>
+                <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-8">
+                    <FormField
+                        control={passwordForm.control}
+                        name="password"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Reset Password</FormLabel>
+                                <FormControl>
+                                    <Input type="password" placeholder="Password" {...field} />
+                                </FormControl>
+                                <FormDescription>Your new password must be at least 8 characters long.</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button isLoading={passwordForm.formState.isSubmitting} disabled={!passwordForm.formState.isDirty} type="submit">
+                        Update Password
+                    </Button>
+                </form>
+            </Form>
+        </div>
     )
 }
