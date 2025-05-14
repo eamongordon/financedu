@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { type ProfileFormValues } from "@/components/account/settings/profile-form";
 import { type RolesFormValues } from "@/components/account/settings/roles-settings-form";
-import { type LoginFormValues } from "@/components/account/settings/login-settings-form";
 import { getSession } from "@/lib/auth";
 import { Roles } from "@/lib/db/schema";
 import SettingsTabs from "@/components/account/settings/settings-tabs";
@@ -29,7 +28,7 @@ export default async function SettingsPage() {
     const loginDefaultValues = {
         email: session.user?.email || "",
         password: ""
-    } as LoginFormValues;
+    };
 
     return (
         <main>
