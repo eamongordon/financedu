@@ -28,6 +28,8 @@ const passwordFormSchema = z.object({
     password: z.string().min(8, "Password must be at least 8 characters long"),
 });
 
+export type LoginFormValues = z.infer<typeof emailFormSchema> & z.infer<typeof passwordFormSchema>;
+
 type EmailFormValues = z.infer<typeof emailFormSchema>;
 type PasswordFormValues = z.infer<typeof passwordFormSchema>;
 
