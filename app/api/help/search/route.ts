@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { searchArticles, helpCategories } from '@/lib/help-data';
+import { searchHelpArticles } from '@/lib/fetchers';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -9,25 +9,20 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ articles: [], query: '' });
   }
 
-  const articles = searchArticles(query);
+  const articles = await searchHelpArticles(query);
   
-  // Add category information to each article
-  const articlesWithCategory = articles.map(article => {
-    // Find which category this article belongs to
-    const category = helpCategories.find(cat => 
-      cat.articles.some(a => a.slug === article.slug)
-    );
-    
-    return {
-      ...article,
-      categorySlug: category?.slug,
-      categoryTitle: category?.title,
-    };
-  });
+  // Format articles for the response
+  const formattedArticles = articles.map(article => ({
+    slug: article.slug,
+    title: article.title,
+    excerpt: article.excerpt,
+    categorySlug: article.category.slug,
+    categoryTitle: article.category.name,
+  }));
 
   return NextResponse.json({
-    articles: articlesWithCategory,
+    articles: formattedArticles,
     query,
-    count: articlesWithCategory.length,
+    count: formattedArticles.length,
   });
 }
