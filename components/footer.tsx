@@ -73,13 +73,14 @@ export default function Footer() {
 
                             <ul className="mt-6 space-y-4 text-sm">
                                 <li>
+                                    <Link href="/help" className="text-accent-foreground transition hover:opacity-75"> Help </Link>
+                                </li>
+                                <li>
                                     <Link href="/courses" className="text-accent-foreground transition hover:opacity-75"> Courses </Link>
                                 </li>
-
                                 <li>
                                     <Link href="/resources" className="text-accent-foreground transition hover:opacity-75"> Resources </Link>
                                 </li>
-
                                 <li>
                                     <Link href="/volunteer" className="text-accent-foreground transition hover:opacity-75"> Volunteer </Link>
                                 </li>
