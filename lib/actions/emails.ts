@@ -9,7 +9,7 @@ const transport = createTransport({
   }
 })
 
-const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+const baseUrl = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
 
 export async function sendChildParentInviteEmail({ childEmail, parentName, inviteId }: { childEmail: string, parentName: string, inviteId: string }) {
   const url = `${baseUrl}/parentinvite/${inviteId}`;
