@@ -12,7 +12,7 @@ const transport = createTransport({
 const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
 
 export async function sendChildParentInviteEmail({ childEmail, parentName, inviteId }: { childEmail: string, parentName: string, inviteId: string }) {
-  const url = `${baseUrl}/parentinvite/${inviteId}`;
+  const url = `https://www.financedu.org/parentinvite/${inviteId}`;
   const result = await transport.sendMail({
     to: childEmail,
     from: process.env.EMAIL_FROM,
