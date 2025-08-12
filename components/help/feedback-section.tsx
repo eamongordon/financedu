@@ -16,8 +16,8 @@ export function FeedbackSection() {
           className={
             `flex items-center gap-2 px-4 py-2 rounded-lg transition-colors border ` +
             (feedback === "yes"
-              ? "bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-500 border-green-400"
-              : "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-500 border-transparent hover:bg-green-100 dark:hover:bg-green-900/30")
+              ? "bg-green-100 dark:bg-green-900/40 text-green-700 border-green-700"
+              : "bg-green-50 dark:bg-green-900/20 text-green-700 border-transparent hover:bg-green-100 dark:hover:bg-green-900/30")
           }
           onClick={() => setFeedback("yes")}
           aria-label="Yes, helpful"
@@ -40,7 +40,7 @@ export function FeedbackSection() {
         </button>
       </div>
       {feedback === "yes" && (
-        <div className="text-green-700 dark:text-green-500 font-medium py-4">Thank you for your feedback!</div>
+        <div className="text-green-700 font-medium py-4">Thank you for your feedback!</div>
       )}
       {feedback === "no" && (
         <div className="py-4">

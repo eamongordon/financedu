@@ -32,7 +32,7 @@ export default async function HelpCenter() {
                         <Link
                             key={category.slug}
                             href={`/help/${category.slug}`}
-                            className="group bg-white dark:bg-gray-800 rounded-xl p-6 transition-all duration-200 border hover:border-primary"
+                            className="group bg-card rounded-xl p-6 transition-all duration-200 border hover:border-primary"
                         >
                             <div className="flex items-start gap-4">
                                 <div className="text-3xl mb-2">
