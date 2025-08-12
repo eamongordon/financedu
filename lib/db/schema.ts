@@ -398,6 +398,31 @@ export const posts = pgTable("post", {
   publishedAt: timestamp("publishedAt", { mode: "date", withTimezone: true }).defaultNow(),
 })
 
+export const helpCategories = pgTable("helpCategory", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
+  description: text("description"),
+  order: integer("order").notNull().default(0),
+  icon: text("icon"),
+  createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date", withTimezone: true }).defaultNow().$onUpdateFn(() => new Date()),
+})
+
+export const helpArticles = pgTable("helpArticle", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  categoryId: text("categoryId")
+    .notNull()
+    .references(() => helpCategories.id, { onDelete: "cascade" }),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  excerpt: text("excerpt"),
+  content: text("content").notNull(),
+  order: integer("order").notNull().default(0),
+  createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date", withTimezone: true }).defaultNow().$onUpdateFn(() => new Date()),
+})
+
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   sessions: many(sessions),
@@ -596,3 +621,15 @@ export const classTeacherInviteRelations = relations(classTeacherInvite, ({ one 
     references: [classes.id],
   }),
 }));
+
+export const helpCategoriesRelations = relations(helpCategories, ({ many }) => ({
+  articles: many(helpArticles, { relationName: "categoryArticles" }),
+}))
+
+export const helpArticlesRelations = relations(helpArticles, ({ one }) => ({
+  category: one(helpCategories, {
+    fields: [helpArticles.categoryId],
+    references: [helpCategories.id],
+    relationName: "categoryArticles",
+  }),
+}))
