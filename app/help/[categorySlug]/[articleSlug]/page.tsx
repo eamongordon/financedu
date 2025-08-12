@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { getHelpArticle, getHelpArticlesByCategorySlug, getHelpCategories } from '@/lib/fetchers';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
+import { FeedbackSection } from '@/components/help/feedback-section';
 
 interface Props {
     params: Promise<{
@@ -91,21 +92,7 @@ export default async function ArticlePage(props: Props) {
                 </div>
 
                 {/* Feedback Section */}
-                <div className="rounded-lg mb-8">
-                    <h3 className="text-lg font-semibold text-card-foreground mb-4">
-                        Was this article helpful?
-                    </h3>
-                    <div className="flex items-center gap-4">
-                        <button className="flex items-center gap-2 px-4 py-2 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors">
-                            <ThumbsUp className="w-4 h-4" />
-                            Yes, helpful
-                        </button>
-                        <button className="flex items-center gap-2 px-4 py-2 bg-destructive/10 text-destructive rounded-lg hover:bg-destructive/20 transition-colors">
-                            <ThumbsDown className="w-4 h-4" />
-                            No, not helpful
-                        </button>
-                    </div>
-                </div>
+                <FeedbackSection />
 
                 {/* Related Articles */}
                 <div className="rounded-lg">
