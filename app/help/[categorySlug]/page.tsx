@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, FileText, GraduationCap } from 'lucide-react';
 import { getHelpCategory, getHelpCategories } from '@/lib/fetchers';
 import { CompletionIcon } from '@/components/ui/completion-icon';
 import { DynamicIcon, dynamicIconImports } from "lucide-react/dynamic";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 
 interface Props {
     params: Promise<{
@@ -25,13 +26,17 @@ export default async function CategoryPage(props: Props) {
         <div className="min-h-screen bg-background">
             <div className="max-w-4xl mx-auto px-4 py-12">
                 {/* Breadcrumb */}
-                <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
-                    <Link href="/help" className="hover:text-primary">
-                        Help Center
-                    </Link>
-                    <span>/</span>
-                    <span className="text-foreground">{category.name}</span>
-                </nav>
+                <Breadcrumb className="mb-8">
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/help">Help Center</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbPage>{category.name}</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
 
                 {/* Back Button */}
                 <Link
