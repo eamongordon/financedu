@@ -1,13 +1,15 @@
 import Link from 'next/link';
-import { Clock, ArrowRight, GraduationCap } from 'lucide-react';
+import { ArrowRight, GraduationCap } from 'lucide-react';
 import { getHelpCategories } from '@/lib/fetchers';
 import SearchBar from '@/components/help/search-bar';
 import { CompletionIcon } from '@/components/ui/completion-icon';
 import { DynamicIcon, dynamicIconImports } from 'lucide-react/dynamic';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 export default async function HelpCenter() {
     const categories = await getHelpCategories();
-
+    console.log("Help categories:", categories);
     return (
         <div className="min-h-screen">
             <div className="max-w-6xl mx-auto px-4 py-12">
@@ -62,7 +64,7 @@ export default async function HelpCenter() {
                 <div className="rounded-xl p-8 shadow-sm border">
                     <h2 className="text-2xl font-bold mb-6">Popular Articles</h2>
                     <div className="space-y-4">
-                        {categories.slice(0, 2).map((category) =>
+                        {categories.map((category) =>
                             category.articles.slice(0, 2).map((article) => (
                                 <Link
                                     key={`${category.slug}-${article.slug}`}
@@ -78,13 +80,9 @@ export default async function HelpCenter() {
                                         </p>
                                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
                                             <span className="capitalize">{category.name}</span>
-                                            <div className="flex items-center gap-1">
-                                                <Clock className="w-3 h-3" />
-                                                <span>5 min read</span>
-                                            </div>
                                         </div>
                                     </div>
-                                    <ArrowRight className="w-4 h-4 text-muted group-hover:text-primary mt-1" />
+                                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary mt-1" />
                                 </Link>
                             ))
                         )}
@@ -92,20 +90,14 @@ export default async function HelpCenter() {
                 </div>
 
                 {/* Footer CTA */}
-                <div className="text-center mt-12">
-                    <div className="bg-primary rounded-xl p-8 text-white">
-                        <h3 className="text-2xl font-bold mb-2">Still need help?</h3>
-                        <p className="text-primary mb-6">
-                            Can&apos;t find what you&apos;re looking for? Our support team is here to help.
-                        </p>
-                        <Link
-                            href="/contact"
-                            className="inline-flex items-center gap-2 bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-muted transition-colors"
-                        >
-                            Contact Support
-                            <ArrowRight className="w-4 h-4" />
-                        </Link>
+                <div className="flex flex-col items-center justify-center gap-6 p-8 mt-8 text-center rounded-xl shadow-sm border">
+                    <h2 className="text-2xl sm:text-3xl font-semibold">Still Need Help?</h2>
+                    <div>
+                        <p className="text-lg text-muted-foreground">Contact our support team for personalized assistance.</p>
                     </div>
+                    <Link href="mailto:info@financedu.org" className={cn(buttonVariants({ size: "lg" }), "text-lg")}>
+                        Contact Us
+                    </Link>
                 </div>
             </div>
         </div>
