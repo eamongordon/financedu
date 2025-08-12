@@ -52,7 +52,7 @@ export default async function HelpCenter() {
                                         {category.description}
                                     </p>
                                     <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                                        <span>{category.articles.length} articles</span>
+                                        <span>{category.articles.length} {category.articles.length === 1 ? 'article' : 'articles'}</span>
                                     </div>
                                 </div>
                             </div>

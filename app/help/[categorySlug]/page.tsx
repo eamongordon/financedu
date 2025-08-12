@@ -66,7 +66,7 @@ export default async function CategoryPage(props: Props) {
                         </div>
                     </div>
                     <div className="text-sm text-muted-foreground">
-                        {category.articles.length} articles in this category
+                        {category.articles.length} {category.articles.length === 1 ? 'article' : 'articles'} in this category
                     </div>
                 </div>
 
