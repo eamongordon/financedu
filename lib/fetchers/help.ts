@@ -79,6 +79,7 @@ export async function searchHelpArticles(query: string) {
             slug: true,
             title: true,
             excerpt: true,
+            updatedAt: true,
         },
     });
 }

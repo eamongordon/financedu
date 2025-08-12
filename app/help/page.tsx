@@ -32,7 +32,7 @@ export default async function HelpCenter() {
                         <Link
                             key={category.slug}
                             href={`/help/${category.slug}`}
-                            className="group bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm hover:shadow-lg transition-all duration-200 border hover:border-primary"
+                            className="group bg-white dark:bg-gray-800 rounded-xl p-6 transition-all duration-200 border hover:border-primary"
                         >
                             <div className="flex items-start gap-4">
                                 <div className="text-3xl mb-2">
@@ -61,7 +61,7 @@ export default async function HelpCenter() {
                 </div>
 
                 {/* Popular Articles */}
-                <div className="rounded-xl p-8 shadow-sm border">
+                <div className="rounded-xl p-8 border">
                     <h2 className="text-2xl font-bold mb-6">Popular Articles</h2>
                     <div className="space-y-4">
                         {categories.map((category) =>
@@ -90,12 +90,12 @@ export default async function HelpCenter() {
                 </div>
 
                 {/* Footer CTA */}
-                <div className="flex flex-col items-center justify-center gap-6 p-8 mt-8 text-center rounded-xl shadow-sm border">
-                    <h2 className="text-2xl sm:text-3xl font-semibold">Still Need Help?</h2>
-                    <div>
-                        <p className="text-lg text-muted-foreground">Contact our support team for personalized assistance.</p>
+                <div className="flex flex-col items-center justify-center gap-5 p-8 mt-8 text-center rounded-xl border">
+                    <div className='flex flex-col items-center gap-2'>
+                        <h2 className="text-xl sm:text-2xl font-semibold">Still Need Help?</h2>
+                        <p className="text-muted-foreground">Contact our support team for personalized assistance.</p>
                     </div>
-                    <Link href="mailto:info@financedu.org" className={cn(buttonVariants({ size: "lg" }), "text-lg")}>
+                    <Link href="mailto:info@financedu.org" className={cn(buttonVariants({ size: "lg" }))}>
                         Contact Us
                     </Link>
                 </div>

@@ -2,24 +2,10 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Search, ArrowRight, Clock } from 'lucide-react';
+import { Search, ArrowRight, LoaderCircle } from 'lucide-react';
+import { searchHelpArticles } from '@/lib/fetchers';
 
-interface SearchResult {
-  slug: string;
-  title: string;
-  description: string;
-  content: string;
-  lastUpdated: string;
-  readTime: number;
-  categorySlug?: string;
-  categoryTitle?: string;
-}
-
-interface SearchResponse {
-  articles: SearchResult[];
-  query: string;
-  count: number;
-}
+type SearchResult = Awaited<ReturnType<typeof searchHelpArticles>>[number];
 
 export default function HelpSearch() {
   const [query, setQuery] = useState('');
@@ -44,8 +30,8 @@ export default function HelpSearch() {
       setLoading(true);
       try {
         const response = await fetch(`/api/help/search?q=${encodeURIComponent(query)}`);
-        const data: SearchResponse = await response.json();
-        setResults(data.articles);
+        const data: SearchResult[] = await response.json();
+        setResults(data);
         setHasSearched(true);
       } catch (error) {
         console.error('Search error:', error);
@@ -93,7 +79,9 @@ export default function HelpSearch() {
         {/* Loading State */}
         {loading && (
           <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <div className="flex justify-center mb-4">
+              <LoaderCircle size={48} className="text-primary animate-spin" />
+            </div>
             <p className="text-gray-600 dark:text-gray-300 mt-2">Searching...</p>
           </div>
         )}
@@ -113,34 +101,30 @@ export default function HelpSearch() {
             <div className="space-y-4">
               {results.map((article) => (
                 <Link
-                  key={`${article.categorySlug}-${article.slug}`}
-                  href={`/help/${article.categorySlug}/${article.slug}`}
-                  className="group block bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600"
+                  key={`${article.category.slug}-${article.slug}`}
+                  href={`/help/${article.category.slug}/${article.slug}`}
+                  className="group block bg-card rounded-lg p-6 transition-all duration-200 border border-border hover:border-primary"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        {article.categoryTitle && (
-                          <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded text-xs">
-                            {article.categoryTitle}
+                        {article.category.name && (
+                          <span className="bg-muted text-primary px-2 py-1 rounded text-xs">
+                            {article.category.name}
                           </span>
                         )}
-                        <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
-                          <Clock className="w-3 h-3" />
-                          <span>{article.readTime} min read</span>
-                        </div>
                       </div>
-                      <h2 className="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 mb-2">
+                      <h2 className="text-xl font-semibold text-card-foreground group-hover:text-primary mb-2">
                         {article.title}
                       </h2>
-                      <p className="text-gray-600 dark:text-gray-300 mb-3">
-                        {article.description}
+                      <p className="text-muted-foreground mb-3">
+                        {article.excerpt}
                       </p>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
-                        Updated {new Date(article.lastUpdated).toLocaleDateString()}
+                      <div className="text-sm text-muted-foreground">
+                        Updated {new Date(article.updatedAt!).toLocaleDateString()}
                       </div>
                     </div>
-                    <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transform group-hover:translate-x-1 transition-transform mt-2" />
+                    <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transform group-hover:translate-x-1 transition-transform mt-2" />
                   </div>
                 </Link>
               ))}
@@ -151,16 +135,18 @@ export default function HelpSearch() {
         {/* No Results State */}
         {!loading && hasSearched && results.length === 0 && query.trim() !== '' && (
           <div className="text-center py-12">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            <div className="flex justify-center mb-4">
+              <Search className="w-16 h-16 text-muted-foreground" />
+            </div>
+            <h3 className="text-xl font-semibold text-card-foreground mb-2">
               No articles found
             </h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
+            <p className="text-muted-foreground mb-6">
               Try searching with different keywords or browse our categories.
             </p>
             <Link
               href="/help"
-              className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors"
             >
               Browse All Categories
               <ArrowRight className="w-4 h-4" />
@@ -171,16 +157,18 @@ export default function HelpSearch() {
         {/* Initial State */}
         {!hasSearched && query.trim() === '' && (
           <div className="text-center py-12">
-            <div className="text-6xl mb-4">💡</div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            <div className="flex justify-center mb-4">
+              <Search size={48} className="text-muted-foreground" />
+            </div>
+            <h3 className="text-xl font-semibold text-card-foreground mb-2">
               Start typing to search
             </h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
+            <p className="text-muted-foreground mb-6">
               Search through our help articles to find what you&apos;re looking for.
             </p>
             <Link
               href="/help"
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+              className="text-primary hover:text-primary/80"
             >
               Or browse all categories →
             </Link>

@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, ThumbsUp, ThumbsDown, Share } from 'lucide-react';
+import { ArrowLeft, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { getHelpArticle, getHelpArticlesByCategorySlug, getHelpCategories } from '@/lib/fetchers';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface Props {
     params: Promise<{
@@ -49,7 +51,7 @@ export default async function ArticlePage(props: Props) {
                 </Link>
 
                 {/* Article Header */}
-                <div className="bg-card rounded-lg p-8 shadow-sm border border-border mb-8">
+                <div className="pb-8 border-b">
                     <div className="flex items-start justify-between mb-6">
                         <div className="flex-1">
                             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
@@ -64,13 +66,6 @@ export default async function ArticlePage(props: Props) {
                                 {article.excerpt}
                             </p>
                         </div>
-
-                        {/* Action Buttons */}
-                        <div className="flex items-center gap-2 ml-6">
-                            <button className="p-2 text-muted-foreground hover:text-primary transition-colors">
-                                <Share className="w-5 h-5" />
-                            </button>
-                        </div>
                     </div>
 
                     <div className="text-sm text-muted-foreground">
@@ -83,15 +78,15 @@ export default async function ArticlePage(props: Props) {
                 </div>
 
                 {/* Article Content */}
-                <div className="bg-card rounded-lg p-8 shadow-sm border border-border mb-8">
+                <div className="py-8">
                     <article
-                        className="prose-md prose prose-stone m-auto dark:prose-invert sm:prose-lg w-full"
+                        className="prose-md prose prose-stone dark:prose-invert sm:prose-lg w-full"
                         dangerouslySetInnerHTML={{ __html: article.content }}
                     />
                 </div>
 
                 {/* Feedback Section */}
-                <div className="bg-card rounded-lg p-6 shadow-sm border border-border mb-8">
+                <div className="rounded-lg mb-8">
                     <h3 className="text-lg font-semibold text-card-foreground mb-4">
                         Was this article helpful?
                     </h3>
@@ -108,7 +103,7 @@ export default async function ArticlePage(props: Props) {
                 </div>
 
                 {/* Related Articles */}
-                <div className="bg-card rounded-lg p-6 shadow-sm border border-border">
+                <div className="rounded-lg">
                     <h3 className="text-lg font-semibold text-card-foreground mb-4">
                         Related Articles
                     </h3>
@@ -140,19 +135,14 @@ export default async function ArticlePage(props: Props) {
                 </div>
 
                 {/* Contact Support CTA */}
-                <div className="mt-8 text-center">
-                    <div className="bg-primary rounded-lg p-6 text-primary-foreground">
-                        <h3 className="text-xl font-semibold mb-2">Still need help?</h3>
-                        <p className="text-primary-foreground/80 mb-4">
-                            Contact our support team for personalized assistance.
-                        </p>
-                        <Link
-                            href="/contact"
-                            className="inline-flex items-center gap-2 bg-background text-foreground px-4 py-2 rounded-lg font-medium hover:bg-muted transition-colors"
-                        >
-                            Contact Support
-                        </Link>
+                <div className="flex flex-col items-center justify-center gap-4 mt-8 text-center py-8 border-t">
+                    <h2 className="text-xl sm:text-2xl font-semibold">Still Need Help?</h2>
+                    <div>
+                        <p className="text-muted-foreground">Contact our support team for personalized assistance.</p>
                     </div>
+                    <Link href="mailto:info@financedu.org" className={cn(buttonVariants())}>
+                        Contact Us
+                    </Link>
                 </div>
             </div>
         </div>

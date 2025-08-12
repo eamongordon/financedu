@@ -10,19 +10,6 @@ export async function GET(request: NextRequest) {
   }
 
   const articles = await searchHelpArticles(query);
-  
-  // Format articles for the response
-  const formattedArticles = articles.map(article => ({
-    slug: article.slug,
-    title: article.title,
-    excerpt: article.excerpt,
-    categorySlug: article.category.slug,
-    categoryTitle: article.category.name,
-  }));
 
-  return NextResponse.json({
-    articles: formattedArticles,
-    query,
-    count: formattedArticles.length,
-  });
+  return NextResponse.json(articles);
 }

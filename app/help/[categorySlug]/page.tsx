@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, ArrowRight, GraduationCap } from 'lucide-react';
+import { ArrowLeft, ArrowRight, FileText, GraduationCap } from 'lucide-react';
 import { getHelpCategory, getHelpCategories } from '@/lib/fetchers';
 import { CompletionIcon } from '@/components/ui/completion-icon';
 import { DynamicIcon, dynamicIconImports } from "lucide-react/dynamic";
@@ -14,10 +14,12 @@ interface Props {
 export default async function CategoryPage(props: Props) {
     const params = await props.params;
     const category = await getHelpCategory(params.categorySlug);
-
+    const allCategories = await getHelpCategories();
     if (!category) {
         notFound();
     }
+    // Exclude current category
+    const otherCategories = allCategories.filter((c) => c.slug !== category.slug);
 
     return (
         <div className="min-h-screen bg-background">
@@ -45,7 +47,7 @@ export default async function CategoryPage(props: Props) {
                     <div className="flex items-center gap-4 mb-4">
                         <span className="text-4xl">
                             <CompletionIcon
-                                icon={category.icon ? <DynamicIcon name={category.icon as keyof typeof dynamicIconImports} strokeWidth={1.5} className='text-muted-foreground' /> : <GraduationCap strokeWidth={1.5} className='text-muted-foreground'/>}
+                                icon={category.icon ? <DynamicIcon name={category.icon as keyof typeof dynamicIconImports} strokeWidth={1.5} className='text-muted-foreground' /> : <GraduationCap strokeWidth={1.5} className='text-muted-foreground' />}
                                 isComplete={false}
                             />
                         </span>
@@ -69,7 +71,7 @@ export default async function CategoryPage(props: Props) {
                         <Link
                             key={article.slug}
                             href={`/help/${category.slug}/${article.slug}`}
-                            className="group block bg-card rounded-lg p-6 shadow-sm hover:shadow-md transition-all duration-200 border border-border hover:border-primary"
+                            className="group block bg-card rounded-lg p-6 transition-all duration-200 border border-border hover:border-primary"
                         >
                             <div className="flex items-start justify-between">
                                 <div className="flex-1">
@@ -91,14 +93,16 @@ export default async function CategoryPage(props: Props) {
 
                 {/* No Articles State */}
                 {category.articles.length === 0 && (
-                    <div className="text-center py-12">
-                        <div className="text-6xl mb-4">📝</div>
-                        <h3 className="text-xl font-semibold text-foreground mb-2">
-                            No articles yet
-                        </h3>
-                        <p className="text-muted-foreground">
-                            We&apos;re working on adding helpful articles to this category.
-                        </p>
+                    <div className="flex flex-col items-center justify-center gap-2 text-center py-12">
+                        <FileText strokeWidth={1.5} size={48} className="text-secondary" />
+                        <div className='flex flex-col items-center justify-center gap-2'>
+                            <h3 className="text-xl font-semibold text-foreground">
+                                No articles yet
+                            </h3>
+                            <p className="text-muted-foreground">
+                                But don&apos;t worry, we&apos;re working on adding some.
+                            </p>
+                        </div>
                     </div>
                 )}
 
@@ -108,14 +112,34 @@ export default async function CategoryPage(props: Props) {
                         Other Categories
                     </h3>
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div className="text-center text-muted-foreground py-8">
-                            <Link
-                                href="/help"
-                                className="text-primary hover:text-primary/80"
-                            >
-                                Browse all categories →
-                            </Link>
-                        </div>
+                        {otherCategories.length === 0 ? (
+                            <div className="text-center text-muted-foreground py-8">
+                                <Link
+                                    href="/help"
+                                    className="text-primary hover:text-primary/80"
+                                >
+                                    Browse all categories →
+                                </Link>
+                            </div>
+                        ) : (
+                            otherCategories.map((cat) => (
+                                <Link
+                                    key={cat.slug}
+                                    href={`/help/${cat.slug}`}
+                                    className="flex flex-col items-center gap-2 bg-card rounded-lg p-6 border border-border hover:border-primary transition-colors text-center"
+                                >
+                                    <span className="text-3xl mb-2">
+                                        <CompletionIcon
+                                            icon={cat.icon ? <DynamicIcon name={cat.icon as keyof typeof dynamicIconImports} strokeWidth={1.5} className='text-muted-foreground' /> : <GraduationCap strokeWidth={1.5} className='text-muted-foreground' />}
+                                            isComplete={false}
+                                        />
+                                    </span>
+                                    <span className="font-semibold text-card-foreground">{cat.name}</span>
+                                    <span className="text-sm text-muted-foreground mb-2">{cat.articles.length} article{cat.articles.length === 1 ? '' : 's'}</span>
+                                    <span className="text-muted-foreground text-xs line-clamp-2">{cat.description}</span>
+                                </Link>
+                            ))
+                        )}
                     </div>
                 </div>
             </div>
