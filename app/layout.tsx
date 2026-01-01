@@ -6,6 +6,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { Toaster } from "@/components/ui/sonner"
 import { GoogleAnalytics } from '@next/third-parties/google';
+import Script from "next/script";
 
 const lato = Lato({
   subsets: ["latin"],
@@ -36,6 +37,11 @@ export default function RootLayout({
         className={`${lato.className} antialiased`}
       >
         <GoogleAnalytics gaId={ga4MeasurementId!} />
+        <Script
+          src="https://cdn.cookieless.tech/tracking.js"
+          data-site-id="0092ceec-07a9-40ca-8998-7ae1205ce270"
+          strategy="afterInteractive"
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
