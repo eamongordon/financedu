@@ -50,6 +50,7 @@ export default function AnchorMenu() {
                     <li><Link href="#privacy" className="block">Privacy Policy</Link></li>
                     <li><Link href="#collecteddata" className="ml-3 block">Collected Data</Link></li>
                     <li><Link href="#datause" className="ml-3 block">Data Use</Link></li>
+                    <li><Link href="#datadeletion" className="ml-3 block">Data Deletion</Link></li>
                     <li><Link href="#modifications" className="block">Modifications</Link></li>
                     <li><Link href="#contact" className="block">Contact Us</Link></li>
                 </ul>

@@ -80,6 +80,18 @@ const Page = async () => {
                                     <p>We utilize trusted third-party tools such as Google Analytics in order to analyze your interaction with our content and website. Information collected may include IP address, geographic location, and browser data.</p>
                                 </div>
                             </div>
+                            <h3 className="text-2xl font-semibold pt-6" id="datadeletion">Data Deletion Request</h3>
+                            <p>We respect your right to control your personal data. You may request the deletion of your data through the following methods:</p>
+                            <div className="flex-col space-y-6 pt-4">
+                                <div>
+                                    <h4 className="text-xl font-semibold ">Account Deletion</h4>
+                                    <p>The most direct way to delete your data is by deleting your Financedu account. You can do this by visiting the <Link className="font-semibold text-primary" href="/account/settings?tab=login#delete-account">account settings page</Link>. Deleting your account will permanently remove your email address and associated profile data from our active databases.</p>
+                                </div>
+                                <div>
+                                    <h4 className="text-xl font-semibold ">Manual Request</h4>
+                                    <p>If you wish to request the deletion of specific data or if you are unable to access your account, please contact us at <a className="font-semibold text-primary" href="mailto:info@financedu.org">info@financedu.org</a> with the subject line &quot;Data Deletion Request&quot;. We will process your request within a reasonable timeframe and in accordance with applicable laws.</p>
+                                </div>
+                            </div>
                         </div>
                         <div>
                             <h2 className="text-3xl font-semibold " id="modifications">Modifications</h2>
