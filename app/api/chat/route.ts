@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 
   const model = wrapLanguageModel({
     model: openai('gpt-4o'),
-    middleware: keokiMiddleware() as unknown as LanguageModelV1Middleware,
+    middleware: keokiMiddleware({ content: true }) as unknown as LanguageModelV1Middleware,
   });
 
   const result = streamText({
@@ -32,6 +32,6 @@ export async function POST(req: Request) {
     },
     maxSteps: 2
   });
-  
+
   return result.toDataStreamResponse();
 }
