@@ -1,6 +1,6 @@
 import { openai } from '@ai-sdk/openai';
 import { keokiMiddleware } from '@keoki/agent-tracking/ai';
-import { streamText, tool, wrapLanguageModel } from 'ai';
+import { streamText, tool, wrapLanguageModel, type LanguageModelV1Middleware } from 'ai';
 import { z } from 'zod';
 import { findRelevantActivities } from '@/lib/fetchers';
 
@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 
   const model = wrapLanguageModel({
     model: openai('gpt-4o'),
-    middleware: keokiMiddleware() as any,
+    middleware: keokiMiddleware() as unknown as LanguageModelV1Middleware,
   });
 
   const result = streamText({
