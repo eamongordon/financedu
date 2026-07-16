@@ -1,5 +1,6 @@
 import { openai } from '@ai-sdk/openai';
-import { streamText, tool } from 'ai';
+import { keokiMiddleware } from '@keoki/agent-tracking/ai';
+import { streamText, tool, wrapLanguageModel } from 'ai';
 import { z } from 'zod';
 import { findRelevantActivities } from '@/lib/fetchers';
 
@@ -8,8 +9,13 @@ export const maxDuration = 30;
 export async function POST(req: Request) {
   const { messages } = await req.json();
 
-  const result = streamText({
+  const model = wrapLanguageModel({
     model: openai('gpt-4o'),
+    middleware: keokiMiddleware() as any,
+  });
+
+  const result = streamText({
+    model,
     messages,
     system: `You are a friendly and helpful assistant. Always respond in a warm and approachable tone.
     Check your knowledge base before answering any questions.
